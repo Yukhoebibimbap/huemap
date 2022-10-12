@@ -4,21 +4,22 @@ services:
 
   nginx:
     container_name: nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
     image: nginx
     ports:
       - "80:80"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
     depends_on:
-      - backend
-    networks:
-      - test_network
+      - backend_spring
 
   database:
-    container_name: mysql_db
+    container_name: mysql
     image: mysql/mysql-server:5.7
     environment:
-      MYSQL_DATABASE: users_db
+      MYSQL_DATABASE: huemap
       MYSQL_ROOT_HOST: '%'
       MYSQL_ROOT_PASSWORD: 1234
       TZ: 'Asia/Seoul'
@@ -28,26 +29,20 @@ services:
       - "mysqld"
       - "--character-set-server=utf8mb4"
       - "--collation-server=utf8mb4_unicode_ci"
-    networks:
-      - test_network
 
-  backend:
-    container_name: docker-compose-test
+
+  backend_spring:
+    container_name: backend_spring
     build:
-      context: backend
-      dockerfile: backend/Dockerfile
-    #    ports:
-    #      - "8080:8080"
+      context: ./backend
+      dockerfile: Dockerfile
     expose:
       - 8080
-    #    environment:
-    #      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_db:3306/users_db?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&autoReconnect=true&failOverReadOnly=false&maxReconnects=10
-    #      SPRING_DATASOURCE_USERNAME: "root"
-    #      SPRING_DATASOURCE_PASSWORD: "1234"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/huemap?useSSL=false
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "1234"
     depends_on:
       - database
-    networks:
-      - test_network
 
-networks:
-  test_network:
+
