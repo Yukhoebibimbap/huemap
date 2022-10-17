@@ -12,7 +12,7 @@ env:
   PROJECT_NAME: huemap
   BUCKET_NAME: huemap
   CODE_DEPLOY_APP_NAME: huemap
-  DEPLOYMENT_GROUP_NAME: huemap
+  DEPLOYMENT_GROUP_NAME: huemap2
 
 jobs:
   code-coverage:
