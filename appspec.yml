@@ -1,0 +1,19 @@
+version: 0.0
+os: ubuntu
+
+files:
+  - source: /
+    destination: /home/ubuntu/huemap # 파일 배포 경로
+    overwrite: yes
+
+permissions:
+  - object: /home/ubuntu/
+    owner: ubuntu
+    group: ubuntu
+    mode: 755
+
+hooks:
+  AfterInstall:
+    - location: deploy.sh
+      timeout: 60
+      runas: root
