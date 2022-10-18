@@ -12,6 +12,6 @@ public class HealthCheckController {
     public String healthCheck(){
 
 
-        return "휴맵 스프링 서버";
+        return "휴맵 스프링 서버 자동 배포 성공";
     }
 }
