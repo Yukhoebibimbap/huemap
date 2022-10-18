@@ -1,12 +1,11 @@
 name: backend-ci
 
 on:
-  push:
-    branches:
-      - 'main'
   pull_request:
     branches:
-      - 'main'
+      - main
+    types: [opened, assigned, synchronize, labeled]
+
 
 jobs:
   code-coverage:
