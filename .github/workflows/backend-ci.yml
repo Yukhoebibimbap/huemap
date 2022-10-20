@@ -13,9 +13,14 @@ env:
   CODE_DEPLOY_APP_NAME: huemap
   DEPLOYMENT_GROUP_NAME: huemap2
 
+
 jobs:
   code-coverage:
     runs-on: ubuntu-latest
+    env:
+      RDS_ENDPOINT: ${{ secrets.RDS_ENDPOINT }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
     steps:
       - uses: actions/checkout@v3
