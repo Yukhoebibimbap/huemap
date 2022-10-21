@@ -4,7 +4,11 @@
 *.iml
 *.ipr
 out/
+
 ### VS Code ###
 .vscode/
 ### mac os ###
 *.DS_Store
+
+### environment variable ###
+.env

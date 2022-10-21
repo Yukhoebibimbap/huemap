@@ -17,22 +17,6 @@ services:
       - backend_spring
       - backend_flask
 
-  database:
-    restart: always
-    container_name: mysql
-    image: mysql/mysql-server:5.7
-    environment:
-      MYSQL_DATABASE: huemap
-      MYSQL_ROOT_HOST: '%'
-      MYSQL_ROOT_PASSWORD: 1234
-      TZ: 'Asia/Seoul'
-    ports:
-      - "3307:3307"
-    command:
-      - "mysqld"
-      - "--character-set-server=utf8mb4"
-      - "--collation-server=utf8mb4_unicode_ci"
-
 
   backend_spring:
     restart: always
@@ -43,11 +27,10 @@ services:
     expose:
       - 8080
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/huemap?useSSL=false
-      SPRING_DATASOURCE_USERNAME: "root"
-      SPRING_DATASOURCE_PASSWORD: "1234"
-    depends_on:
-      - database
+      SPRING_DATASOURCE_URL: jdbc:mysql://${RDS_ENDPOINT}:3306/huemap?useSSL=false
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+
 
   backend_flask:
     restart: always
@@ -57,7 +40,6 @@ services:
       dockerfile: Dockerfile
     expose:
       - 5050
-    depends_on:
-      - database
+
 
 
