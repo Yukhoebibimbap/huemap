@@ -1,14 +1,17 @@
 package com.huemap.backend.common.response.success;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 
-@Builder
-@AllArgsConstructor
+@Getter
+@Builder(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class RestResponse<T> {
 
-  private String message;
-  private T data;
+  private final String message;
+  private final T data;
 
   public static <T> RestResponse of(T data) {
     return RestResponse.builder()
