@@ -6,15 +6,13 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import com.huemap.backend.common.entity.BaseEntity;
+
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table
-public class User {
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+public class User extends BaseEntity {
 
   @Column
   private String name;
