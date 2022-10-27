@@ -1,11 +1,12 @@
 name: backend-ci
 
 on:
+  push:
+    branches:
+      - 'main'
   pull_request:
     branches:
-      - main
-    types: [ opened, assigned, synchronize, labeled ]
-
+      - 'main'
 
 jobs:
   code-coverage:
@@ -37,6 +38,6 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: ${{ always() }}
         with:
-          files: backend/build/test-results/**/*.xml
+          files: ./backend/build/test-results/**/*.xml
 
       
