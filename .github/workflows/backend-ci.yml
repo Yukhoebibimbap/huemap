@@ -4,23 +4,12 @@ on:
   pull_request:
     branches:
       - main
-    types: [opened, assigned, synchronize, labeled]
-
-
-env:
-  PROJECT_NAME: huemap
-  BUCKET_NAME: huemap
-  CODE_DEPLOY_APP_NAME: huemap
-  DEPLOYMENT_GROUP_NAME: huemap2
+    types: [ opened, assigned, synchronize, labeled ]
 
 
 jobs:
   code-coverage:
     runs-on: ubuntu-latest
-    env:
-      RDS_ENDPOINT: ${{ secrets.RDS_ENDPOINT }}
-      DB_USERNAME: ${{ secrets.DB_USERNAME }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
     steps:
       - uses: actions/checkout@v3
@@ -43,35 +32,11 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./backend/build/reports/jacoco/test/jacocoTestReport.xml
-          
+
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: ${{ always() }}
         with:
           files: backend/build/test-results/**/*.xml
 
-      - name: Make zip file
-        run: zip -qq -r ./$GITHUB_SHA.zip .
-        shell: bash
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
-          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-          aws-region: ap-northeast-2
-
-      - name: Delete all files on s3
-        run: aws s3 rm s3://$BUCKET_NAME/ --recursive --include "*"
-
-      - name: Upload .zip file to s3
-        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip
-
-      - name: Code deploy
-        run: >
-          aws deploy create-deployment
-          --application-name $CODE_DEPLOY_APP_NAME
-          --deployment-config-name CodeDeployDefault.AllAtOnce
-          --deployment-group-name $DEPLOYMENT_GROUP_NAME
-          --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip
       
