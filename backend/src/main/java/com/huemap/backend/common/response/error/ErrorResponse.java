@@ -5,6 +5,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.validation.BindingResult;
 
+import lombok.Getter;
+
+@Getter
 public class ErrorResponse {
 
   private int status;
@@ -20,18 +23,6 @@ public class ErrorResponse {
   private ErrorResponse(ErrorCode code) {
     this.message = code.getMessage();
     this.status = code.getStatus();
-  }
-
-  public String getMessage() {
-    return message;
-  }
-
-  public int getStatus() {
-    return status;
-  }
-
-  public List<FieldError> getErrors() {
-    return errors;
   }
 
   public static ErrorResponse of(ErrorCode code, BindingResult bindingResult) {
