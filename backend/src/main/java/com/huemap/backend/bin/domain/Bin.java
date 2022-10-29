@@ -1,10 +1,10 @@
 package com.huemap.backend.bin.domain;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.huemap.backend.common.entity.BaseEntity;
 
@@ -18,16 +18,16 @@ import lombok.NoArgsConstructor;
 @Table
 public class Bin extends BaseEntity {
 
-	@Column(nullable = false)
+	@NotNull
 	private String gu;
 
-	@Column(nullable = false)
+	@NotNull
 	private Double latitude;
 
-	@Column(nullable = false)
+	@NotNull
 	private Double longitude;
 
-	@Column(nullable = false)
+	@NotNull
 	private String address;
 
 	private String addressDescription;
