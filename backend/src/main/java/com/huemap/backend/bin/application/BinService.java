@@ -1,10 +1,14 @@
 package com.huemap.backend.bin.application;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.huemap.backend.bin.domain.BinMapper;
+import com.huemap.backend.bin.domain.BinRepository;
+import com.huemap.backend.bin.domain.BinType;
 import com.huemap.backend.bin.dto.response.BinResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -14,10 +18,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BinService {
 
-	public List<BinResponse> findAll(String type) {
+	private final BinRepository binRepository;
 
-		List<BinResponse> binResponses = null;
+	public List<BinResponse> findAll(final BinType type) {
 
-		return binResponses;
+		return binRepository.findAllByType(type)
+			.stream()
+			.map(BinMapper.INSTANCE::toDto)
+			.collect(Collectors.toList());
 	}
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.huemap.backend.bin.application.BinService;
+import com.huemap.backend.bin.domain.BinType;
 import com.huemap.backend.common.response.success.RestResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -19,10 +20,9 @@ public class BinController {
 	private final BinService binService;
 
 	@GetMapping
-	public ResponseEntity<RestResponse> findAll(@RequestParam("type") String type) {
+	public ResponseEntity<RestResponse> findAll(@RequestParam("type") BinType type) {
 
 		RestResponse response = RestResponse.of(binService.findAll(type));
-
 		return ResponseEntity.ok(response);
 	}
 
