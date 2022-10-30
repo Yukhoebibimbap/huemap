@@ -33,6 +33,6 @@ public class Bin extends BaseEntity {
 	private String addressDescription;
 
 	@Enumerated(EnumType.STRING)
-	private BinType binType;
+	private BinType type;
 
 }
