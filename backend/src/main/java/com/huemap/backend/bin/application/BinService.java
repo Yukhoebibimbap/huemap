@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BinService {
 
-	public List<BinResponse> findAll() {
+	public List<BinResponse> findAll(String type) {
 
 		List<BinResponse> binResponses = null;
 
