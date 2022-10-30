@@ -15,5 +15,5 @@ public class BinResponse {
 	private Double longitude;
 	private String address;
 	private String addressDescription;
-	private BinType binType;
+	private BinType type;
 }
