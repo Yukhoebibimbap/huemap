@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.huemap.backend.bin.dto.response.BinResponse;
-import com.huemap.backend.bin.dto.response.BinResponses;
 
 import lombok.RequiredArgsConstructor;
 
@@ -15,10 +14,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BinService {
 
-	public BinResponses findAll() {
+	public List<BinResponse> findAll() {
 
 		List<BinResponse> binResponses = null;
 
-		return new BinResponses(binResponses);
+		return binResponses;
 	}
 }
