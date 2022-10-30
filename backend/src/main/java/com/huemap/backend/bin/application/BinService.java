@@ -22,12 +22,9 @@ public class BinService {
 
 	public List<BinResponse> findAll(final BinType type) {
 
-
-		final List<BinResponse> binResponses = binRepository.findAllByType(type)
+		return binRepository.findAllByType(type)
 			.stream()
-			.map(BinMapper.INSTANCE::ToDto)
+			.map(BinMapper.INSTANCE::toDto)
 			.collect(Collectors.toList());
-
-		return binResponses;
 	}
 }
