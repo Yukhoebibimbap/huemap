@@ -1,5 +1,7 @@
 package com.huemap.backend.bin.dto.response;
 
+import java.time.LocalDateTime;
+
 import com.huemap.backend.bin.domain.BinType;
 
 import lombok.Builder;
@@ -16,4 +18,5 @@ public class BinResponse {
 	private String address;
 	private String addressDescription;
 	private BinType type;
+	private LocalDateTime updatedAt;
 }
