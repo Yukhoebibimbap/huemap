@@ -1,10 +1,18 @@
+import 'dart:io';
+import 'dart:developer';
+import 'dart:convert';
+import 'package:cp949_codec/cp949_codec.dart';
+
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+
+import 'package:webview_flutter/webview_flutter.dart';
 import 'package:huemap_app/get_current_position.dart';
 import 'package:huemap_app/bin.dart';
+import 'package:flutter/foundation.dart';
 
-void main(){runApp(MaterialApp(home:MapPage()));}
+void main(){runApp(const MaterialApp(home:MapPage()));}
 
 
 class MapPage extends StatefulWidget {
@@ -40,9 +48,22 @@ class _MapPageState extends State<MapPage> {
             javascriptChannels: channel,
           ),
         ),
+        ElevatedButton(onPressed: getBins, child: const Text('Button'))
       ],
       ),
     );
+  }
+
+  void getBins () async {
+    const path = '/api/v1/bins';
+    const params = <String, String>{'type' : 'GENERAL'};
+    final uri = Uri.https('huemap.shop', path, params);
+    final res = await http.get(uri);
+    if( res.statusCode == HttpStatus.ok)
+      {
+
+      }
+
   }
 
   @override

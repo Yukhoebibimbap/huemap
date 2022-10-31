@@ -36,6 +36,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.16.0"
+  cp949_codec:
+    dependency: "direct main"
+    description:
+      name: cp949_codec
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   cupertino_icons:
     dependency: "direct main"
     description:
