@@ -4,6 +4,11 @@ import java.time.LocalDateTime;
 
 import com.huemap.backend.bin.domain.BinType;
 
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
 public class BinDetailResponse {
 	private Long id;
 	private String gu;
