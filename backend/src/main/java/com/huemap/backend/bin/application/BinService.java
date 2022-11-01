@@ -6,9 +6,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.huemap.backend.bin.domain.mapper.BinMapper;
 import com.huemap.backend.bin.domain.BinRepository;
 import com.huemap.backend.bin.domain.BinType;
+import com.huemap.backend.bin.domain.mapper.BinMapper;
+import com.huemap.backend.bin.dto.response.BinDetailResponse;
 import com.huemap.backend.bin.dto.response.BinResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class BinService {
 			.collect(Collectors.toList());
 	}
 
-	public BinResponse findById(Long binId) {
+	public BinDetailResponse findById(Long binId) {
 		return null;
 	}
 }
