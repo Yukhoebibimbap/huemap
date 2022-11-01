@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.huemap.backend.common.exception.BusinessException;
 import com.huemap.backend.common.response.error.ErrorCode;
 import com.huemap.backend.common.response.error.ErrorResponse;
 
@@ -30,6 +31,11 @@ public class ControllerAdvice {
     final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE);
     return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
   }
-
+  @ExceptionHandler(BusinessException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ResponseEntity<ErrorResponse> businessException(final BusinessException e) {
+    final ErrorResponse response = ErrorResponse.of(e.getErrorCode());
+    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+  }
 
 }
