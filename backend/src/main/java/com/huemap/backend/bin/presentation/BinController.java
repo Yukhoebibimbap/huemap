@@ -27,10 +27,10 @@ public class BinController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<RestResponse> findById(@PathVariable("id") Long binId) {
+	@GetMapping("{id}")
+	public ResponseEntity<RestResponse> findById(@PathVariable Long id) {
 
-		RestResponse response = RestResponse.of(binService.findById(binId));
+		RestResponse response = RestResponse.of(binService.findById(id));
 		return ResponseEntity.ok(response);
 	}
 
