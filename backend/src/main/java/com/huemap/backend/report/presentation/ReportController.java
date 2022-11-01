@@ -1,4 +1,4 @@
-현package com.huemap.backend.report.presentation;
+package com.huemap.backend.report.presentation;
 
 import javax.validation.Valid;
 
