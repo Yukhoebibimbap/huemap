@@ -11,7 +11,7 @@ import com.huemap.backend.common.entity.BaseEntity;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Table
+@Table(name = "`user`")
 public class User extends BaseEntity {
 
   @Column

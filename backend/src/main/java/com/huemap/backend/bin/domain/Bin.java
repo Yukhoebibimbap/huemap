@@ -6,6 +6,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Where;
+
 import com.huemap.backend.common.entity.BaseEntity;
 
 import lombok.AccessLevel;
@@ -16,6 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table
+@Where(clause = "deleted=false")
 public class Bin extends BaseEntity {
 
 	@NotNull
@@ -34,5 +37,7 @@ public class Bin extends BaseEntity {
 
 	@Enumerated(EnumType.STRING)
 	private BinType type;
+
+	private boolean deleted;
 
 }
