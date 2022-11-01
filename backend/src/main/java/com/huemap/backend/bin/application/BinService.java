@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.huemap.backend.bin.domain.BinMapper;
+import com.huemap.backend.bin.domain.mapper.BinMapper;
 import com.huemap.backend.bin.domain.BinRepository;
 import com.huemap.backend.bin.domain.BinType;
 import com.huemap.backend.bin.dto.response.BinResponse;
