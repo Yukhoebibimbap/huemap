@@ -36,7 +36,7 @@ public class BinService {
 	public BinDetailResponse findById(Long id) {
 
 		Bin bin = binRepository.findById(id)
-			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.valueOf("BIN_NOT_FOUND")));
+			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.BIN_NOT_FOUND));
 
 		return BinDetailMapper.INSTANCE.toDto(bin);
 	}
