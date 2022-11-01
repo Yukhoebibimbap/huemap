@@ -9,6 +9,6 @@ public abstract class BusinessException extends RuntimeException {
 	private final ErrorCode errorCode;
 
 	protected BusinessException(final ErrorCode errorCode) {
-		this.errorCode=errorCode;
+		this.errorCode = errorCode;
 	}
 }
