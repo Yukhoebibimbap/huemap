@@ -29,7 +29,7 @@ public class BinService {
 			.collect(Collectors.toList());
 	}
 
-	public BinDetailResponse findById(Long binId) {
+	public BinDetailResponse findById(Long id) {
 		return null;
 	}
 }
