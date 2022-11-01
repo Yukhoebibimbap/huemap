@@ -27,4 +27,8 @@ public class BinService {
 			.map(BinMapper.INSTANCE::toDto)
 			.collect(Collectors.toList());
 	}
+
+	public BinResponse findById(Long binId) {
+		return null;
+	}
 }

@@ -2,6 +2,7 @@ package com.huemap.backend.bin.presentation;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +24,13 @@ public class BinController {
 	public ResponseEntity<RestResponse> findAll(@RequestParam("type") BinType type) {
 
 		RestResponse response = RestResponse.of(binService.findAll(type));
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<RestResponse> findById(@PathVariable("id") Long binId) {
+
+		RestResponse response = RestResponse.of(binService.findById(binId));
 		return ResponseEntity.ok(response);
 	}
 
