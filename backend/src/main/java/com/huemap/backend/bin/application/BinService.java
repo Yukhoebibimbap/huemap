@@ -6,11 +6,15 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.huemap.backend.bin.domain.Bin;
 import com.huemap.backend.bin.domain.BinRepository;
 import com.huemap.backend.bin.domain.BinType;
+import com.huemap.backend.bin.domain.mapper.BinDetailMapper;
 import com.huemap.backend.bin.domain.mapper.BinMapper;
 import com.huemap.backend.bin.dto.response.BinDetailResponse;
 import com.huemap.backend.bin.dto.response.BinResponse;
+import com.huemap.backend.common.exception.EntityNotFoundException;
+import com.huemap.backend.common.response.error.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,6 +34,10 @@ public class BinService {
 	}
 
 	public BinDetailResponse findById(Long id) {
-		return null;
+
+		Bin bin = binRepository.findById(id)
+			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.BIN_NOT_FOUND));
+
+		return BinDetailMapper.INSTANCE.toDto(bin);
 	}
 }
