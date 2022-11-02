@@ -1,5 +1,6 @@
 package com.huemap.backend.bin.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -7,6 +8,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Where;
+import org.locationtech.jts.geom.Point;
 
 import com.huemap.backend.common.entity.BaseEntity;
 
@@ -24,11 +26,8 @@ public class Bin extends BaseEntity {
 	@NotNull
 	private String gu;
 
-	@NotNull
-	private Double latitude;
-
-	@NotNull
-	private Double longitude;
+	@Column(columnDefinition = "GEOMETRY")
+	private Point location;
 
 	@NotNull
 	private String address;
