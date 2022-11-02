@@ -16,6 +16,6 @@ import com.huemap.backend.bin.dto.response.BinResponse;
 public interface BinMapper {
 	BinMapper INSTANCE = Mappers.getMapper(BinMapper.class);
 
-	BinResponse toDto(Bin bin);
+	BinResponse toDto(Bin bin, Double latitude, Double longitude);
 
 }
