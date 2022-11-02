@@ -29,7 +29,7 @@ public class BinService {
 
 		return binRepository.findAllByType(type)
 			.stream()
-			.map((bin) -> BinMapper.INSTANCE.toDto(bin, bin.getLocation().getX(), bin.getLocation().getY()))
+			.map(BinMapper.INSTANCE::toDto)
 			.collect(Collectors.toList());
 	}
 
@@ -38,6 +38,6 @@ public class BinService {
 		Bin bin = binRepository.findById(id)
 			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.BIN_NOT_FOUND));
 
-		return BinDetailMapper.INSTANCE.toDto(bin, bin.getLocation().getX(), bin.getLocation().getY());
+		return BinDetailMapper.INSTANCE.toDto(bin);
 	}
 }
