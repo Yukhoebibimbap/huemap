@@ -19,6 +19,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.huemap.backend.common.exception.EntityNotFoundException;
+import com.huemap.backend.common.exception.InvalidValueException;
+import com.huemap.backend.common.response.error.ErrorCode;
 import com.huemap.backend.common.response.success.RestResponse;
 import com.huemap.backend.report.application.ReportService;
 import com.huemap.backend.report.dto.request.ClosureCreateRequest;
@@ -26,6 +29,7 @@ import com.huemap.backend.report.dto.response.ClosureCreateResponse;
 
 @WebMvcTest(ReportController.class)
 @MockBean(JpaMetamodelMappingContext.class)
+@DisplayName("ReportController의")
 public class ReportControllerTest {
 
   @Autowired
@@ -110,6 +114,72 @@ public class ReportControllerTest {
         //given
         final Long binId = 1L;
         final ClosureCreateRequest request = new ClosureCreateRequest(37.5833354, longitude);
+
+        //when
+        final ResultActions perform = requestSaveClosure(binId, request);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("존재하지 않은 폐수거함으로 폐쇄 제보를 한다면")
+    class Context_with_not_found_bin {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final Long binId = 1L;
+        final ClosureCreateRequest request = new ClosureCreateRequest(37.5833354, 126.9876779);
+        willThrow(new EntityNotFoundException(ErrorCode.BIN_NOT_FOUND))
+            .given(reportService)
+            .saveClosure(anyLong(), anyLong(), any(ClosureCreateRequest.class));
+
+        //when
+        final ResultActions perform = requestSaveClosure(binId, request);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("폐수거함의 거리 차이가 10m 이상인 곳에서 폐쇄 제보를 한다면")
+    class Context_with_distance_far_bin {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final Long binId = 1L;
+        final ClosureCreateRequest request = new ClosureCreateRequest(37.583289, 126.987803);
+        willThrow(new InvalidValueException(ErrorCode.REPORT_DISTANCE_FAR))
+            .given(reportService)
+            .saveClosure(anyLong(), anyLong(), any(ClosureCreateRequest.class));
+
+        //when
+        final ResultActions perform = requestSaveClosure(binId, request);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("같은 폐수거함에 대하여 폐쇄 제보를 한다면")
+    class Context_with_already_exist_closure {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final Long binId = 1L;
+        final ClosureCreateRequest request = new ClosureCreateRequest(37.583289, 126.987803);
+        willThrow(new InvalidValueException(ErrorCode.CLOSURE_DUPLICATED))
+            .given(reportService)
+            .saveClosure(anyLong(), anyLong(), any(ClosureCreateRequest.class));
 
         //when
         final ResultActions perform = requestSaveClosure(binId, request);
