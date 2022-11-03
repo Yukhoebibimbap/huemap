@@ -39,4 +39,7 @@ public class Bin extends BaseEntity {
 
 	private boolean deleted;
 
+	public void delete() {
+		this.deleted = true;
+	}
 }
