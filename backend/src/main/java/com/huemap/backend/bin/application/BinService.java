@@ -42,6 +42,6 @@ public class BinService {
 
 		int count = reportRepository.countClosureByBin(id);
 
-		return BinDetailMapper.INSTANCE.toDto(bin, count!=0 ? true : false);
+		return BinDetailMapper.INSTANCE.toDto(bin, count != 0 ? true : false);
 	}
 }
