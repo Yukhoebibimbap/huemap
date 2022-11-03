@@ -13,6 +13,7 @@ import com.huemap.backend.report.domain.Closure;
 import com.huemap.backend.report.domain.ReportRepository;
 import com.huemap.backend.report.domain.mapper.ClosureMapper;
 import com.huemap.backend.report.dto.request.ClosureCreateRequest;
+import com.huemap.backend.report.dto.request.PresenceCreateRequest;
 import com.huemap.backend.report.dto.response.ClosureCreateResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,11 @@ public class ReportService {
     final Closure closure = (Closure)reportRepository.save(ClosureMapper.INSTANCE.toEntity(userId, bin));
 
     return ClosureMapper.INSTANCE.toDto(closure);
+  }
+
+  @Transactional
+  public Object savePresence(Long userId, PresenceCreateRequest presenceCreateRequest) {
+    return null;
   }
 
   private void validateAlreadyExist(Long userId, Bin bin) {
