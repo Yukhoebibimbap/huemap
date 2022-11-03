@@ -19,5 +19,5 @@ public interface BinDetailMapper {
 
 	@Mapping(expression = "java(bin.getLocation().getX())", target = "latitude")
 	@Mapping(expression = "java(bin.getLocation().getY())", target = "longitude")
-	BinDetailResponse toDto(Bin bin, int closureCount);
+	BinDetailResponse toDto(Bin bin, boolean isClosure);
 }
