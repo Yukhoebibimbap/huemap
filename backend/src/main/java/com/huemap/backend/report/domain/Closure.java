@@ -7,7 +7,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.huemap.backend.bin.domain.Bin;
-import com.huemap.backend.user.domain.User;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -22,13 +21,9 @@ public class Closure extends Report {
   @JoinColumn(name = "bin_id")
   private Bin bin;
 
-  private int count;
-
-  private boolean deleted;
-
   @Builder
-  public Closure(final User user, final Bin bin) {
-    super(user);
+  public Closure(final Long userId, final Bin bin) {
+    super(userId);
     this.bin = bin;
   }
 }
