@@ -15,6 +15,7 @@ import com.huemap.backend.bin.dto.response.BinDetailResponse;
 import com.huemap.backend.bin.dto.response.BinResponse;
 import com.huemap.backend.common.exception.EntityNotFoundException;
 import com.huemap.backend.common.response.error.ErrorCode;
+import com.huemap.backend.report.domain.ReportRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class BinService {
 
 	private final BinRepository binRepository;
+	private final ReportRepository reportRepository;
 
 	public List<BinResponse> findAll(final BinType type) {
 
@@ -38,6 +40,8 @@ public class BinService {
 		Bin bin = binRepository.findById(id)
 			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.BIN_NOT_FOUND));
 
-		return BinDetailMapper.INSTANCE.toDto(bin);
+		int count = reportRepository.countClosureByBin(id);
+
+		return BinDetailMapper.INSTANCE.toDto(bin, count != 0 ? true : false);
 	}
 }
