@@ -17,7 +17,7 @@ import com.huemap.backend.bin.dto.response.BinDetailResponse;
 public interface BinDetailMapper {
 	BinDetailMapper INSTANCE = Mappers.getMapper(BinDetailMapper.class);
 
-	@Mapping(expression = "java(bin.getLocation().getX())", target="latitude")
-	@Mapping(expression = "java(bin.getLocation().getY())", target="longitude")
-	BinDetailResponse toDto(Bin bin);
+	@Mapping(expression = "java(bin.getLocation().getX())", target = "latitude")
+	@Mapping(expression = "java(bin.getLocation().getY())", target = "longitude")
+	BinDetailResponse toDto(Bin bin, int closureCount);
 }
