@@ -40,7 +40,7 @@ dependencies:
   geolocator: ^9.0.2
   fluttertoast: ^8.1.1
   http: ^0.13.5
-  cp949_codec: ^0.0.2
+  provider: ^6.0.4
 
 dev_dependencies:
   flutter_test:
