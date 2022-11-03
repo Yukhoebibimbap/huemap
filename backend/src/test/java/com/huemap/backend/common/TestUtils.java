@@ -20,7 +20,6 @@ public class TestUtils {
     String pointWKT = String.format("POINT(%s %s)", 37.5833354, 126.9876779);
     Point point = (Point) new WKTReader().read(pointWKT);
 
-    ReflectionTestUtils.setField(bin, "id", 1L);
     ReflectionTestUtils.setField(bin, "gu", "종로구");
     ReflectionTestUtils.setField(bin, "location", point);
     ReflectionTestUtils.setField(bin, "address", "서울특별시 종로구 창덕궁7길 5");
@@ -36,8 +35,6 @@ public class TestUtils {
                              .userId(1L)
                              .bin(bin)
                              .build();
-
-    ReflectionTestUtils.setField(bin, "id", 1L);
 
     return closure;
   }
