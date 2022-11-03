@@ -18,5 +18,5 @@ public class BinDetailResponse {
 	private String addressDescription;
 	private BinType type;
 	private LocalDateTime updatedAt;
-	private boolean isClosure;
+	private boolean hasClosure;
 }
