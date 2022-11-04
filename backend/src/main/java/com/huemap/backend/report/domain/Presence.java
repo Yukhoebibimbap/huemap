@@ -1,16 +1,15 @@
 package com.huemap.backend.report.domain;
 
-import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
-import org.locationtech.jts.geom.Point;
-
-import com.huemap.backend.bin.domain.BinType;
+import com.huemap.backend.bin.domain.Bin;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -18,10 +17,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Presence extends Report {
 
-  @Column(columnDefinition = "GEOMETRY")
-  private Point location;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "bin_id")
+  private Bin bin;
 
-  @Enumerated(EnumType.STRING)
-  private BinType type;
+  private int count;
 
+  @Builder
+  public Presence(final Long userId, final Bin bin) {
+    super(userId);
+    this.bin = bin;
+  }
 }
