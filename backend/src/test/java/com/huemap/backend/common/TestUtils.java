@@ -25,6 +25,7 @@ public class TestUtils {
     ReflectionTestUtils.setField(bin, "address", "서울특별시 종로구 창덕궁7길 5");
     ReflectionTestUtils.setField(bin, "addressDescription", null);
     ReflectionTestUtils.setField(bin, "type", BinType.CLOTHES);
+    ReflectionTestUtils.setField(bin, "isCandidate", false);
     ReflectionTestUtils.setField(bin, "deleted", false);
 
     return bin;
