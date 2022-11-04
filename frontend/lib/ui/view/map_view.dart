@@ -1,4 +1,4 @@
-import 'dart:io'
+import 'dart:io';
 import 'dart:developer';
 import 'dart:convert';
 
@@ -20,17 +20,16 @@ class MapView extends StatelessWidget {
           initialUrl: viewModel.url,
           onWebViewCreated: (controller) {
             viewModel.controller = controller;
-            // viewModel.controller!.runJavascript("marker = new kakao.maps.Marker({position: map.getCenter()});"
-            //     "kakao.maps.event.addListener(map, 'click', function(mouseEvent) {"
-            //     "var latlng = mouseEvent.latLng;"
-            //     "marker.setPosition(latlng);"
-            //     "});");
           },
           javascriptMode: JavascriptMode.unrestricted,
           javascriptChannels: viewModel.channel,
+          
+          onPageFinished: (url) {
+            viewModel.initBinMarker();
+          }
         ),
       ),
-      ElevatedButton(onPressed: viewModel.notifyListen, child: const Text('Button')),
+      ElevatedButton(onPressed: (){}, child: const Text('Button')),
     ]);
   }
 }

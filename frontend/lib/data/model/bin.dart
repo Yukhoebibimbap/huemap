@@ -1,7 +1,7 @@
 class Bin {
   final int id;
   final double lat, lng;
-  final int type;
+  final String type;
 
   // json 생성자
   Bin.fromJson(Map<String, dynamic> json) :
