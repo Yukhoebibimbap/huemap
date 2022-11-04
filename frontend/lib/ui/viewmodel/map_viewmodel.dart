@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,8 +17,8 @@ class MapViewModel with ChangeNotifier{
   List<Bin> _items = [];
 
   MapViewModel() {
-    // _binRepository = BinRepository();
-    // _loadItems();
+    _binRepository = BinRepository();
+    _loadItems().then((_){});
 
     channel = {JavascriptChannel(name: 'onClickMarker', onMessageReceived: (message) {
       Fluttertoast.showToast(msg: message.message);
@@ -25,19 +27,24 @@ class MapViewModel with ChangeNotifier{
 
   Future<void> _loadItems() async {
     _items = await _binRepository.getBins();
-    notifyListeners();
+    //notifyListeners();
   }
 
-  Future<void> notifyListen() async {
-    notifyListeners();
+  void initBinMarker() {
+    String script = "";
+
+
+
+    for(var i=0; i < _items.length; i++) {
+      script += "initMarker(${_items[i].lat}, ${_items[i].lng}, ${_items[i].id});";
+    }
+
+    log(script);
+
+    controller!.runJavascript(script);
+    controller!.runJavascript("map.panTo(new kakao.maps.LatLng(37.495716, 127.029214))");
   }
 
-  // void initBinMarker(int category) {
-  //   controller!.runJavascript(
-  //       'initMarker(${lat}, ${lng}, ${category});'
-  //   );
-  // }
-  //
   // static void setBinMarker() {
   //   controller!.runJavascript(
   //       'setMarker(${idx});'
