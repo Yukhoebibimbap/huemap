@@ -5,6 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.HashMap;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,13 +21,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.huemap.backend.bin.domain.BinType;
 import com.huemap.backend.common.exception.EntityNotFoundException;
 import com.huemap.backend.common.exception.InvalidValueException;
 import com.huemap.backend.common.response.error.ErrorCode;
 import com.huemap.backend.common.response.success.RestResponse;
 import com.huemap.backend.report.application.ReportService;
 import com.huemap.backend.report.dto.request.ClosureCreateRequest;
+import com.huemap.backend.report.dto.request.PresenceCreateRequest;
 import com.huemap.backend.report.dto.response.ClosureCreateResponse;
+import com.huemap.backend.report.dto.response.PresenceCreateResponse;
 
 @WebMvcTest(ReportController.class)
 @MockBean(JpaMetamodelMappingContext.class)
@@ -46,7 +51,7 @@ public class ReportControllerTest {
   class saveClosure {
 
     @Nested
-    @DisplayName("위도가 null로 들어오면")
+    @DisplayName("제보자의 위도가 null로 들어오면")
     class Context_with_null_latitude {
 
       @Test
@@ -65,7 +70,7 @@ public class ReportControllerTest {
     }
 
     @Nested
-    @DisplayName("위도가 -90 ~ 90 이외의 값이거나 올바르지 않은 형식으로 들어오면")
+    @DisplayName("제보자의 위도가 -90 ~ 90 이외의 값이거나 올바르지 않은 형식으로 들어오면")
     class Context_with_invalid_range_latitude {
 
       @ParameterizedTest
@@ -85,7 +90,7 @@ public class ReportControllerTest {
     }
 
     @Nested
-    @DisplayName("경도가 null로 들어오면")
+    @DisplayName("제보자의 경도가 null로 들어오면")
     class Context_with_null_longitude {
 
       @Test
@@ -104,7 +109,7 @@ public class ReportControllerTest {
     }
 
     @Nested
-    @DisplayName("경도가 -180 ~ 180 이외의 값이거나 올바르지 않은 형식으로 들어오면")
+    @DisplayName("제보자의 경도가 -180 ~ 180 이외의 값이거나 올바르지 않은 형식으로 들어오면")
     class Context_with_invalid_range_longitude {
 
       @ParameterizedTest
@@ -190,7 +195,7 @@ public class ReportControllerTest {
     }
 
     @Nested
-    @DisplayName("위도와 경도가 올바른 값으로 입력되면")
+    @DisplayName("제보자의 위도와 경도가 올바른 값으로 입력되면")
     class Context_with_valid_latitude_longitude {
 
       @Test
@@ -215,6 +220,166 @@ public class ReportControllerTest {
     private ResultActions requestSaveClosure(final Long binId, final ClosureCreateRequest request)
         throws Exception {
       return requestPost("/api/v1/bins/" + binId + "/report-closures", request);
+    }
+  }
+
+  @Nested
+  @DisplayName("savePresence 메소드는")
+  class savePresence {
+
+    @Nested
+    @DisplayName("폐수거함 유형이 null로 들어오면")
+    class Context_with_null_type {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final PresenceCreateRequest request = new PresenceCreateRequest(null,
+                                                                        37.5833354,
+                                                                        126.9876779);
+
+        //when
+        final ResultActions perform = requestSavePresence(request);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("유효하지 않은 폐수거함 유형이 들어오면")
+    class Context_with_invalid_type {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final HashMap<String, Object> requestMap = new HashMap<>();
+        requestMap.put("type", "INVALID");
+        requestMap.put("latitude", 37.5833354);
+        requestMap.put("longitude", 126.9876779);
+        final String request = objectMapper.writeValueAsString(requestMap);
+
+        //when
+        final ResultActions perform = mockMvc.perform(post("/api/v1/bins/report-presences")
+                                                          .contentType(MediaType.APPLICATION_JSON)
+                                                          .content(request))
+                                             .andDo(print());
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("핀의 위도가 null로 들어오면")
+    class Context_with_null_latitude {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final PresenceCreateRequest request = new PresenceCreateRequest(BinType.GENERAL,
+                                                                        null,
+                                                                        126.9876779);
+
+        //when
+        final ResultActions perform = requestSavePresence(request);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("핀의  위도가 -90 ~ 90 이외의 값이거나 올바르지 않은 형식으로 들어오면")
+    class Context_with_invalid_range_latitude {
+
+      @ParameterizedTest
+      @ValueSource(doubles = {90.1, -91, Double.MAX_VALUE})
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception(Double latitude) throws Exception {
+        //given
+        final PresenceCreateRequest request = new PresenceCreateRequest(BinType.GENERAL,
+                                                                        latitude,
+                                                                        126.9876779);
+        //when
+        final ResultActions perform = requestSavePresence(request);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("핀의  경도가 null로 들어오면")
+    class Context_with_null_longitude {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final PresenceCreateRequest request = new PresenceCreateRequest(BinType.GENERAL,
+                                                                        37.5833354,
+                                                                        null);
+
+        //when
+        final ResultActions perform = requestSavePresence(request);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("핀의 경도가 -180 ~ 180 이외의 값이거나 올바르지 않은 형식으로 들어오면")
+    class Context_with_invalid_range_longitude {
+
+      @ParameterizedTest
+      @ValueSource(doubles = {180.1, -181, Double.MAX_VALUE})
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception(Double longitude) throws Exception {
+        //given
+        final PresenceCreateRequest request = new PresenceCreateRequest(BinType.GENERAL,
+                                                                        37.5833354,
+                                                                        longitude);
+
+        //when
+        final ResultActions perform = requestSavePresence(request);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("핀의 위도, 경도, 타입이 올바른 값으로 입력되면")
+    class Context_with_valid_latitude_longitude_type {
+
+      @Test
+      @DisplayName("201을 응답한다.")
+      void It_responses_201() throws Exception {
+        //given
+        final PresenceCreateRequest request = new PresenceCreateRequest(BinType.GENERAL,
+                                                                        37.5833354,
+                                                                        126.9876779);
+        final PresenceCreateResponse response = new PresenceCreateResponse(1L);
+        final RestResponse restResponse = RestResponse.of(response);
+        given(reportService.savePresence(anyLong(), any(PresenceCreateRequest.class))).willReturn(response);
+
+        //when
+        final ResultActions perform = requestSavePresence(request);
+
+        //then
+        perform.andExpect(status().isCreated())
+               .andExpect(content().json(objectMapper.writeValueAsString(restResponse)));
+      }
+    }
+
+    private ResultActions requestSavePresence(final PresenceCreateRequest request)
+        throws Exception {
+      return requestPost("/api/v1/bins/report-presences", request);
     }
   }
 
