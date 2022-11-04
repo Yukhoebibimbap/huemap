@@ -37,6 +37,8 @@ public class Bin extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private BinType type;
 
+	private boolean isCandidate;
+
 	private boolean deleted;
 
 	public void delete() {
