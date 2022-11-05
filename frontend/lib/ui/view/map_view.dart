@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:huemap_app/ui/viewmodel/map_viewmodel.dart';
-import 'package:huemap_app/get_current_position.dart';
 
 class MapView extends StatelessWidget {
   late MapViewModel viewModel;
