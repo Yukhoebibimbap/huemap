@@ -9,6 +9,19 @@ class Bin {
         lat = json['latitude'],
         lng = json['longitude'],
         type = json['type'];
+}
 
+enum Type  {
+  general,
+  recycle,
+  medicine,
+  clothes,
+  battery,
+  lamp
+}
 
+extension ParseToString on Type {
+  String toParameter() {
+    return (this.toString().split('.').last).toUpperCase();
+  }
 }

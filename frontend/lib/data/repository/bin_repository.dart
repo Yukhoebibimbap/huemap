@@ -12,8 +12,7 @@ class BinRepository {
     //   return _localDataSource.getCachedPosts();
     // }
 
-    Future<List<Bin>> getBins() {
-      return _remoteDataSource.getBins();
+    Future<List<Bin>> getBins(Type t) async {
+      return await _remoteDataSource.getBins(t);
     }
-
 }
