@@ -13,36 +13,50 @@ class MapView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     viewModel = Provider.of<MapViewModel>(context);
-    return Column(children: [
-      FutureBuilder(
+    return FutureBuilder(
       future: viewModel.loadItems(),
       builder: (context, snapshot) {
-        if(!snapshot.hasData){
+        if (!snapshot.hasData) {
           return Container(
             height: 480,
-          );}
+          );
+        }
         else {
-        return Container(
-          height: 480,
-          child: WebView(
-              initialUrl: viewModel.url,
-              onWebViewCreated: (controller) {
-                viewModel.controller = controller;
-              },
-              javascriptMode: JavascriptMode.unrestricted,
-              javascriptChannels: viewModel.channel,
+          return Container(
+            height: 480,
+            child: Stack(
+              children: [
+                WebView(
+                    initialUrl: viewModel.url,
+                    onWebViewCreated: (controller) {
+                      viewModel.controller = controller;
+                    },
+                    javascriptMode: JavascriptMode.unrestricted,
+                    javascriptChannels: viewModel.channel,
 
-              onPageFinished: (url) {
-                viewModel.initBinMarker();
-              }
-          ),
-        );}
-      }),
-
-      ElevatedButton(
-          onPressed: viewModel.panToCurrent,
-          child: const Text('toCurrentPosition')),
-    ]);
+                    onPageFinished: (url) {
+                      viewModel.initBinMarker();
+                    }
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    FloatingActionButton(
+                        onPressed: viewModel.panToCurrent,
+                        child: const Icon(Icons.my_location)
+                    ),
+                    Container(
+                      width: 360,
+                    )
+                  ]
+                )
+              ]
+            )
+          );
+        }
+      }
+    );
   }
 }
 
