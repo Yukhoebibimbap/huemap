@@ -10,7 +10,7 @@ import 'package:huemap_app/get_current_position.dart';
 
 class MapViewModel with ChangeNotifier{
   late final BinRepository _binRepository;
-  final String url = "118.67.130.12/map.html";
+  final String url = "118.67.130.12/mac.html";
   WebViewController? controller;
   late final Set<JavascriptChannel> channel;
 
@@ -69,7 +69,7 @@ class MapViewModel with ChangeNotifier{
   void panToCurrent() {
     final pos = determinePosition();
     pos.then((value) => controller!.runJavascript(""
-        "map.panTo(new kakao.maps.LatLng(${value.latitude}, ${value.longitude}))"
+        "panToCurrent(${value.latitude},${value.longitude})"
         ""));
   }
 }
