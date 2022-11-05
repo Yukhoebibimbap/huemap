@@ -77,7 +77,7 @@ public class ReportService {
   }
 
   private void validateDistanceBetweenUserAndBin(Bin bin, Double userLatitude, Double userLongitude) {
-    if (GeometryUtil.calculateDistance(bin.getLocation().getX(), bin.getLocation().getY(),
+정    if (GeometryUtil.calculateDistance(bin.getLocation().getY(), bin.getLocation().getX(),
                                        userLatitude, userLongitude) > DISTANCE_METER) {
       throw new InvalidValueException(ErrorCode.REPORT_DISTANCE_FAR);
     }
