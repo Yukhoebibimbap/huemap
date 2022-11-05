@@ -107,7 +107,7 @@ public class ReportServiceTest {
     }
 
     @Nested
-    @DisplayName("이미 같은 폐수거함을 폐쇄 제보한 상태에서 폐쇄 제보를 한다면")
+    @DisplayName("유효한 값이 넘어오면")
     class Context_with_valid_argument {
 
       @Test
