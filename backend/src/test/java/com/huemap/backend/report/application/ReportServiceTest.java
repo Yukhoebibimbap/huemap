@@ -95,7 +95,7 @@ public class ReportServiceTest {
         final Bin bin = getBin();
         final Closure closure = getClosure(bin);
         given(binRepository.findById(anyLong())).willReturn(Optional.of(bin));
-        given(reportRepository.findByUserIdAndBin(anyLong(), any(Bin.class))).willReturn(Optional.of(closure));
+        given(reportRepository.findClosureByUserIdAndBin(anyLong(), any(Bin.class))).willReturn(Optional.of(closure));
 
         // when, then
         assertThatThrownBy(
@@ -118,7 +118,7 @@ public class ReportServiceTest {
         final Bin bin = getBin();
         final Closure closure = getClosure(bin);
         given(binRepository.findById(anyLong())).willReturn(Optional.of(bin));
-        given(reportRepository.findByUserIdAndBin(anyLong(), any(Bin.class))).willReturn(Optional.empty());
+        given(reportRepository.findClosureByUserIdAndBin(anyLong(), any(Bin.class))).willReturn(Optional.empty());
         given(reportRepository.save(any(Closure.class))).willReturn(closure);
 
         // when
