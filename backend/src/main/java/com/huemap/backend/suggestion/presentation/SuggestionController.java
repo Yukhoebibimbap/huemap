@@ -20,10 +20,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SuggestionController {
 
+	private final SuggestionService suggestionService;
+
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping("bin-location")
 	public RestResponse save(@RequestBody @Valid SuggestionCreateRequest suggestionCreateRequest) {
 
-		return RestResponse.of(SuggestionService.save(suggestionCreateRequest));
+		return RestResponse.of(suggestionService.save(suggestionCreateRequest));
 	}
 }
