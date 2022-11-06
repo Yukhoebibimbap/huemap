@@ -17,7 +17,7 @@ public class TestUtils {
     constructor.setAccessible(true);
     Bin bin = (Bin)constructor.newInstance();
 
-    String pointWKT = String.format("POINT(%s %s)", 37.5833354, 126.9876779);
+    String pointWKT = String.format("POINT(%s %s)", 126.9876779, 37.5833354);
     Point point = (Point) new WKTReader().read(pointWKT);
 
     ReflectionTestUtils.setField(bin, "gu", "종로구");

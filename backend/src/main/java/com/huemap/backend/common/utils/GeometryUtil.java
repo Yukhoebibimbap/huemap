@@ -1,6 +1,20 @@
 package com.huemap.backend.common.utils;
 
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
+
 public class GeometryUtil {
+
+  public static Point convertPoint(Double latitude, Double longitude) {
+    try {
+      String pointWKT = String.format("POINT(%s %s)", longitude, latitude);
+      return (Point) new WKTReader().read(pointWKT);
+    }
+    catch (ParseException e) {
+      throw new RuntimeException(String.format( "Can't parse string %s as WKT"));
+    }
+  }
 
   public static double calculateDistance(Double latitude1,
                                          Double longitude1,

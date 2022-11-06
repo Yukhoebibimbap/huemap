@@ -1,7 +1,9 @@
 package com.huemap.backend.bin.domain;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.locationtech.jts.geom.Point;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -17,4 +19,7 @@ public interface BinRepository extends JpaRepository<Bin, Long> {
 			+ "GROUP BY c.bin "
 			+ "HAVING COUNT(c.bin) >= :closureCount)")
 	List<Bin> findAllHasClosureOver(long closureCount);
+
+	Optional<Bin> findCandidateBinByTypeAndLocation(BinType type, Point location);
+
 }

@@ -41,7 +41,7 @@ public class ReportRepositoryTest {
         final Closure expected = (Closure)reportRepository.save(getClosure(bin));
 
         //when
-        final Optional<Closure> actual = reportRepository.findByUserIdAndBin(userId, bin);
+        final Optional<Closure> actual = reportRepository.findClosureByUserIdAndBin(userId, bin);
 
         //then
         assertThat(actual).isNotEmpty();

@@ -9,7 +9,6 @@ import javax.persistence.ManyToOne;
 import com.huemap.backend.bin.domain.Bin;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -23,9 +22,13 @@ public class Presence extends Report {
 
   private int count;
 
-  @Builder
-  public Presence(final Long userId, final Bin bin) {
+  private Presence(final Long userId, final Bin bin) {
     super(userId);
     this.bin = bin;
+    this.count = 1;
+  }
+
+  public static Presence of(final Long userId, final Bin bin) {
+    return new Presence(userId, bin);
   }
 }
