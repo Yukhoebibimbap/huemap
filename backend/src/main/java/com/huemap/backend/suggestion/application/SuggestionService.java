@@ -29,12 +29,7 @@ public class SuggestionService {
 	@Transactional
 	public SuggestionCreateResponse save(SuggestionCreateRequest suggestionCreateRequest, Long userId) {
 
-		LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0));
-		LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59));
-
-		if (suggestionRepository.countByUserIdAndCreatedAtBetween(userId, startDatetime, endDatetime) >= 3) {
-			throw new SuggestionLimitExceededException();
-		}
+		validateSuggestionCount(userId);
 
 		final Point location = convertPoint(suggestionCreateRequest.getLatitude(),
 			suggestionCreateRequest.getLongitude());
@@ -43,5 +38,14 @@ public class SuggestionService {
 			SuggestionCreateMapper.INSTANCE.toEntity(suggestionCreateRequest, location, userId));
 
 		return SuggestionCreateMapper.INSTANCE.toDto(suggestion);
+	}
+
+	private void validateSuggestionCount(Long userId) {
+		LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0));
+		LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59));
+
+		if (suggestionRepository.countByUserIdAndCreatedAtBetween(userId, startDatetime, endDatetime) >= 3) {
+			throw new SuggestionLimitExceededException();
+		}
 	}
 }
