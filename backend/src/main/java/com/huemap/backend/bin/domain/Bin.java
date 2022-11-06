@@ -81,4 +81,8 @@ public class Bin extends BaseEntity {
 	public void delete() {
 		this.deleted = true;
 	}
+
+	public void elevate() {
+		this.isCandidate = false;
+	}
 }
