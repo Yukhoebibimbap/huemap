@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -14,6 +15,7 @@ import com.huemap.backend.common.response.success.RestResponse;
 import com.huemap.backend.report.application.ReportService;
 import com.huemap.backend.report.dto.request.ClosureCreateRequest;
 import com.huemap.backend.report.dto.request.PresenceCreateRequest;
+import com.huemap.backend.report.dto.request.PresenceVoteRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -47,5 +49,18 @@ public class ReportController {
      */
     final Long userId = 1L;
     return RestResponse.of(reportService.savePresence(userId, presenceCreateRequest));
+  }
+
+  @ResponseStatus(HttpStatus.OK)
+  @PutMapping("{binId}/vote")
+  public void votePresence(
+      @PathVariable Long binId,
+      @RequestBody @Valid PresenceVoteRequest presenceVoteRequest
+  ) {
+    /**
+     * TODO: user 도메인 구현 후 수정 예정
+     */
+    final Long userId = 1L;
+    reportService.votePresence(userId, binId, presenceVoteRequest);
   }
 }

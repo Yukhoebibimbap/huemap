@@ -22,6 +22,7 @@ import com.huemap.backend.report.domain.mapper.ClosureMapper;
 import com.huemap.backend.report.domain.mapper.PresenceMapper;
 import com.huemap.backend.report.dto.request.ClosureCreateRequest;
 import com.huemap.backend.report.dto.request.PresenceCreateRequest;
+import com.huemap.backend.report.dto.request.PresenceVoteRequest;
 import com.huemap.backend.report.dto.response.ClosureCreateResponse;
 import com.huemap.backend.report.dto.response.PresenceCreateResponse;
 
@@ -69,6 +70,10 @@ public class ReportService {
     final Presence presence = (Presence)reportRepository.save(Presence.of(userId, bin));
 
     return PresenceMapper.INSTANCE.toDto(presence);
+  }
+
+  @Transactional
+  public void votePresence(Long userId, Long binId, PresenceVoteRequest presenceVoteRequest) {
   }
 
   private void validateClosureAlreadyExist(Long userId, Bin bin) {
