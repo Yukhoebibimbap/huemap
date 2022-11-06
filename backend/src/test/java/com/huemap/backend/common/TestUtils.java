@@ -9,6 +9,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import com.huemap.backend.bin.domain.Bin;
 import com.huemap.backend.bin.domain.BinType;
 import com.huemap.backend.report.domain.Closure;
+import com.huemap.backend.report.domain.Presence;
 
 public class TestUtils {
   public static Bin getBin() throws Exception {
@@ -38,5 +39,9 @@ public class TestUtils {
                              .build();
 
     return closure;
+  }
+
+  public static Presence getPresence(Bin bin) {
+    return Presence.of(1L, bin);
   }
 }
