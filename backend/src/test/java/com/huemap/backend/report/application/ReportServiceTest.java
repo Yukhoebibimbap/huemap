@@ -11,19 +11,25 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.locationtech.jts.geom.Point;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import com.huemap.backend.bin.domain.Bin;
 import com.huemap.backend.bin.domain.BinRepository;
+import com.huemap.backend.bin.domain.BinType;
 import com.huemap.backend.common.exception.EntityNotFoundException;
 import com.huemap.backend.common.exception.InvalidValueException;
 import com.huemap.backend.common.response.error.ErrorCode;
 import com.huemap.backend.report.domain.Closure;
+import com.huemap.backend.report.domain.Presence;
 import com.huemap.backend.report.domain.ReportRepository;
 import com.huemap.backend.report.dto.request.ClosureCreateRequest;
+import com.huemap.backend.report.dto.request.PresenceCreateRequest;
 import com.huemap.backend.report.dto.response.ClosureCreateResponse;
+import com.huemap.backend.report.dto.response.PresenceCreateResponse;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ReportService의")
@@ -37,6 +43,9 @@ public class ReportServiceTest {
 
   @Mock
   private BinRepository binRepository;
+
+  @Mock
+  private ApplicationEventPublisher publisher;
 
   @Nested
   @DisplayName("saveClosure 메소드는")
@@ -127,6 +136,38 @@ public class ReportServiceTest {
         //then
         verify(reportRepository).save(any(Closure.class));
         assertThat(response.getId()).isEqualTo(closure.getId());
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("savePresence 메소드는")
+  class savePresence {
+
+    @Nested
+    @DisplayName("유효한 값이 넘어오면")
+    class Context_with_valid_argument {
+
+      @Test
+      @DisplayName("존재 제보를 저장한다.")
+      void success() throws Exception {
+        //given
+        final PresenceCreateRequest request = new PresenceCreateRequest(BinType.CLOTHES,
+                                                                        37.583297,
+                                                                        126.987755);
+        final Bin bin = getBin();
+        final Presence presence = getPresence(bin);
+        given(binRepository.findCandidateBinByTypeAndLocation(any(BinType.class),
+                                                              any(Point.class)))
+            .willReturn(Optional.of(bin));
+        given(reportRepository.save(any(Presence.class))).willReturn(presence);
+
+        // when
+        final PresenceCreateResponse response = reportService.savePresence(1L, request);
+
+        //then
+        verify(reportRepository).save(any(Presence.class));
+        assertThat(response.getId()).isEqualTo(presence.getId());
       }
     }
   }
