@@ -25,7 +25,10 @@ public class SuggestionController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping("bin-location")
 	public RestResponse save(@RequestBody @Valid SuggestionCreateRequest suggestionCreateRequest) {
-
-		return RestResponse.of(suggestionService.save(suggestionCreateRequest));
+		/**
+		 * TODO: user 도메인 구현 후 수정 예정
+		 */
+		final Long userId = 1L;
+		return RestResponse.of(suggestionService.save(suggestionCreateRequest, userId));
 	}
 }
