@@ -25,6 +25,7 @@ public class SuggestionCreateRequest {
 	@LongitudeValid
 	private Double longitude;
 
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	private BinType type;
 }
