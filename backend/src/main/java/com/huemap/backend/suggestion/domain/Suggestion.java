@@ -13,6 +13,8 @@ import com.huemap.backend.bin.domain.BinType;
 import com.huemap.backend.common.entity.BaseEntity;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +22,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table
+@Builder
+@AllArgsConstructor
 public class Suggestion extends BaseEntity {
 
 	@NotNull
