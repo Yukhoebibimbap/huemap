@@ -29,6 +29,7 @@ import com.huemap.backend.common.response.success.RestResponse;
 import com.huemap.backend.report.application.ReportService;
 import com.huemap.backend.report.dto.request.ClosureCreateRequest;
 import com.huemap.backend.report.dto.request.PresenceCreateRequest;
+import com.huemap.backend.report.dto.request.PresenceVoteRequest;
 import com.huemap.backend.report.dto.response.ClosureCreateResponse;
 import com.huemap.backend.report.dto.response.PresenceCreateResponse;
 
@@ -383,10 +384,127 @@ public class ReportControllerTest {
     }
   }
 
+  @Nested
+  @DisplayName("votePresence 메소드는")
+  class votePresence {
+
+    @Nested
+    @DisplayName("투표자의 위도가 null로 들어오면")
+    class Context_with_null_latitude {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final Long binId = 1L;
+        final PresenceVoteRequest request = new PresenceVoteRequest(null, 126.9876779);
+
+        //when
+        final ResultActions perform = requestVotePresence(binId, request);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("투표자의 위도가 -90 ~ 90 이외의 값이거나 올바르지 않은 형식으로 들어오면")
+    class Context_with_invalid_range_latitude {
+
+      @ParameterizedTest
+      @ValueSource(doubles = {90.1, -91, Double.MAX_VALUE})
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception(Double latitude) throws Exception {
+        //given
+        final Long binId = 1L;
+        final PresenceVoteRequest request = new PresenceVoteRequest(latitude, 126.9876779);
+
+        //when
+        final ResultActions perform = requestVotePresence(binId, request);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("핀의  경도가 null로 들어오면")
+    class Context_with_null_longitude {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final Long binId = 1L;
+        final PresenceVoteRequest request = new PresenceVoteRequest(37.5833354, null);
+
+        //when
+        final ResultActions perform = requestVotePresence(binId, request);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("핀의 경도가 -180 ~ 180 이외의 값이거나 올바르지 않은 형식으로 들어오면")
+    class Context_with_invalid_range_longitude {
+
+      @ParameterizedTest
+      @ValueSource(doubles = {180.1, -181, Double.MAX_VALUE})
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception(Double longitude) throws Exception {
+        //given
+        final Long binId = 1L;
+        final PresenceVoteRequest request = new PresenceVoteRequest(37.5833354, longitude);
+
+        //when
+        final ResultActions perform = requestVotePresence(binId, request);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("핀의 위도, 경도, 타입이 올바른 값으로 입력되면")
+    class Context_with_valid_latitude_longitude_type {
+
+      @Test
+      @DisplayName("200을 응답한다.")
+      void It_responses_200() throws Exception {
+        //given
+        final Long binId = 1L;
+        final PresenceVoteRequest request = new PresenceVoteRequest(37.5833354, 126.9876779);
+        doNothing().when(reportService).votePresence(anyLong(), anyLong(), any(PresenceVoteRequest.class));
+
+        //when
+        final ResultActions perform = requestVotePresence(binId, request);
+
+        //then
+        perform.andExpect(status().isOk());
+      }
+    }
+
+    private ResultActions requestVotePresence(final Long binId, final PresenceVoteRequest request)
+        throws Exception {
+      return requestPut("/api/v1/bins/" + binId + "/vote", request);
+    }
+  }
+
   private ResultActions requestPost(final String url, final Object request) throws Exception {
     final String content = objectMapper.writeValueAsString(request);
 
     return mockMvc.perform(post(url)
+                               .contentType(MediaType.APPLICATION_JSON)
+                               .content(content))
+                  .andDo(print());
+  }
+
+  private ResultActions requestPut(final String url, final Object request) throws Exception {
+    final String content = objectMapper.writeValueAsString(request);
+
+    return mockMvc.perform(put(url)
                                .contentType(MediaType.APPLICATION_JSON)
                                .content(content))
                   .andDo(print());
