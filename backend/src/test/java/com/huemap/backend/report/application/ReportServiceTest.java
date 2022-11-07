@@ -28,6 +28,7 @@ import com.huemap.backend.report.domain.Presence;
 import com.huemap.backend.report.domain.ReportRepository;
 import com.huemap.backend.report.dto.request.ClosureCreateRequest;
 import com.huemap.backend.report.dto.request.PresenceCreateRequest;
+import com.huemap.backend.report.dto.request.PresenceVoteRequest;
 import com.huemap.backend.report.dto.response.ClosureCreateResponse;
 import com.huemap.backend.report.dto.response.PresenceCreateResponse;
 
@@ -88,7 +89,7 @@ public class ReportServiceTest {
             () -> reportService.saveClosure(1L, 1L, request))
             .isInstanceOf(InvalidValueException.class)
             .extracting("errorCode")
-            .isEqualTo(ErrorCode.REPORT_DISTANCE_FAR);
+            .isEqualTo(ErrorCode.DISTANCE_FAR);
       }
     }
 
@@ -168,6 +169,99 @@ public class ReportServiceTest {
         //then
         verify(reportRepository).save(any(Presence.class));
         assertThat(response.getId()).isEqualTo(presence.getId());
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("votePresence 메소드는")
+  class votePresence {
+
+    @Nested
+    @DisplayName("후보 폐수거함이 존재하지 않는 경우")
+    class Context_with_not_found_bin {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() {
+        //given
+        final PresenceVoteRequest request = new PresenceVoteRequest(37.583297, 126.987755);
+        given(binRepository.findById(anyLong())).willReturn(Optional.empty());
+
+        // when, then
+        assertThatThrownBy(
+            () -> reportService.votePresence( 1L, request))
+            .isInstanceOf(EntityNotFoundException.class)
+            .extracting("errorCode")
+            .isEqualTo(ErrorCode.BIN_NOT_FOUND);
+      }
+    }
+
+    @Nested
+    @DisplayName("투표자의 위치와 투표하려는 후보 폐수거함의 거리 차이가 10m 이상이면")
+    class Context_with_distance_far_bin {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final PresenceVoteRequest request = new PresenceVoteRequest(37.583289, 126.987803);
+        final Bin bin = getBin();
+        given(binRepository.findById(anyLong())).willReturn(Optional.of(bin));
+
+        // when, then
+        assertThatThrownBy(
+            () -> reportService.votePresence(1L, request))
+            .isInstanceOf(InvalidValueException.class)
+            .extracting("errorCode")
+            .isEqualTo(ErrorCode.DISTANCE_FAR);
+      }
+    }
+
+    @Nested
+    @DisplayName("투표하려는 후보 폐수거함 제보가 존재하지 않다면")
+    class Context_not_found_presence {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final PresenceVoteRequest request = new PresenceVoteRequest(37.583297, 126.987755);
+        final Bin bin = getBin();
+        given(binRepository.findById(anyLong())).willReturn(Optional.of(bin));
+        given(reportRepository.findPresenceByBinAndDeletedFalse(any(Bin.class))).willReturn(
+            Optional.empty());
+
+        // when, then
+        assertThatThrownBy(
+            () -> reportService.votePresence( 1L, request))
+            .isInstanceOf(EntityNotFoundException.class)
+            .extracting("errorCode")
+            .isEqualTo(ErrorCode.PRESENCE_NOT_FOUND);
+      }
+    }
+
+    @Nested
+    @DisplayName("유효한 값이 넘어오면")
+    class Context_with_valid_argument {
+
+      @Test
+      @DisplayName("존재 제보를 저장한다.")
+      void success() throws Exception {
+        //given
+        final PresenceVoteRequest request = new PresenceVoteRequest(37.583297, 126.987755);
+        final Bin bin = getBin();
+        final Presence presence = getPresence(bin);
+        final int expectedCount = presence.getCount() + 1;
+        given(binRepository.findById(anyLong())).willReturn(Optional.of(bin));
+        given(reportRepository.findPresenceByBinAndDeletedFalse(any(Bin.class))).willReturn(
+            Optional.of(presence));
+
+        // when
+        reportService.votePresence(1L, request);
+
+        //then
+        assertThat(presence.getCount()).isEqualTo(expectedCount);
       }
     }
   }

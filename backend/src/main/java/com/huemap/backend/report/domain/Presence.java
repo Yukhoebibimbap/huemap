@@ -39,4 +39,8 @@ public class Presence extends Report {
   public void delete() {
     this.deleted = true;
   }
+
+  public void addCount() {
+    this.count += 1;
+  }
 }
