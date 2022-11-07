@@ -10,8 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.huemap.backend.bin.domain.Bin;
 import com.huemap.backend.bin.domain.BinRepository;
 import com.huemap.backend.bin.domain.BinType;
-import com.huemap.backend.bin.domain.mapper.BinDetailMapper;
-import com.huemap.backend.bin.domain.mapper.BinMapper;
 import com.huemap.backend.bin.dto.response.BinDetailResponse;
 import com.huemap.backend.bin.dto.response.BinResponse;
 import com.huemap.backend.bin.event.BinCreateEvent;
@@ -37,7 +35,7 @@ public class BinService {
 
 		return binRepository.findAllByType(type)
 			.stream()
-			.map(BinMapper.INSTANCE::toDto)
+			.map(BinResponse::toDto)
 			.collect(Collectors.toList());
 	}
 
@@ -48,7 +46,7 @@ public class BinService {
 
 		int count = reportRepository.countClosureByBin(id);
 
-		return BinDetailMapper.INSTANCE.toDto(bin, count != 0 ? true : false);
+		return BinDetailResponse.toDto(bin, count != 0 ? true : false);
 	}
 
 	public void save(BinCreateEvent binCreateEvent) {
