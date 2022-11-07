@@ -60,7 +60,6 @@ public class ReportController {
     /**
      * TODO: user 도메인 구현 후 수정 예정
      */
-    final Long userId = 1L;
-    reportService.votePresence(userId, binId, presenceVoteRequest);
+    reportService.votePresence(binId, presenceVoteRequest);
   }
 }
