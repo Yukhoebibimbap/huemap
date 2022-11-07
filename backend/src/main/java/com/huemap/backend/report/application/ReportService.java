@@ -2,6 +2,8 @@ package com.huemap.backend.report.application;
 
 import static com.huemap.backend.common.utils.GeometryUtil.*;
 
+import java.util.Optional;
+
 import org.locationtech.jts.geom.Point;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -73,7 +75,20 @@ public class ReportService {
   }
 
   @Transactional
-  public void votePresence(Long userId, Long binId, PresenceVoteRequest presenceVoteRequest) {
+  public void votePresence(Long binId, PresenceVoteRequest presenceVoteRequest) {
+    final Bin bin = binRepository.findById(binId)
+                                 .orElseThrow(
+                                     () -> new EntityNotFoundException(ErrorCode.BIN_NOT_FOUND));
+
+    validateDistanceBetweenUserAndBin(bin, presenceVoteRequest.getLatitude(),
+                                      presenceVoteRequest.getLongitude());
+
+    final Optional<Presence> presence = reportRepository.findPresenceByBinAndDeletedFalse(bin);
+    if (presence.isEmpty()) {
+      throw new EntityNotFoundException(ErrorCode.PRESENCE_NOT_FOUND);
+    }
+
+    presence.get().addCount();
   }
 
   private void validateClosureAlreadyExist(Long userId, Bin bin) {
@@ -84,7 +99,7 @@ public class ReportService {
   private void validateDistanceBetweenUserAndBin(Bin bin, Double userLatitude, Double userLongitude) {
     if (GeometryUtil.calculateDistance(bin.getLocation().getY(), bin.getLocation().getX(),
                                        userLatitude, userLongitude) > DISTANCE_METER) {
-      throw new InvalidValueException(ErrorCode.REPORT_DISTANCE_FAR);
+      throw new InvalidValueException(ErrorCode.DISTANCE_FAR);
     }
   }
 }

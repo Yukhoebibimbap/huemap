@@ -28,4 +28,6 @@ public interface ReportRepository<T extends Report> extends JpaRepository<T, Lon
 			+ "GROUP BY cl.bin "
 			+ "HAVING COUNT(cl.bin) >= :closureCount)")
 	List<Closure> findClosureHasBinClosureOver(long closureCount);
+
+	Optional<Presence> findPresenceByBinAndDeletedFalse(Bin bin);
 }
