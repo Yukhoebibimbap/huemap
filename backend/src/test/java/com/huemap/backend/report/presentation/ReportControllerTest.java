@@ -161,7 +161,7 @@ public class ReportControllerTest {
         //given
         final Long binId = 1L;
         final ClosureCreateRequest request = new ClosureCreateRequest(37.583289, 126.987803);
-        willThrow(new InvalidValueException(ErrorCode.REPORT_DISTANCE_FAR))
+        willThrow(new InvalidValueException(ErrorCode.DISTANCE_FAR))
             .given(reportService)
             .saveClosure(anyLong(), anyLong(), any(ClosureCreateRequest.class));
 
@@ -476,7 +476,7 @@ public class ReportControllerTest {
         //given
         final Long binId = 1L;
         final PresenceVoteRequest request = new PresenceVoteRequest(37.5833354, 126.9876779);
-        doNothing().when(reportService).votePresence(anyLong(), anyLong(), any(PresenceVoteRequest.class));
+        doNothing().when(reportService).votePresence(anyLong(), any(PresenceVoteRequest.class));
 
         //when
         final ResultActions perform = requestVotePresence(binId, request);
