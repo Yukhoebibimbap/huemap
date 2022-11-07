@@ -46,7 +46,7 @@ public class BinService {
 
 		int count = reportRepository.countClosureByBin(id);
 
-		return BinDetailResponse.toDto(bin, count != 0 ? true : false);
+		return BinDetailResponse.toDto(bin, count != 0);
 	}
 
 	public void save(BinCreateEvent binCreateEvent) {
