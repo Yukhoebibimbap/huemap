@@ -1,5 +1,6 @@
 package com.huemap.backend.bin.presentation;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,7 @@ public class BinController {
 
 	private final BinService binService;
 
+	@Cacheable(cacheNames = "bins")
 	@GetMapping
 	public ResponseEntity<RestResponse> findAll(@RequestParam("type") BinType type) {
 
