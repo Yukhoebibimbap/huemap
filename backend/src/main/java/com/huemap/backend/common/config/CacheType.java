@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum CacheType {
-  USERS("bins",
+  BINS("bins",
         5 * 60,
         10000
   );
