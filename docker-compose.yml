@@ -16,7 +16,16 @@ services:
     depends_on:
       - backend_spring
       - backend_flask
+      - frontend
 
+  frontend:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./web
+    container_name: web
+    environment:
+      VUE_APP_KAKAO_KEY: ${KAKAO_KEY}
 
   backend_spring:
     restart: always
