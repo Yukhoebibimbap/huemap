@@ -1,12 +1,14 @@
 package com.huemap.backend.bin.application;
 
-import static com.huemap.backend.common.TestUtils.*;
-import static com.huemap.backend.common.utils.GeometryUtil.*;
-import static org.assertj.core.api.Assertions.*;
+import static com.huemap.backend.common.TestUtils.getBin;
+import static com.huemap.backend.common.utils.GeometryUtil.convertPoint;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.verify;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -21,11 +23,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.huemap.backend.bin.domain.Bin;
 import com.huemap.backend.bin.domain.BinRepository;
 import com.huemap.backend.bin.domain.BinType;
+import com.huemap.backend.bin.dto.response.BinResponse;
 import com.huemap.backend.bin.event.BinCreateEvent;
 import com.huemap.backend.common.exception.InvalidValueException;
 import com.huemap.backend.common.response.error.ErrorCode;
 import com.huemap.backend.openApi.kakao.KakaoMapProvider;
-import com.huemap.backend.openApi.kakao.response.KakaoMapRoadAddress;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("BinService의")
@@ -39,6 +41,34 @@ public class BinServiceTest {
 
   @Mock
   private KakaoMapProvider kakaoMapProvider;
+
+  @Nested
+  @DisplayName("findAll 메소드")
+  class findAll {
+
+    @Nested
+    @DisplayName("올바른 폐수거함 type이 넘어오면")
+    class Context_with_valid_bin_type {
+
+      @Test
+      @DisplayName("해당 type의 폐수거함을 모두 조회한다")
+      void success() throws Exception {
+        //given
+        final BinType type = BinType.CLOTHES;
+
+        final List<Bin> bins = List.of(getBin());
+        given(binRepository.findAllByType(any(BinType.class))).willReturn(bins);
+
+        //when
+        final List<BinResponse> foundBins = binService.findAll(type);
+
+        //then
+        assertThat(foundBins.size()).isEqualTo(1);
+        assertThat(foundBins.get(0).getType()).isEqualTo(type);
+      }
+    }
+
+  }
 
   @Nested
   @DisplayName("save 메소드")
