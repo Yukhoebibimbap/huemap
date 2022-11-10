@@ -106,7 +106,6 @@ public class BinControllerTest {
 				//then
 				perform.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-					.andExpect(jsonPath("$.data.id").value(1L))
 					.andExpect(jsonPath("$.data.address").value("서울특별시 종로구 창덕궁7길 5"));
 			}
 		}

@@ -102,7 +102,7 @@ public class BinServiceTest {
         //then
         verify(binRepository).findById(id);
         verify(reportRepository).countClosureByBin(anyLong());
-        assertThat(foundBin.getId()).isEqualTo(id);
+        assertThat(foundBin.getAddress()).isEqualTo("서울특별시 종로구 창덕궁7길 5");
       }
     }
 
