@@ -5,6 +5,8 @@ import static com.huemap.backend.common.utils.GeometryUtil.convertPoint;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.verify;
 
@@ -23,11 +25,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.huemap.backend.bin.domain.Bin;
 import com.huemap.backend.bin.domain.BinRepository;
 import com.huemap.backend.bin.domain.BinType;
+import com.huemap.backend.bin.dto.response.BinDetailResponse;
 import com.huemap.backend.bin.dto.response.BinResponse;
 import com.huemap.backend.bin.event.BinCreateEvent;
+import com.huemap.backend.common.exception.EntityNotFoundException;
 import com.huemap.backend.common.exception.InvalidValueException;
 import com.huemap.backend.common.response.error.ErrorCode;
 import com.huemap.backend.openApi.kakao.KakaoMapProvider;
+import com.huemap.backend.report.domain.ReportRepository;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("BinService의")
@@ -40,10 +45,13 @@ public class BinServiceTest {
   private BinRepository binRepository;
 
   @Mock
+  private ReportRepository reportRepository;
+
+  @Mock
   private KakaoMapProvider kakaoMapProvider;
 
   @Nested
-  @DisplayName("findAll 메소드")
+  @DisplayName("findAll 메소드는")
   class findAll {
 
     @Nested
@@ -65,6 +73,56 @@ public class BinServiceTest {
         //then
         assertThat(foundBins.size()).isEqualTo(1);
         assertThat(foundBins.get(0).getType()).isEqualTo(type);
+      }
+    }
+
+  }
+
+  @Nested
+  @DisplayName("findById 메소드는")
+  class findById {
+
+    @Nested
+    @DisplayName("올바른 폐수거함 id가 넘어오면")
+    class Context_with_valid_id {
+
+      @Test
+      @DisplayName("해당 id의 폐수거함 정보를 조회한다")
+      void success() throws Exception {
+        //given
+        final Long id = 1L;
+
+        final Bin bin = getBin();
+        given(binRepository.findById(id)).willReturn(Optional.of(bin));
+        given(reportRepository.countClosureByBin(anyLong())).willReturn(anyInt());
+
+        //when
+        final BinDetailResponse foundBin = binService.findById(id);
+
+        //then
+        verify(binRepository).findById(id);
+        verify(reportRepository).countClosureByBin(anyLong());
+        assertThat(foundBin.getAddress()).isEqualTo("서울특별시 종로구 창덕궁7길 5");
+      }
+    }
+
+    @Nested
+    @DisplayName("존재하지 않은 폐수거함 id가 넘어오면")
+    class Context_with_invalid_id {
+
+      @Test
+      @DisplayName("예외를 던진다")
+      void It_throws_exception() throws Exception {
+        //given
+        final Long id = 2L;
+        given(binRepository.findById(id)).willReturn(Optional.empty());
+
+        //when //then
+        assertThatThrownBy(
+            () -> binService.findById(id))
+            .isInstanceOf(EntityNotFoundException.class)
+            .extracting("errorCode")
+            .isEqualTo(ErrorCode.BIN_NOT_FOUND);
       }
     }
 
