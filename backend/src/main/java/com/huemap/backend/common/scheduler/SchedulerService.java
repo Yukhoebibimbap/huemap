@@ -7,9 +7,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.huemap.backend.report.domain.Closure;
-import com.huemap.backend.report.domain.Presence;
-import com.huemap.backend.report.domain.ReportRepository;
+import com.huemap.backend.domain.report.domain.Closure;
+import com.huemap.backend.domain.report.domain.Presence;
+import com.huemap.backend.domain.report.domain.ReportRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

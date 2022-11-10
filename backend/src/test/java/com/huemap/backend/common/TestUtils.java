@@ -6,14 +6,14 @@ import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.io.WKTReader;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import com.huemap.backend.bin.domain.Bin;
-import com.huemap.backend.bin.domain.BinType;
-import com.huemap.backend.report.domain.Closure;
-import com.huemap.backend.report.domain.Presence;
+import com.huemap.backend.domain.bin.domain.Bin;
+import com.huemap.backend.domain.bin.domain.BinType;
+import com.huemap.backend.domain.report.domain.Closure;
+import com.huemap.backend.domain.report.domain.Presence;
 
 public class TestUtils {
   public static Bin getBin() throws Exception {
-    Class<?> clazz = Class.forName("com.huemap.backend.bin.domain.Bin");
+    Class<?> clazz = Class.forName("com.huemap.backend.domain.bin.domain.Bin");
     Constructor<?> constructor = clazz.getDeclaredConstructor();
     constructor.setAccessible(true);
     Bin bin = (Bin)constructor.newInstance();

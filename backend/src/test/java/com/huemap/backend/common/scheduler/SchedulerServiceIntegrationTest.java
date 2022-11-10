@@ -13,11 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import com.huemap.backend.bin.domain.Bin;
-import com.huemap.backend.bin.domain.BinRepository;
-import com.huemap.backend.report.domain.Closure;
-import com.huemap.backend.report.domain.Presence;
-import com.huemap.backend.report.domain.ReportRepository;
+import com.huemap.backend.domain.bin.domain.Bin;
+import com.huemap.backend.domain.bin.domain.BinRepository;
+import com.huemap.backend.domain.report.domain.Closure;
+import com.huemap.backend.domain.report.domain.Presence;
+import com.huemap.backend.domain.report.domain.ReportRepository;
 
 @SpringBootTest
 @DisplayName("SchedulerService의")
