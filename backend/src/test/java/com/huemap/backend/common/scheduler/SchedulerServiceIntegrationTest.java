@@ -23,6 +23,10 @@ import com.huemap.backend.domain.report.domain.ReportRepository;
 @DisplayName("SchedulerService의")
 public class SchedulerServiceIntegrationTest {
 
+  static {
+    System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true");
+  }
+
   @Autowired
   private SchedulerService schedulerService;
 
