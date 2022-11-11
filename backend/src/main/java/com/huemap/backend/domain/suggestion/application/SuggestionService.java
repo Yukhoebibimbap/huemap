@@ -11,6 +11,7 @@ import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.huemap.backend.domain.bin.domain.BinType;
 import com.huemap.backend.domain.suggestion.domain.Suggestion;
 import com.huemap.backend.domain.suggestion.domain.SuggestionRepository;
 import com.huemap.backend.domain.suggestion.domain.mapper.SuggestionCreateMapper;
@@ -41,7 +42,8 @@ public class SuggestionService {
 		return SuggestionCreateMapper.INSTANCE.toDto(suggestion);
 	}
 
-	public List<SuggestionService> findAllByGuAndDate(String gu, LocalDateTime startDate, LocalDateTime endDate) {
+	public List<SuggestionService> findAllByGuAndTypeAndDate(String gu, BinType type, LocalDateTime startDate,
+		LocalDateTime endDate) {
 		return null;
 	}
 

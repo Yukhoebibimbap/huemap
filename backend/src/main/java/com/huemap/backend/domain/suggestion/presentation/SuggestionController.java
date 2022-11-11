@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.huemap.backend.common.response.success.RestResponse;
+import com.huemap.backend.domain.bin.domain.BinType;
 import com.huemap.backend.domain.suggestion.application.SuggestionService;
 import com.huemap.backend.domain.suggestion.dto.request.SuggestionCreateRequest;
 
@@ -37,8 +38,8 @@ public class SuggestionController {
 	}
 
 	@GetMapping("bin-location")
-	public RestResponse findAllByGuAndDate(@PathParam("gu") String gu, @PathParam("startDate") LocalDateTime startDate,
-		@PathParam("endDate") LocalDateTime endDate) {
-		return RestResponse.of(suggestionService.findAllByGuAndDate(gu, startDate, endDate));
+	public RestResponse findAllByGuAndTypeAndDate(@PathParam("gu") String gu, @PathParam("type") BinType type,
+		@PathParam("startDate") LocalDateTime startDate, @PathParam("endDate") LocalDateTime endDate) {
+		return RestResponse.of(suggestionService.findAllByGuAndTypeAndDate(gu, type, startDate, endDate));
 	}
 }
