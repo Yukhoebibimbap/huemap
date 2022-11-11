@@ -5,17 +5,19 @@ import static com.huemap.backend.common.utils.GeometryUtil.convertPoint;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.huemap.backend.domain.bin.domain.BinType;
 import com.huemap.backend.domain.suggestion.domain.Suggestion;
 import com.huemap.backend.domain.suggestion.domain.SuggestionRepository;
 import com.huemap.backend.domain.suggestion.domain.mapper.SuggestionCreateMapper;
-import com.huemap.backend.domain.suggestion.exception.SuggestionLimitExceededException;
 import com.huemap.backend.domain.suggestion.dto.request.SuggestionCreateRequest;
 import com.huemap.backend.domain.suggestion.dto.response.SuggestionCreateResponse;
+import com.huemap.backend.domain.suggestion.exception.SuggestionLimitExceededException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,9 +37,14 @@ public class SuggestionService {
 			suggestionCreateRequest.getLongitude());
 
 		Suggestion suggestion = suggestionRepository.save(
-        SuggestionCreateMapper.INSTANCE.toEntity(suggestionCreateRequest, location, userId));
+			SuggestionCreateMapper.INSTANCE.toEntity(suggestionCreateRequest, location, userId));
 
 		return SuggestionCreateMapper.INSTANCE.toDto(suggestion);
+	}
+
+	public List<SuggestionService> findAllByGuAndTypeAndDate(String gu, BinType type, LocalDateTime startDate,
+		LocalDateTime endDate) {
+		return null;
 	}
 
 	private void validateSuggestionCount(Long userId) {
@@ -48,4 +55,5 @@ public class SuggestionService {
 			throw new SuggestionLimitExceededException();
 		}
 	}
+
 }
