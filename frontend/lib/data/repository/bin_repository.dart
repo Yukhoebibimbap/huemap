@@ -8,8 +8,8 @@ class BinRepository {
         _remoteDataSource = RemoteDataSource();
     // final LocalDataSource _localDataSource;
 
-    // Future<List<Bin>> getCachedPosts() {
-    //   return _localDataSource.getCachedPosts();
+    // Future<List<Bin>> getCachedBins() {
+    //   return _localDataSource.getCachedBins();
     // }
 
     Future<List<Bin>> getBins(Type t) async {

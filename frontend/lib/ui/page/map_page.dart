@@ -15,7 +15,19 @@ class MapPage extends StatelessWidget {
         ChangeNotifierProvider<MapViewModel>(
           create: (_) => MapViewModel(),
           child: MapView()),
-    ])
+      ]),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem> [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: '지도',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle),
+            label: '사용자',
+          )
+        ],
+      )
     );
   }
 }
