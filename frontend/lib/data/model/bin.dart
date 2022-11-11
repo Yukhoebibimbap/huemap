@@ -6,8 +6,8 @@ class Bin {
   // json 생성자
   Bin.fromJson(Map<String, dynamic> json) :
         id = json['id'],
-        lat = json['latitude'],
-        lng = json['longitude'],
+        lat = json['longitude'],
+        lng = json['latitude'],
         type = json['type'];
 }
 
