@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Mainpage from '../view/mainPage'
-import Subpage from '../view/subPage'
+
 
 
 Vue.use(Router)
@@ -11,9 +10,20 @@ const router = new Router({
   routes: [
     {
           path: '/',
-          component: ()=>import('../view/newPage')
+          component: ()=>import('../view/mainPage')
     },
-
+    {
+      path: '/state/select/gu',
+      component: ()=>import('../view/selectGuPage')
+    },
+    {
+      path: '/state/:gu',
+      component: ()=>import('../view/binStatePage')
+    },
+    {
+      path: '/chat',
+      component: ()=>import('../view/chatTest')
+    },
     
   ]
 })
