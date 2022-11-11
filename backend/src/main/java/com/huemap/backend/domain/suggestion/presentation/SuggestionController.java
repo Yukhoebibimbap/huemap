@@ -1,8 +1,12 @@
 package com.huemap.backend.domain.suggestion.presentation;
 
+import java.time.LocalDateTime;
+
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,5 +34,11 @@ public class SuggestionController {
 		 */
 		final Long userId = 1L;
 		return RestResponse.of(suggestionService.save(suggestionCreateRequest, userId));
+	}
+
+	@GetMapping("bin-location")
+	public RestResponse findAllByGuAndDate(@PathParam("gu") String gu, @PathParam("startDate") LocalDateTime startDate,
+		@PathParam("endDate") LocalDateTime endDate) {
+		return RestResponse.of(suggestionService.findAllByGuAndDate(gu, startDate, endDate));
 	}
 }
