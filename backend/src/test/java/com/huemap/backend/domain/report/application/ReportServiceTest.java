@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.mock.web.MockMultipartFile;
 
 import com.huemap.backend.domain.bin.domain.Bin;
 import com.huemap.backend.domain.bin.domain.BinRepository;
@@ -23,15 +24,20 @@ import com.huemap.backend.domain.bin.domain.BinType;
 import com.huemap.backend.common.exception.EntityNotFoundException;
 import com.huemap.backend.common.exception.InvalidValueException;
 import com.huemap.backend.common.response.error.ErrorCode;
-import com.huemap.backend.domain.report.application.ReportService;
+import com.huemap.backend.domain.bin.domain.ConditionType;
 import com.huemap.backend.domain.report.domain.Closure;
+import com.huemap.backend.domain.report.domain.Condition;
+import com.huemap.backend.domain.report.domain.Image;
 import com.huemap.backend.domain.report.domain.Presence;
 import com.huemap.backend.domain.report.domain.ReportRepository;
 import com.huemap.backend.domain.report.dto.request.ClosureCreateRequest;
+import com.huemap.backend.domain.report.dto.request.ConditionCreateRequest;
 import com.huemap.backend.domain.report.dto.request.PresenceCreateRequest;
 import com.huemap.backend.domain.report.dto.request.PresenceVoteRequest;
 import com.huemap.backend.domain.report.dto.response.ClosureCreateResponse;
+import com.huemap.backend.domain.report.dto.response.ConditionCreateResponse;
 import com.huemap.backend.domain.report.dto.response.PresenceCreateResponse;
+import com.huemap.backend.infrastructure.s3.S3Uploader;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ReportService의")
@@ -48,6 +54,9 @@ public class ReportServiceTest {
 
   @Mock
   private ApplicationEventPublisher publisher;
+
+  @Mock
+  private S3Uploader s3Uploader;
 
   @Nested
   @DisplayName("saveClosure 메소드는")
@@ -263,6 +272,98 @@ public class ReportServiceTest {
 
         //then
         assertThat(presence.getCount()).isEqualTo(expectedCount);
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("saveCondition 메소드는")
+  class saveCondition {
+
+    @Nested
+    @DisplayName("폐수거함이 존재하지 않는 경우")
+    class Context_with_not_found_bin {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() {
+        //given
+        final ConditionCreateRequest request = new ConditionCreateRequest(ConditionType.FULL,
+                                                                          37.583297,
+                                                                          126.987755);
+        final MockMultipartFile multipartFile = new MockMultipartFile("file",
+                                                             "imagefile.png",
+                                                             "image/png",
+                                                             "<<png data>>".getBytes());
+        given(binRepository.findById(anyLong())).willReturn(Optional.empty());
+
+        // when, then
+        assertThatThrownBy(
+            () -> reportService.saveCondition( 1L, 1L, request, multipartFile))
+            .isInstanceOf(EntityNotFoundException.class)
+            .extracting("errorCode")
+            .isEqualTo(ErrorCode.BIN_NOT_FOUND);
+      }
+    }
+
+    @Nested
+    @DisplayName("제보자의 위치와 제보하려는 폐수거함의 거리 차이가 10m 이상이면")
+    class Context_with_distance_far_bin {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final ConditionCreateRequest request = new ConditionCreateRequest(ConditionType.FULL,
+                                                                          37.583289,
+                                                                          126.987803);
+        final MockMultipartFile multipartFile = new MockMultipartFile("file",
+                                                                      "imagefile.png",
+                                                                      "image/png",
+                                                                      "<<png data>>".getBytes());
+        final Bin bin = getBin();
+        given(binRepository.findById(anyLong())).willReturn(Optional.of(bin));
+
+        // when, then
+        assertThatThrownBy(
+            () -> reportService.saveCondition( 1L, 1L, request, multipartFile))
+            .isInstanceOf(InvalidValueException.class)
+            .extracting("errorCode")
+            .isEqualTo(ErrorCode.DISTANCE_FAR);
+      }
+    }
+
+    @Nested
+    @DisplayName("유효한 값이 넘어오면")
+    class Context_with_valid_argument {
+
+      @Test
+      @DisplayName("상태 제보를 저장한다.")
+      void success() throws Exception {
+        //given
+        final ConditionCreateRequest request = new ConditionCreateRequest(ConditionType.FULL,
+                                                                          37.583297,
+                                                                          126.987755);
+        final MockMultipartFile multipartFile = new MockMultipartFile("file",
+                                                                      "imagefile.png",
+                                                                      "image/png",
+                                                                      "<<png data>>".getBytes());
+        final Bin bin = getBin();
+        final String imgUrl = "https://huemap-s3.test.png";
+        final Condition condition = getCondition(bin, new Image(imgUrl));
+        given(binRepository.findById(anyLong())).willReturn(Optional.of(bin));
+        given(s3Uploader.upload(multipartFile)).willReturn(imgUrl);
+        given(reportRepository.save(any(Condition.class))).willReturn(condition);
+
+        // when
+        final ConditionCreateResponse response = reportService.saveCondition(1L,
+                                                                             1L,
+                                                                             request,
+                                                                             multipartFile);
+
+        //then
+        verify(reportRepository).save(any(Condition.class));
+        assertThat(response.getId()).isEqualTo(condition.getId());
       }
     }
   }

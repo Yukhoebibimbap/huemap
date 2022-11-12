@@ -9,6 +9,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import com.huemap.backend.domain.bin.domain.Bin;
 import com.huemap.backend.domain.bin.domain.BinType;
 import com.huemap.backend.domain.report.domain.Closure;
+import com.huemap.backend.domain.report.domain.Condition;
+import com.huemap.backend.domain.report.domain.Image;
 import com.huemap.backend.domain.report.domain.Presence;
 
 public class TestUtils {
@@ -43,5 +45,14 @@ public class TestUtils {
 
   public static Presence getPresence(Bin bin) {
     return Presence.of(1L, bin);
+  }
+
+  public static Condition getCondition(Bin bin, Image image) {
+    Condition condition = Condition.builder()
+                                   .userId(1L)
+                                   .bin(bin)
+                                   .image(image)
+                                   .build();
+    return condition;
   }
 }
