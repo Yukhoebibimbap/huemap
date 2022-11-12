@@ -13,8 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.huemap.backend.domain.bin.domain.Bin;
 import com.huemap.backend.domain.bin.domain.BinRepository;
 import com.huemap.backend.domain.bin.domain.BinType;
-import com.huemap.backend.domain.bin.event.BinCreateEvent;
-import com.huemap.backend.domain.bin.event.BinEventHandler;
 
 @SpringBootTest
 @DisplayName("BinEventHandler의")
