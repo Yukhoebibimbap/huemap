@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +40,8 @@ public class SuggestionController {
 
 	@GetMapping("bin-location")
 	public RestResponse findAllByGuAndTypeAndDate(@PathParam("gu") String gu, @PathParam("type") BinType type,
-		@PathParam("startDate") LocalDateTime startDate, @PathParam("endDate") LocalDateTime endDate) {
+		@PathParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startDate,
+		@PathParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endDate) {
 		return RestResponse.of(suggestionService.findAllByGuAndTypeAndDate(gu, type, startDate, endDate));
 	}
 }

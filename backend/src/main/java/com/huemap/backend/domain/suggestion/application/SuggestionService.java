@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,10 @@ import com.huemap.backend.domain.bin.domain.BinType;
 import com.huemap.backend.domain.suggestion.domain.Suggestion;
 import com.huemap.backend.domain.suggestion.domain.SuggestionRepository;
 import com.huemap.backend.domain.suggestion.domain.mapper.SuggestionCreateMapper;
+import com.huemap.backend.domain.suggestion.domain.mapper.SuggestionMapper;
 import com.huemap.backend.domain.suggestion.dto.request.SuggestionCreateRequest;
 import com.huemap.backend.domain.suggestion.dto.response.SuggestionCreateResponse;
+import com.huemap.backend.domain.suggestion.dto.response.SuggestionResponse;
 import com.huemap.backend.domain.suggestion.exception.SuggestionLimitExceededException;
 
 import lombok.RequiredArgsConstructor;
@@ -42,9 +45,16 @@ public class SuggestionService {
 		return SuggestionCreateMapper.INSTANCE.toDto(suggestion);
 	}
 
-	public List<SuggestionService> findAllByGuAndTypeAndDate(String gu, BinType type, LocalDateTime startDate,
+	public List<SuggestionResponse> findAllByGuAndTypeAndDate(String gu, BinType type, LocalDateTime startDate,
 		LocalDateTime endDate) {
-		return null;
+
+		List<SuggestionResponse> suggestionResponses = suggestionRepository
+			.findAllByGuAndTypeAndCreatedAtBetween(gu, type, startDate, endDate)
+			.stream()
+			.map(SuggestionMapper.INSTANCE::toDto)
+			.collect(Collectors.toList());
+
+		return suggestionResponses;
 	}
 
 	private void validateSuggestionCount(Long userId) {
