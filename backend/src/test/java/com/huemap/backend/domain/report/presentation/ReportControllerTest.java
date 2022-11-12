@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 import org.junit.jupiter.api.DisplayName;
@@ -17,8 +18,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huemap.backend.domain.bin.domain.BinType;
@@ -26,13 +29,15 @@ import com.huemap.backend.common.exception.EntityNotFoundException;
 import com.huemap.backend.common.exception.InvalidValueException;
 import com.huemap.backend.common.response.error.ErrorCode;
 import com.huemap.backend.common.response.success.RestResponse;
+import com.huemap.backend.domain.bin.domain.ConditionType;
 import com.huemap.backend.domain.report.application.ReportService;
 import com.huemap.backend.domain.report.dto.request.ClosureCreateRequest;
+import com.huemap.backend.domain.report.dto.request.ConditionCreateRequest;
 import com.huemap.backend.domain.report.dto.request.PresenceCreateRequest;
 import com.huemap.backend.domain.report.dto.request.PresenceVoteRequest;
 import com.huemap.backend.domain.report.dto.response.ClosureCreateResponse;
+import com.huemap.backend.domain.report.dto.response.ConditionCreateResponse;
 import com.huemap.backend.domain.report.dto.response.PresenceCreateResponse;
-import com.huemap.backend.domain.report.presentation.ReportController;
 
 @WebMvcTest(ReportController.class)
 @MockBean(JpaMetamodelMappingContext.class)
@@ -493,6 +498,240 @@ public class ReportControllerTest {
     }
   }
 
+  @Nested
+  @DisplayName("saveCondition 메소드는")
+  class saveCondition {
+
+    @Nested
+    @DisplayName("폐수거함 상태 유형이 null로 들어오면")
+    class Context_with_null_type {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final Long binId = 1L;
+        final ConditionCreateRequest request = new ConditionCreateRequest(null,
+                                                                         37.5833354,
+                                                                         126.9876779);
+        final String content = objectMapper.writeValueAsString(request);
+        final MockMultipartFile dto = new MockMultipartFile("dto",
+                                                            "",
+                                                            "application/json",
+                                                            content.getBytes(StandardCharsets.UTF_8));
+        final MockMultipartFile file = new MockMultipartFile("file",
+                                                              "imagefile.png",
+                                                              "image/png",
+                                                              "<<png data>>".getBytes());
+
+        //when
+        final ResultActions perform = requestSaveCondition(binId, dto, file);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("유효하지 않은 폐수거함 상태 유형이 들어오면")
+    class Context_with_invalid_type {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final Long binId = 1L;
+        final HashMap<String, Object> requestMap = new HashMap<>();
+        requestMap.put("type", "INVALID");
+        requestMap.put("latitude", 37.5833354);
+        requestMap.put("longitude", 126.9876779);
+        final String content = objectMapper.writeValueAsString(requestMap);
+        final MockMultipartFile dto = new MockMultipartFile("dto",
+                                                            "",
+                                                            "application/json",
+                                                            content.getBytes(StandardCharsets.UTF_8));
+        final MockMultipartFile file = new MockMultipartFile("file",
+                                                             "imagefile.png",
+                                                             "image/png",
+                                                             "<<png data>>".getBytes());
+
+        //when
+        final ResultActions perform = mockMvc.perform(multipart("/api/v1/bins/" + binId + "/report-condition")
+                                                          .file(dto)
+                                                          .file(file)
+                                                          .contentType("multipart/form-data")
+                                                          .accept(MediaType.APPLICATION_JSON)
+                                                          .characterEncoding("UTF-8"))
+                                             .andDo(print());
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("상태 제보자의 위도가 null로 들어오면")
+    class Context_with_null_latitude {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final Long binId = 1L;
+        final ConditionCreateRequest request = new ConditionCreateRequest(ConditionType.FULL,
+                                                                          null,
+                                                                          126.9876779);
+        final String content = objectMapper.writeValueAsString(request);
+        final MockMultipartFile dto = new MockMultipartFile("dto",
+                                                            "",
+                                                            "application/json",
+                                                            content.getBytes(StandardCharsets.UTF_8));
+        final MockMultipartFile file = new MockMultipartFile("file",
+                                                             "imagefile.png",
+                                                             "image/png",
+                                                             "<<png data>>".getBytes());
+
+        //when
+        final ResultActions perform = requestSaveCondition(binId, dto, file);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("상태 제보자의 위도가 -90 ~ 90 이외의 값이거나 올바르지 않은 형식으로 들어오면")
+    class Context_with_invalid_range_latitude {
+
+      @ParameterizedTest
+      @ValueSource(doubles = {90.1, -91, Double.MAX_VALUE})
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception(Double latitude) throws Exception {
+        //given
+        final Long binId = 1L;
+        final ConditionCreateRequest request = new ConditionCreateRequest(ConditionType.FULL,
+                                                                          latitude,
+                                                                          126.9876779);
+        final String content = objectMapper.writeValueAsString(request);
+        final MockMultipartFile dto = new MockMultipartFile("dto",
+                                                            "",
+                                                            "application/json",
+                                                            content.getBytes(StandardCharsets.UTF_8));
+        final MockMultipartFile file = new MockMultipartFile("file",
+                                                             "imagefile.png",
+                                                             "image/png",
+                                                             "<<png data>>".getBytes());
+
+        //when
+        final ResultActions perform = requestSaveCondition(binId, dto, file);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("상태 제보자의 경도가 null로 들어오면")
+    class Context_with_null_longitude {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final Long binId = 1L;
+        final ConditionCreateRequest request = new ConditionCreateRequest(ConditionType.FULL,
+                                                                          37.5833354,
+                                                                          null);
+        final String content = objectMapper.writeValueAsString(request);
+        final MockMultipartFile dto = new MockMultipartFile("dto",
+                                                            "",
+                                                            "application/json",
+                                                            content.getBytes(StandardCharsets.UTF_8));
+        final MockMultipartFile file = new MockMultipartFile("file",
+                                                             "imagefile.png",
+                                                             "image/png",
+                                                             "<<png data>>".getBytes());
+
+        //when
+        final ResultActions perform = requestSaveCondition(binId, dto, file);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("상태 제보자의 경도가 -180 ~ 180 이외의 값이거나 올바르지 않은 형식으로 들어오면")
+    class Context_with_invalid_range_longitude {
+
+      @ParameterizedTest
+      @ValueSource(doubles = {180.1, -181, Double.MAX_VALUE})
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception(Double longitude) throws Exception {
+        //given
+        final Long binId = 1L;
+        final ConditionCreateRequest request = new ConditionCreateRequest(ConditionType.FULL,
+                                                                          37.5833354,
+                                                                          longitude);
+        final String content = objectMapper.writeValueAsString(request);
+        final MockMultipartFile dto = new MockMultipartFile("dto",
+                                                            "",
+                                                            "application/json",
+                                                            content.getBytes(StandardCharsets.UTF_8));
+        final MockMultipartFile file = new MockMultipartFile("file",
+                                                             "imagefile.png",
+                                                             "image/png",
+                                                             "<<png data>>".getBytes());
+
+        //when
+        final ResultActions perform = requestSaveCondition(binId, dto, file);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("제보자의 위도, 경도, 타입, 이미지 파일이 올바른 값으로 입력되면")
+    class Context_with_valid_latitude_longitude_type_file {
+
+      @Test
+      @DisplayName("201을 응답한다.")
+      void It_responses_201() throws Exception {
+        //given
+        final Long binId = 1L;
+        final ConditionCreateRequest request = new ConditionCreateRequest(ConditionType.FULL,
+                                                                          37.5833354,
+                                                                          126.9876779);
+        final String content = objectMapper.writeValueAsString(request);
+        final MockMultipartFile dto = new MockMultipartFile("dto",
+                                                            "",
+                                                            "application/json",
+                                                            content.getBytes(StandardCharsets.UTF_8));
+        final MockMultipartFile file = new MockMultipartFile("file",
+                                                             "imagefile.png",
+                                                             "image/png",
+                                                             "<<png data>>".getBytes());
+        final ConditionCreateResponse response = new ConditionCreateResponse(1L);
+        final RestResponse restResponse = RestResponse.of(response);
+        given(reportService.saveCondition(anyLong(), anyLong(), any(ConditionCreateRequest.class), any(
+            MultipartFile.class))).willReturn(response);
+
+        //when
+        final ResultActions perform = requestSaveCondition(binId, dto, file);
+
+        //then
+        perform.andExpect(status().isCreated())
+               .andExpect(content().json(objectMapper.writeValueAsString(restResponse)));
+      }
+    }
+
+    private ResultActions requestSaveCondition(final Long binId, final MockMultipartFile dto, final MockMultipartFile file)
+        throws Exception {
+      return requestPostWithMultiPart("/api/v1/bins/" + binId + "/report-condition", dto, file);
+    }
+  }
+
   private ResultActions requestPost(final String url, final Object request) throws Exception {
     final String content = objectMapper.writeValueAsString(request);
 
@@ -508,6 +747,17 @@ public class ReportControllerTest {
     return mockMvc.perform(put(url)
                                .contentType(MediaType.APPLICATION_JSON)
                                .content(content))
+                  .andDo(print());
+  }
+
+  private ResultActions requestPostWithMultiPart(final String url, final MockMultipartFile dto, final MockMultipartFile file) throws
+      Exception {
+    return mockMvc.perform(multipart(url)
+                               .file(dto)
+                               .file(file)
+                               .contentType("multipart/form-data")
+                               .accept(MediaType.APPLICATION_JSON)
+                               .characterEncoding("UTF-8"))
                   .andDo(print());
   }
 }

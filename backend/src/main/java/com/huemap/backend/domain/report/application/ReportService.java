@@ -8,6 +8,7 @@ import org.locationtech.jts.geom.Point;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.huemap.backend.domain.bin.domain.Bin;
 import com.huemap.backend.domain.bin.domain.BinRepository;
@@ -23,9 +24,11 @@ import com.huemap.backend.domain.report.domain.ReportRepository;
 import com.huemap.backend.domain.report.domain.mapper.ClosureMapper;
 import com.huemap.backend.domain.report.domain.mapper.PresenceMapper;
 import com.huemap.backend.domain.report.dto.request.ClosureCreateRequest;
+import com.huemap.backend.domain.report.dto.request.ConditionCreateRequest;
 import com.huemap.backend.domain.report.dto.request.PresenceCreateRequest;
 import com.huemap.backend.domain.report.dto.request.PresenceVoteRequest;
 import com.huemap.backend.domain.report.dto.response.ClosureCreateResponse;
+import com.huemap.backend.domain.report.dto.response.ConditionCreateResponse;
 import com.huemap.backend.domain.report.dto.response.PresenceCreateResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -90,6 +93,14 @@ public class ReportService {
     }
 
     presence.get().addCount();
+  }
+
+  @Transactional
+  public ConditionCreateResponse saveCondition(Long userId,
+                                               Long binId,
+                                               ConditionCreateRequest conditionCreateRequest,
+                                               MultipartFile multipartFile) {
+    return null;
   }
 
   private void validateClosureAlreadyExist(Long userId, Bin bin) {
