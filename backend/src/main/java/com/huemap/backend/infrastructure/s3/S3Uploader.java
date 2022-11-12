@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,6 +13,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 
 import lombok.RequiredArgsConstructor;
 
+@Profile("prod")
 @Service
 @RequiredArgsConstructor
 public class S3Uploader {
