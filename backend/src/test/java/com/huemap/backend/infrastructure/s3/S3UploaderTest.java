@@ -6,7 +6,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.FileCopyUtils;
@@ -21,11 +20,11 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import com.huemap.backend.common.IntegrationTest;
 
 @ActiveProfiles("test")
 @Import({S3MockConfig.class})
-@SpringBootTest
-class S3UploaderTest {
+class S3UploaderTest extends IntegrationTest {
 
   @Autowired
   private AmazonS3 amazonS3;
