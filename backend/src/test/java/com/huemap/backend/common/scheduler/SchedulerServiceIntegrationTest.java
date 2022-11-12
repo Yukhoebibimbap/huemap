@@ -10,18 +10,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.huemap.backend.common.IntegrationTest;
 import com.huemap.backend.domain.bin.domain.Bin;
 import com.huemap.backend.domain.bin.domain.BinRepository;
 import com.huemap.backend.domain.report.domain.Closure;
 import com.huemap.backend.domain.report.domain.Presence;
 import com.huemap.backend.domain.report.domain.ReportRepository;
 
-@SpringBootTest
 @DisplayName("SchedulerService의")
-public class SchedulerServiceIntegrationTest {
+public class SchedulerServiceIntegrationTest extends IntegrationTest {
 
   static {
     System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true");

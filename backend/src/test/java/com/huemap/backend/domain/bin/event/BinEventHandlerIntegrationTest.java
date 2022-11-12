@@ -8,15 +8,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
+import com.huemap.backend.common.IntegrationTest;
 import com.huemap.backend.domain.bin.domain.Bin;
 import com.huemap.backend.domain.bin.domain.BinRepository;
 import com.huemap.backend.domain.bin.domain.BinType;
 
-@SpringBootTest
 @DisplayName("BinEventHandler의")
-public class BinEventHandlerIntegrationTest {
+public class BinEventHandlerIntegrationTest extends IntegrationTest {
 
   @Autowired
   private BinEventHandler binEventHandler;

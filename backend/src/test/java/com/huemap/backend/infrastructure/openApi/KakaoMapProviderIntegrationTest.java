@@ -6,14 +6,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
+import com.huemap.backend.common.IntegrationTest;
 import com.huemap.backend.infrastructure.openApi.kakao.KakaoMapProvider;
 import com.huemap.backend.infrastructure.openApi.kakao.response.KakaoMapRoadAddress;
+import com.huemap.backend.infrastructure.s3.S3Uploader;
 
-@SpringBootTest
 @DisplayName("KakaoMapProvider의")
-public class KakaoMapProviderIntegrationTest {
+public class KakaoMapProviderIntegrationTest extends IntegrationTest {
 
   static {
     System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true");
