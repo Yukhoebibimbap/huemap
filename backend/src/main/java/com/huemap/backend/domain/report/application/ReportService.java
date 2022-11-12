@@ -2,6 +2,7 @@ package com.huemap.backend.domain.report.application;
 
 import static com.huemap.backend.common.utils.GeometryUtil.*;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.locationtech.jts.geom.Point;
@@ -19,9 +20,12 @@ import com.huemap.backend.common.exception.InvalidValueException;
 import com.huemap.backend.common.response.error.ErrorCode;
 import com.huemap.backend.common.utils.GeometryUtil;
 import com.huemap.backend.domain.report.domain.Closure;
+import com.huemap.backend.domain.report.domain.Condition;
+import com.huemap.backend.domain.report.domain.Image;
 import com.huemap.backend.domain.report.domain.Presence;
 import com.huemap.backend.domain.report.domain.ReportRepository;
 import com.huemap.backend.domain.report.domain.mapper.ClosureMapper;
+import com.huemap.backend.domain.report.domain.mapper.ConditionMapper;
 import com.huemap.backend.domain.report.domain.mapper.PresenceMapper;
 import com.huemap.backend.domain.report.dto.request.ClosureCreateRequest;
 import com.huemap.backend.domain.report.dto.request.ConditionCreateRequest;
@@ -30,6 +34,7 @@ import com.huemap.backend.domain.report.dto.request.PresenceVoteRequest;
 import com.huemap.backend.domain.report.dto.response.ClosureCreateResponse;
 import com.huemap.backend.domain.report.dto.response.ConditionCreateResponse;
 import com.huemap.backend.domain.report.dto.response.PresenceCreateResponse;
+import com.huemap.backend.infrastructure.s3.S3Uploader;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,6 +46,7 @@ public class ReportService {
   private final ReportRepository reportRepository;
   private final BinRepository binRepository;
   private final ApplicationEventPublisher publisher;
+  private final S3Uploader s3Uploader;
 
   private final double DISTANCE_METER = 10;
 
@@ -99,8 +105,19 @@ public class ReportService {
   public ConditionCreateResponse saveCondition(Long userId,
                                                Long binId,
                                                ConditionCreateRequest conditionCreateRequest,
-                                               MultipartFile multipartFile) {
-    return null;
+                                               MultipartFile multipartFile) throws IOException {
+    final Bin bin = binRepository.findById(binId)
+                                 .orElseThrow(
+                                     () -> new EntityNotFoundException(ErrorCode.BIN_NOT_FOUND));
+
+    validateDistanceBetweenUserAndBin(bin, conditionCreateRequest.getLatitude(),
+                                      conditionCreateRequest.getLongitude());
+
+    final Image image = new Image(s3Uploader.upload(multipartFile));
+    final Condition condition = (Condition)reportRepository.save(
+        ConditionMapper.INSTANCE.toEntity(userId, bin, image));
+
+    return ConditionMapper.INSTANCE.toDto(condition);
   }
 
   private void validateClosureAlreadyExist(Long userId, Bin bin) {
