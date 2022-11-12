@@ -46,6 +46,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'io.findify:s3mock_2.12:0.2.4'
 }
 
 tasks.named('test') {
