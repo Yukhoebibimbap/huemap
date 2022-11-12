@@ -12,3 +12,11 @@ spring:
         format_sql: true
         ddl-auto: create
         dialect: org.hibernate.spatial.dialect.h2geodb.GeoDBDialect
+
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false

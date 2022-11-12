@@ -15,6 +15,10 @@ import com.huemap.backend.infrastructure.openApi.kakao.response.KakaoMapRoadAddr
 @DisplayName("KakaoMapProvider의")
 public class KakaoMapProviderIntegrationTest {
 
+  static {
+    System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true");
+  }
+
   @Autowired
   private KakaoMapProvider kakaoMapProvider;
 
