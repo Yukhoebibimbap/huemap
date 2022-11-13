@@ -1,6 +1,6 @@
 package com.huemap.backend.common.scheduler;
 
-import static com.huemap.backend.common.TestUtils.*;
+import static com.huemap.backend.support.TestUtils.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import com.huemap.backend.common.IntegrationTest;
+import com.huemap.backend.support.IntegrationTest;
 import com.huemap.backend.domain.bin.domain.Bin;
 import com.huemap.backend.domain.bin.domain.BinRepository;
 import com.huemap.backend.domain.report.domain.Closure;

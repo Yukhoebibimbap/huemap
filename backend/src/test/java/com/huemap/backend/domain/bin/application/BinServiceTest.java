@@ -1,6 +1,6 @@
 package com.huemap.backend.domain.bin.application;
 
-import static com.huemap.backend.common.TestUtils.getBin;
+import static com.huemap.backend.support.TestUtils.getBin;
 import static com.huemap.backend.common.utils.GeometryUtil.convertPoint;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -22,7 +22,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.huemap.backend.domain.bin.application.BinService;
 import com.huemap.backend.domain.bin.domain.Bin;
 import com.huemap.backend.domain.bin.domain.BinRepository;
 import com.huemap.backend.domain.bin.domain.BinType;
