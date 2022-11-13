@@ -11,6 +11,11 @@ spring:
     hibernate:
       format_sql: true
       ddl-auto: update
+  session:
+    storage-type: redis
+  redis:
+    host: localhost
+    port: 6379
 
 cloud:
   aws:
