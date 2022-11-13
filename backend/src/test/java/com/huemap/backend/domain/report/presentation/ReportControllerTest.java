@@ -13,24 +13,18 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.huemap.backend.support.ControllerTest;
 import com.huemap.backend.domain.bin.domain.BinType;
 import com.huemap.backend.common.exception.EntityNotFoundException;
 import com.huemap.backend.common.exception.InvalidValueException;
 import com.huemap.backend.common.response.error.ErrorCode;
 import com.huemap.backend.common.response.success.RestResponse;
 import com.huemap.backend.domain.bin.domain.ConditionType;
-import com.huemap.backend.domain.report.application.ReportService;
 import com.huemap.backend.domain.report.dto.request.ClosureCreateRequest;
 import com.huemap.backend.domain.report.dto.request.ConditionCreateRequest;
 import com.huemap.backend.domain.report.dto.request.PresenceCreateRequest;
@@ -39,19 +33,9 @@ import com.huemap.backend.domain.report.dto.response.ClosureCreateResponse;
 import com.huemap.backend.domain.report.dto.response.ConditionCreateResponse;
 import com.huemap.backend.domain.report.dto.response.PresenceCreateResponse;
 
-@WebMvcTest(ReportController.class)
-@MockBean(JpaMetamodelMappingContext.class)
+
 @DisplayName("ReportController의")
-public class ReportControllerTest {
-
-  @Autowired
-  private MockMvc mockMvc;
-
-  @Autowired
-  private ObjectMapper objectMapper;
-
-  @MockBean
-  private ReportService reportService;
+public class ReportControllerTest extends ControllerTest {
 
   @Nested
   @DisplayName("saveClosure 메소드는")
