@@ -1,4 +1,4 @@
-package com.huemap.backend.infrastructure.s3;
+package com.huemap.backend.support;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
