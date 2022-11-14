@@ -1,6 +1,6 @@
 package com.huemap.backend.domain.bin.presentation;
 
-import static com.huemap.backend.common.TestUtils.getBin;
+import static com.huemap.backend.support.TestUtils.getBin;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -12,31 +12,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.huemap.backend.domain.bin.application.BinService;
+import com.huemap.backend.support.ControllerTest;
 import com.huemap.backend.domain.bin.domain.Bin;
 import com.huemap.backend.domain.bin.dto.response.BinDetailResponse;
 import com.huemap.backend.common.exception.EntityNotFoundException;
 import com.huemap.backend.common.response.error.ErrorCode;
-import com.huemap.backend.domain.bin.presentation.BinController;
 
-@WebMvcTest(BinController.class)
-@MockBean(JpaMetamodelMappingContext.class)
+
 @DisplayName("BinController의")
-public class BinControllerTest {
-
-	@Autowired
-	private MockMvc mockMvc;
-
-	@MockBean
-	private BinService binService;
+public class BinControllerTest extends ControllerTest {
 
 	@Nested
 	@DisplayName("findAll 메소드는")

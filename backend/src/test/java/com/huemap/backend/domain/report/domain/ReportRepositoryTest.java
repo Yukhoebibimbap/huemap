@@ -1,6 +1,6 @@
 package com.huemap.backend.domain.report.domain;
 
-import static com.huemap.backend.common.TestUtils.*;
+import static com.huemap.backend.support.TestUtils.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.Optional;
@@ -8,23 +8,12 @@ import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import com.huemap.backend.domain.bin.domain.Bin;
-import com.huemap.backend.domain.bin.domain.BinRepository;
-import com.huemap.backend.domain.report.domain.Closure;
-import com.huemap.backend.domain.report.domain.ReportRepository;
+import com.huemap.backend.support.RepositoryTest;
 
-@DataJpaTest
 @DisplayName("ReportRepository의")
-public class ReportRepositoryTest {
-
-  @Autowired
-  private ReportRepository reportRepository;
-
-  @Autowired
-  private BinRepository binRepository;
+public class ReportRepositoryTest extends RepositoryTest {
 
   @Nested
   @DisplayName("findByUserIdAndBin 메소드는")

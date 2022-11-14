@@ -1,6 +1,6 @@
 package com.huemap.backend.domain.report.application;
 
-import static com.huemap.backend.common.TestUtils.*;
+import static com.huemap.backend.support.TestUtils.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;

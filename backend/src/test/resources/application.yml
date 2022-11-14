@@ -12,6 +12,9 @@ spring:
         format_sql: true
         ddl-auto: create
         dialect: org.hibernate.spatial.dialect.h2geodb.GeoDBDialect
+  redis:
+    host: localhost
+    port: 16379
 
 cloud:
   aws:

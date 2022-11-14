@@ -20,7 +20,8 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
-import com.huemap.backend.common.IntegrationTest;
+import com.huemap.backend.support.IntegrationTest;
+import com.huemap.backend.support.S3MockConfig;
 
 @ActiveProfiles("test")
 @Import({S3MockConfig.class})

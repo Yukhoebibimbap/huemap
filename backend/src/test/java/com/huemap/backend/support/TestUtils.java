@@ -1,4 +1,4 @@
-package com.huemap.backend.common;
+package com.huemap.backend.support;
 
 import java.lang.reflect.Constructor;
 
