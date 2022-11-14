@@ -18,6 +18,12 @@ services:
       - backend_flask
       - frontend
 
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+
   frontend:
     restart: always
     build:
@@ -39,7 +45,12 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://${RDS_ENDPOINT}:3306/huemap?useSSL=false
       SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      CLOUD_AWS_CREDENTIALS_ACCESSKEY: ${AWS_ACCESS_KEY_ID}
+      CLOUD_AWS_CREDENTIALS_SECRETKEY: ${AWS_SECRET_ACCESS_KEY}
+      SPRING_REDIS_HOST: redis
 
+    depends_on:
+      - redis
 
   backend_flask:
     restart: always
