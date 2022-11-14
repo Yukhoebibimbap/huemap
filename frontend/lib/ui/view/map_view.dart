@@ -39,6 +39,7 @@ class MapView extends StatelessWidget {
 
                       onPageFinished: (url) {
                         viewModel.initBinMarker(Type.general);
+                        viewModel.setBinMarker(Type.general);
                         viewModel.controller!.runJavascript("map.panTo(new kakao.maps.LatLng(37.495716, 127.029214))");
                       }
                   ),
@@ -49,17 +50,17 @@ class MapView extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children:[
-                            buttonBuilder(Type.general, "일반"),
-                            buttonBuilder(Type.recycle, "재활용"),
-                            buttonBuilder(Type.lamp, "폐형광등")
+                            buttonBuilder(Type.general, "A 일반"),
+                            buttonBuilder(Type.recycle, "B 재활용"),
+                            buttonBuilder(Type.lamp, "C 형광등")
                           ]
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children:[
-                            buttonBuilder(Type.battery, "폐건전지"),
-                            buttonBuilder(Type.clothes, "의류"),
-                            buttonBuilder(Type.medicine, "폐의약품")
+                            buttonBuilder(Type.battery, "D 건전지"),
+                            buttonBuilder(Type.clothes, "E 의류"),
+                            buttonBuilder(Type.medicine, "F 의약품")
                           ]
                         ),
                       ]
@@ -70,7 +71,16 @@ class MapView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Padding(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
+                        child: FloatingActionButton(
+                          onPressed: viewModel.togglePinDrop,
+                          backgroundColor: viewModel.onPinDrop ? Colors.blueAccent : Colors.white,
+                          foregroundColor: viewModel.onPinDrop ? Colors.white : Colors.blueAccent,
+                          child: const Icon(Icons.pin_drop),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10),
                         child: FloatingActionButton(
                           onPressed: viewModel.panToCurrent,
                           child: const Icon(Icons.my_location),
