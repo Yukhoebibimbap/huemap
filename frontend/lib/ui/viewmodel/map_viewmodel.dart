@@ -20,9 +20,10 @@ import 'package:huemap_app/get_current_position.dart';
 
 class MapViewModel with ChangeNotifier{
   late final BinRepository _binRepository;
-  final String url = "118.67.130.12/mac.html";
+  final String url = "118.67.130.12/map.html";
   WebViewController? controller;
   late final Set<JavascriptChannel> channel;
+  int count = 0;
 
   Map<int, List<Bin>> get items => _items;
   late Map<int, int> offset = <int, int>{};
@@ -32,6 +33,7 @@ class MapViewModel with ChangeNotifier{
 
   final onLoad = <bool>[true,false,false,false,false,false];
   final onMarker = <bool>[true,false,false,false,false,false];
+  bool onPinDrop = false;
 
   MapViewModel() {
     // 데이터 계층 연결, 자바스크립트 채널 생성
@@ -45,13 +47,13 @@ class MapViewModel with ChangeNotifier{
 
   Future<List<Bin>> loadItems(Type t) async {
     late Future<List<Bin>> binData;
-    int count = 0;
     binData = _binRepository.getBins(t);
     binData.then((data) {
       _items.addAll({t.index : data});
       offset.addAll({t.index : count});
       count += data.length;
     });
+
     return binData;
   }
 
@@ -60,7 +62,7 @@ class MapViewModel with ChangeNotifier{
     String script = "";
 
     for(var j in _items[t.index]!) {
-      script += "initMarker(${j.lat}, ${j.lng}, ${j.id});";
+      script += "initMarker(${j.lat}, ${j.lng}, ${j.id}, ${t.index});";
     }
 
     controller!.runJavascript(script);
@@ -82,7 +84,6 @@ class MapViewModel with ChangeNotifier{
       }
     }
     onMarker[t.index] = !onMarker[t.index];
-    log(onMarker[t.index].toString());
     notifyListeners();
   }
 
@@ -104,11 +105,26 @@ class MapViewModel with ChangeNotifier{
     controller!.runJavascript(script);
   }
 
-
   void panToCurrent() {
     final pos = determinePosition();
     pos.then((value) => controller!.runJavascript(""
         "panToCurrent(${value.latitude},${value.longitude})"
         ""));
+  }
+
+  void togglePinDrop() {
+    if(onPinDrop){
+      controller!.runJavascript(""
+          "pinDropped.setMap(null);"
+          "kakao.maps.event.removeListener(map, 'click', dropPin);"
+          "");
+    } else {
+      controller!.runJavascript(""
+          "pinDropped.setMap(map);"
+          "kakao.maps.event.addListener(map, 'click', dropPin);"
+          "");
+    }
+    onPinDrop = !onPinDrop;
+    notifyListeners();
   }
 }

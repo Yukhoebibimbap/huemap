@@ -6,18 +6,18 @@ class Bin {
   // json 생성자
   Bin.fromJson(Map<String, dynamic> json) :
         id = json['id'],
-        lat = json['longitude'],
-        lng = json['latitude'],
+        lat = json['latitude'],
+        lng = json['longitude'],
         type = json['type'];
 }
 
 enum Type  {
   general,
   recycle,
-  medicine,
-  clothes,
+  lamp,
   battery,
-  lamp
+  clothes,
+  medicine
 }
 
 extension ParseToString on Type {
