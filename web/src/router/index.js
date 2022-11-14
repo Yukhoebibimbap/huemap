@@ -21,8 +21,8 @@ const router = new Router({
       component: ()=>import('../view/binStatePage')
     },
     {
-      path: '/chat',
-      component: ()=>import('../view/chatTest')
+      path: '/chat/:gu',
+      component: ()=>import('../view/chatTest2')
     },
     
   ]
