@@ -25,5 +25,5 @@ cloud:
       auto: false
 
 socket:
-  host: 0.0.0.0
-  port: 8092
+  host: 43.201.57.41
+  port: 8083
