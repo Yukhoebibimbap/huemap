@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.corundumstudio.socketio.SocketIOClient;
+import com.corundumstudio.socketio.SocketIOServer;
 import com.huemap.backend.domain.bin.domain.Bin;
 import com.huemap.backend.domain.bin.domain.BinRepository;
 import com.huemap.backend.domain.bin.domain.BinType;
@@ -33,8 +35,10 @@ import com.huemap.backend.domain.report.dto.request.PresenceCreateRequest;
 import com.huemap.backend.domain.report.dto.request.PresenceVoteRequest;
 import com.huemap.backend.domain.report.dto.response.ClosureCreateResponse;
 import com.huemap.backend.domain.report.dto.response.ConditionCreateResponse;
+import com.huemap.backend.domain.report.dto.response.ConditionResponse;
 import com.huemap.backend.domain.report.dto.response.PresenceCreateResponse;
 import com.huemap.backend.infrastructure.s3.S3Uploader;
+import com.huemap.backend.infrastructure.socket.SocketService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -47,6 +51,9 @@ public class ReportService {
   private final BinRepository binRepository;
   private final ApplicationEventPublisher publisher;
   private final S3Uploader s3Uploader;
+
+  private final SocketService socketService;
+  private final SocketIOServer socketIOServer;
 
   private final double DISTANCE_METER = 10;
 
@@ -115,9 +122,20 @@ public class ReportService {
 
     final Image image = new Image(s3Uploader.upload(multipartFile));
     final Condition condition = (Condition)reportRepository.save(
-        ConditionMapper.INSTANCE.toEntity(userId, bin, image));
+        ConditionMapper.INSTANCE.toEntity(userId, bin, image, conditionCreateRequest.getType()));
+
+    sendSocketMessage(condition);
 
     return ConditionMapper.INSTANCE.toDto(condition);
+  }
+
+  private void sendSocketMessage(Condition condition) {
+
+    ConditionResponse response = ConditionResponse.toDto(condition);
+
+    for( SocketIOClient client :socketIOServer.getAllClients()){
+      socketService.sendSocketMessage(client, response, response.getGu());
+    }
   }
 
   private void validateClosureAlreadyExist(Long userId, Bin bin) {
