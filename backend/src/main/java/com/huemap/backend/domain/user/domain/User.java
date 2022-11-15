@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import com.huemap.backend.common.entity.BaseEntity;
+import com.huemap.backend.common.utils.PasswordEncrypter;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,6 +30,10 @@ public class User extends BaseEntity {
   public User(final String email, final String name, final String password) {
     this.email = email;
     this.name = name;
-    this.password = password;
+    this.password = encryptPassword(password);
+  }
+
+  private String encryptPassword(String password) {
+    return PasswordEncrypter.encrypt(password);
   }
 }

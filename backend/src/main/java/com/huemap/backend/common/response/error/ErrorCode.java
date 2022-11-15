@@ -13,6 +13,7 @@ public enum ErrorCode {
 	CLOSURE_DUPLICATED(400, "중복된 폐수거함 폐쇄 제보를 할 수 없습니다."),
 	CANDIDATE_BIN_DUPLICATED(400, "이미 존재 제보된 후보 폐수거함이 존재합니다."),
 	KAKAO_MAP_REQUEST_INVALID(400, "카카오맵 OPEN API 요청 값이 적절하지 않습니다."),
+	USER_EMAIL_DUPLICATED(400, "중복된 이메일입니다."),
 
 	SUGGESTION_LIMIT_EXCEEDED(400, "하루 제안 횟수를 초과하였습니다"),
 	PRESENCE_NOT_FOUND(400, "존재 폐수거함 제보를 찾을 수 없습니다.");
