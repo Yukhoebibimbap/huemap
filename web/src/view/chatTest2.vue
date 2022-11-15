@@ -21,14 +21,14 @@
                         </div>
                       
                     </div>
-                    <v-btn
+                    <!-- <v-btn
                           color="black"
                           block
                           class="my-8 rounded-pill btn"
                           @click="send()"
                         >
                           <h3>전송</h3>
-                    </v-btn>
+                    </v-btn> -->
                       <!-- <v-row>
                         <v-col width="80%">
                         <v-form ref="form">
@@ -79,18 +79,18 @@
           return io.connect(`http://localhost:8081`,{
             cors:{origin:'*'},
             path: '/socket.io',
-            query: { roomId: this.$route.params.gu }
+            query: { room: this.$route.params.gu }
           })
         }
       },
       async mounted (){
     
-        this.socket.on('chat', (data) => {
+        this.socket.on('send', (data) => {
           const div = document.createElement('div');
             div.classList.add('mine');
     
           const chat = document.createElement('div');
-          chat.textContent = data.message;
+          chat.textContent = data.gu+" "+data.img+" "+data.latitude+" "+data.longitude+" "+data.type+" "+data.createdAt;
           div.appendChild(chat);
     
           const div2= document.createElement('div');
