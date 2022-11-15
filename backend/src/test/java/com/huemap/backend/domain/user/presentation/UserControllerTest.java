@@ -1,4 +1,4 @@
-package com.huemap.backend.domain.user;
+package com.huemap.backend.domain.user.presentation;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;

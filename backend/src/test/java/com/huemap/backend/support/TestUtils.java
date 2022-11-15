@@ -6,12 +6,14 @@ import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.io.WKTReader;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.huemap.backend.common.utils.PasswordEncrypter;
 import com.huemap.backend.domain.bin.domain.Bin;
 import com.huemap.backend.domain.bin.domain.BinType;
 import com.huemap.backend.domain.report.domain.Closure;
 import com.huemap.backend.domain.report.domain.Condition;
 import com.huemap.backend.domain.report.domain.Image;
 import com.huemap.backend.domain.report.domain.Presence;
+import com.huemap.backend.domain.user.domain.User;
 
 public class TestUtils {
   public static Bin getBin() throws Exception {
@@ -54,5 +56,14 @@ public class TestUtils {
                                    .image(image)
                                    .build();
     return condition;
+  }
+
+  public static User getUser() {
+    User user = User.builder()
+                    .email("huemap@gmail.com")
+                    .name("name")
+                    .password(PasswordEncrypter.encrypt("Password1234!"))
+                    .build();
+    return user;
   }
 }
