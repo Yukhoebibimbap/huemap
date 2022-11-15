@@ -23,8 +23,6 @@ public class ConditionResponse {
 			return null;
 		}
 
-		System.out.println(condition.getCreatedAt());
-
 		return ConditionResponse.builder()
 			.img(condition.getImage().getImgUrl())
 			.gu(condition.getBin().getGu())

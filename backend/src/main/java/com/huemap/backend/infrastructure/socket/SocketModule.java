@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SocketModule {
 
-
 	private final SocketIOServer server;
 	private final SocketService socketService;
 
@@ -24,7 +23,6 @@ public class SocketModule {
 		server.addConnectListener(onConnected());
 		server.addDisconnectListener(onDisconnected());
 	}
-
 
 	private ConnectListener onConnected() {
 
