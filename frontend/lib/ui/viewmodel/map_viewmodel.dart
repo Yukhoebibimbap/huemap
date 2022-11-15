@@ -117,6 +117,7 @@ class MapViewModel with ChangeNotifier{
       controller!.runJavascript(""
           "pinDropped.setMap(null);"
           "kakao.maps.event.removeListener(map, 'click', dropPin);"
+          "custom.setMap(null);"
           "");
     } else {
       controller!.runJavascript(""

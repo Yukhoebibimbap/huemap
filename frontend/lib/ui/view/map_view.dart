@@ -109,9 +109,14 @@ class MapView extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 5),
         child:OutlinedButton(
           onPressed: () {
-            if(!viewModel.onLoad[t.index] && viewModel.onMarker[t.index]){}
-            else {
+            if(!viewModel.onMarker[t.index]) {
+              for(var type in Type.values) {
+                if(viewModel.onMarker[type.index]) {
+                  viewModel.toggleBinMarker(type);
+                }
+              }
               viewModel.toggleBinMarker(t);
+
             }
           },
           style: OutlinedButton.styleFrom(
