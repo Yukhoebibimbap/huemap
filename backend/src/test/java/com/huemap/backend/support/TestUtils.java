@@ -64,8 +64,9 @@ public class TestUtils {
     User user = User.builder()
                     .email("huemap@gmail.com")
                     .name("name")
-                    .password(PasswordEncrypter.encrypt("Password1234!"))
+                    .password("Password1234!")
                     .build();
+    ReflectionTestUtils.setField(user, "id", 1L);
     return user;
   }
 }
