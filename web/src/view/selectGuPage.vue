@@ -1,7 +1,7 @@
 <template>
     <v-container>
       <div id="pollution-map"></div>
-      <v-btn href="/chat/강남구" color="primary">강남구</v-btn>
+      <v-btn href="/state/강남구" color="primary">강남구</v-btn>
     </v-container>
       
       
