@@ -1,9 +1,15 @@
 package com.huemap.backend.domain.report.application;
 
-import static com.huemap.backend.support.TestUtils.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.*;
+import static com.huemap.backend.support.TestUtils.getBin;
+import static com.huemap.backend.support.TestUtils.getClosure;
+import static com.huemap.backend.support.TestUtils.getCondition;
+import static com.huemap.backend.support.TestUtils.getPresence;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.verify;
 
 import java.util.Optional;
 
@@ -18,12 +24,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.mock.web.MockMultipartFile;
 
-import com.huemap.backend.domain.bin.domain.Bin;
-import com.huemap.backend.domain.bin.domain.BinRepository;
-import com.huemap.backend.domain.bin.domain.BinType;
+import com.corundumstudio.socketio.SocketIOServer;
 import com.huemap.backend.common.exception.EntityNotFoundException;
 import com.huemap.backend.common.exception.InvalidValueException;
 import com.huemap.backend.common.response.error.ErrorCode;
+import com.huemap.backend.domain.bin.domain.Bin;
+import com.huemap.backend.domain.bin.domain.BinRepository;
+import com.huemap.backend.domain.bin.domain.BinType;
 import com.huemap.backend.domain.bin.domain.ConditionType;
 import com.huemap.backend.domain.report.domain.Closure;
 import com.huemap.backend.domain.report.domain.Condition;
@@ -38,6 +45,7 @@ import com.huemap.backend.domain.report.dto.response.ClosureCreateResponse;
 import com.huemap.backend.domain.report.dto.response.ConditionCreateResponse;
 import com.huemap.backend.domain.report.dto.response.PresenceCreateResponse;
 import com.huemap.backend.infrastructure.s3.S3Uploader;
+import com.huemap.backend.infrastructure.socket.SocketService;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ReportService의")
@@ -57,6 +65,12 @@ public class ReportServiceTest {
 
   @Mock
   private S3Uploader s3Uploader;
+
+  @Mock
+  private SocketService socketService;
+
+  @Mock
+  private SocketIOServer socketIOServer;
 
   @Nested
   @DisplayName("saveClosure 메소드는")
@@ -350,10 +364,11 @@ public class ReportServiceTest {
                                                                       "<<png data>>".getBytes());
         final Bin bin = getBin();
         final String imgUrl = "https://huemap-s3.test.png";
-        final Condition condition = getCondition(bin, new Image(imgUrl));
+        final Condition condition = getCondition(bin, new Image(imgUrl),ConditionType.FULL);
         given(binRepository.findById(anyLong())).willReturn(Optional.of(bin));
         given(s3Uploader.upload(multipartFile)).willReturn(imgUrl);
         given(reportRepository.save(any(Condition.class))).willReturn(condition);
+
 
         // when
         final ConditionCreateResponse response = reportService.saveCondition(1L,
