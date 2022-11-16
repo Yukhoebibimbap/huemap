@@ -23,9 +23,10 @@ public class UserService {
   @Transactional
   public UserCreateResponse save(UserCreateRequest userCreateRequest) {
     validateEmailAlreadyExist(userCreateRequest.getEmail());
+
     final User user = userRepository.save(UserMapper.INSTANCE.toEntity(userCreateRequest));
 
-    return UserMapper.INSTANCE.toDto(user);
+    return UserMapper.INSTANCE.toCreateDto(user);
   }
 
   private void validateEmailAlreadyExist(String email) {
