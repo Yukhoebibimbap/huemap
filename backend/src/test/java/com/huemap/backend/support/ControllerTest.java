@@ -13,6 +13,7 @@ import com.huemap.backend.domain.bin.application.BinService;
 import com.huemap.backend.domain.bin.presentation.BinController;
 import com.huemap.backend.domain.report.application.ReportService;
 import com.huemap.backend.domain.report.presentation.ReportController;
+import com.huemap.backend.domain.user.application.LoginService;
 import com.huemap.backend.domain.user.application.UserService;
 import com.huemap.backend.domain.user.presentation.UserController;
 
@@ -40,4 +41,6 @@ public class ControllerTest {
   @MockBean
   protected UserService userService;
 
+  @MockBean
+  protected LoginService loginService;
 }
