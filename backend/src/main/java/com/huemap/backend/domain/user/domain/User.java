@@ -9,6 +9,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import com.huemap.backend.common.entity.BaseEntity;
+import com.huemap.backend.common.exception.InvalidValueException;
+import com.huemap.backend.common.response.error.ErrorCode;
 import com.huemap.backend.common.utils.PasswordEncrypter;
 
 @Entity
@@ -35,5 +37,11 @@ public class User extends BaseEntity {
 
   private String encryptPassword(String password) {
     return PasswordEncrypter.encrypt(password);
+  }
+
+  public void matchPassword(String passwordToCheck) {
+    if (!PasswordEncrypter.isMatch(passwordToCheck, password)) {
+      throw new InvalidValueException(ErrorCode.LOGIN_PASSWORD_NOT_MATCH);
+    }
   }
 }
