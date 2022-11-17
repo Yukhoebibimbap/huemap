@@ -1,7 +1,7 @@
 package com.huemap.backend.support;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.given;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +18,8 @@ import com.huemap.backend.domain.bin.application.BinService;
 import com.huemap.backend.domain.bin.presentation.BinController;
 import com.huemap.backend.domain.report.application.ReportService;
 import com.huemap.backend.domain.report.presentation.ReportController;
+import com.huemap.backend.domain.suggestion.application.SuggestionService;
+import com.huemap.backend.domain.suggestion.presentation.SuggestionController;
 import com.huemap.backend.domain.user.application.LoginService;
 import com.huemap.backend.domain.user.application.UserService;
 import com.huemap.backend.domain.user.presentation.UserController;
@@ -26,7 +28,8 @@ import com.huemap.backend.domain.user.presentation.UserController;
 @WebMvcTest({
     BinController.class,
     ReportController.class,
-    UserController.class
+    UserController.class,
+    SuggestionController.class
 })
 @MockBean(JpaMetamodelMappingContext.class)
 public class ControllerTest {
@@ -48,6 +51,9 @@ public class ControllerTest {
 
   @MockBean
   protected LoginService loginService;
+
+  @MockBean
+  protected SuggestionService suggestionService;
 
   @MockBean
   protected AuthInterceptor authInterceptor;
