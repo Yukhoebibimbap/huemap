@@ -1,6 +1,5 @@
 package com.huemap.backend.domain.user.presentation;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
