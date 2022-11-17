@@ -8,20 +8,27 @@
 
  */
 
-import 'dart:developer'; // 디버깅 목적
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 
 import 'package:huemap_app/data/model/bin.dart';
 import 'package:huemap_app/data/repository/bin_repository.dart';
 import 'package:huemap_app/get_current_position.dart';
 
+import 'package:flutter/services.dart' show ImmutableBuffer, rootBundle;
+
 class MapViewModel with ChangeNotifier{
   late final BinRepository _binRepository;
-  final String url = "118.67.130.12/map.html";
   WebViewController? controller;
+  late final String url;
   late final Set<JavascriptChannel> channel;
   int count = 0;
 
@@ -29,7 +36,8 @@ class MapViewModel with ChangeNotifier{
   late Map<int, int> offset = <int, int>{};
   final Map<int, List<Bin>> _items = <int, List<Bin>>{};
 
-  late Future<List<Bin>> loadCompleted;
+  late Future<List<Bin>> binLoadCompleted;
+  late Future<String> assetLoadCompleted;
 
   final onLoad = <bool>[true,false,false,false,false,false];
   final onMarker = <bool>[true,false,false,false,false,false];
@@ -38,7 +46,9 @@ class MapViewModel with ChangeNotifier{
   MapViewModel() {
     // 데이터 계층 연결, 자바스크립트 채널 생성
     _binRepository = BinRepository();
-    loadCompleted = loadItems(Type.general);
+    binLoadCompleted = loadItems(Type.general);
+    assetLoadCompleted = loadAssets();
+
 
     channel = {JavascriptChannel(name: 'onClickMarker', onMessageReceived: (message) {
       Fluttertoast.showToast(msg: message.message);
@@ -127,5 +137,45 @@ class MapViewModel with ChangeNotifier{
     }
     onPinDrop = !onPinDrop;
     notifyListeners();
+  }
+
+  Future<String> loadAssets() async {
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }
+
+    String cssText = await rootBundle.loadString('assets/map.css');
+    String htmlText = await rootBundle.loadString('assets/map.html');
+    String jsText = await rootBundle.loadString('assets/map.js');
+    ByteData current = await rootBundle.load('assets/markers/current.png');
+    List<ByteData> pins = [];
+    for(var i=0; i<6; i++) {
+      log('assets/markers/tile00$i.png');
+      pins.add(await rootBundle.load('assets/markers/tile00$i.png'));
+    }
+
+
+    final tempDir = await getTemporaryDirectory();
+    final cssPath = '${tempDir.path}/map.css';
+    final htmlPath = '${tempDir.path}/map.html';
+    final jsPath = '${tempDir.path}/map.js';
+    await Directory('${(tempDir.path)}/markers').create();
+    final currentPath = '${tempDir.path}/markers/current.png';
+    final pinPath = '${tempDir.path}/markers/';
+
+    await File(cssPath).writeAsString(cssText);
+    await File(htmlPath).writeAsString(htmlText);
+    await File(jsPath).writeAsString(jsText);
+    await File(currentPath).writeAsBytes(
+        current.buffer.asUint8List()
+    );
+    for(var i=0; i<6; i++) {
+      await File('${pinPath}tile00$i.png').writeAsBytes(
+        pins[i].buffer.asUint8List()
+      );
+    }
+
+    return (url = Uri(scheme: 'file', path: htmlPath).toString());
   }
 }

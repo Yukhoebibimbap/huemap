@@ -1,0 +1,9 @@
+body {
+  margin: 0;
+}
+
+body .customoverlay {position:relative;bottom:60px;float:left;}
+body .customoverlay .title {text-align:center;border:none;background:#fff;padding:10px 15px;font-size:14px;border-radius:30px}
+body .customoverlay .title:active {
+  background-color: #eeeeee;
+}
