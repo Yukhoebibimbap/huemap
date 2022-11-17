@@ -36,4 +36,9 @@ public class SessionLoginService implements LoginService{
 
     return UserMapper.INSTANCE.toLoginDto(user);
   }
+
+  @Override
+  public Long getCurrentUser() {
+    return (Long)httpSession.getAttribute(LOGIN_USER_ID);
+  }
 }
