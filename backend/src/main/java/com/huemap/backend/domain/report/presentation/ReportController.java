@@ -1,11 +1,16 @@
 package com.huemap.backend.domain.report.presentation;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.huemap.backend.common.annotation.AuthRequired;
 import com.huemap.backend.common.annotation.CurrentUserId;
 import com.huemap.backend.common.response.success.RestResponse;
+import com.huemap.backend.domain.bin.domain.ConditionType;
 import com.huemap.backend.domain.report.application.ReportService;
 import com.huemap.backend.domain.report.dto.request.ClosureCreateRequest;
 import com.huemap.backend.domain.report.dto.request.ConditionCreateRequest;
@@ -77,5 +83,14 @@ public class ReportController {
       @RequestPart(value = "file") MultipartFile multipartFile) throws IOException {
     return RestResponse.of(
         reportService.saveCondition(userId, binId, conditionCreateRequest, multipartFile));
+  }
+
+  @GetMapping("report-condition")
+  public ResponseEntity<RestResponse> findById(@PathParam("gu") String gu, @PathParam("type") ConditionType type,
+      @PathParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startDate,
+      @PathParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endDate) {
+
+    RestResponse response = RestResponse.of(reportService.findByConditionType(gu, type, startDate, endDate));
+    return ResponseEntity.ok(response);
   }
 }

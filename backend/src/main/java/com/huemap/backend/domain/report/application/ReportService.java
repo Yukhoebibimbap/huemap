@@ -3,6 +3,7 @@ package com.huemap.backend.domain.report.application;
 import static com.huemap.backend.common.utils.GeometryUtil.*;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.locationtech.jts.geom.Point;
@@ -16,6 +17,7 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.huemap.backend.domain.bin.domain.Bin;
 import com.huemap.backend.domain.bin.domain.BinRepository;
 import com.huemap.backend.domain.bin.domain.BinType;
+import com.huemap.backend.domain.bin.domain.ConditionType;
 import com.huemap.backend.domain.bin.event.BinCreateEvent;
 import com.huemap.backend.common.exception.EntityNotFoundException;
 import com.huemap.backend.common.exception.InvalidValueException;
@@ -127,6 +129,12 @@ public class ReportService {
     sendSocketMessage(condition);
 
     return ConditionMapper.INSTANCE.toDto(condition);
+  }
+
+  public ConditionResponse findByConditionType(String gu, ConditionType type, LocalDateTime startDate,
+      LocalDateTime endDate) {
+
+    return null;
   }
 
   private void sendSocketMessage(Condition condition) {
