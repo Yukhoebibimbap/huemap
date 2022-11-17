@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.huemap.backend.common.annotation.AuthRequired;
+import com.huemap.backend.common.annotation.CurrentUserId;
 import com.huemap.backend.common.response.success.RestResponse;
 import com.huemap.backend.domain.report.application.ReportService;
 import com.huemap.backend.domain.report.dto.request.ClosureCreateRequest;
@@ -34,38 +36,32 @@ public class ReportController {
 
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("{binId}/report-closures")
+  @AuthRequired
   public RestResponse saveClosure(
+      @CurrentUserId Long userId,
       @PathVariable Long binId,
       @RequestBody @Valid ClosureCreateRequest closureCreateRequest
   ) {
-    /**
-     * TODO: user 도메인 구현 후 수정 예정
-     */
-    final Long userId = 1L;
     return RestResponse.of(reportService.saveClosure(userId, binId, closureCreateRequest));
   }
 
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("report-presences")
+  @AuthRequired
   public RestResponse savePresence(
+      @CurrentUserId Long userId,
       @RequestBody @Valid PresenceCreateRequest presenceCreateRequest
   ) {
-    /**
-     * TODO: user 도메인 구현 후 수정 예정
-     */
-    final Long userId = 1L;
     return RestResponse.of(reportService.savePresence(userId, presenceCreateRequest));
   }
 
   @ResponseStatus(HttpStatus.OK)
   @PutMapping("{binId}/vote")
+  @AuthRequired
   public void votePresence(
       @PathVariable Long binId,
       @RequestBody @Valid PresenceVoteRequest presenceVoteRequest
   ) {
-    /**
-     * TODO: user 도메인 구현 후 수정 예정
-     */
     reportService.votePresence(binId, presenceVoteRequest);
   }
 
@@ -73,14 +69,13 @@ public class ReportController {
   @PostMapping(
       value = "{binId}/report-condition",
       consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  @AuthRequired
   public RestResponse saveCondition(
+      @CurrentUserId Long userId,
       @PathVariable Long binId,
       @RequestPart(value = "dto") @Valid ConditionCreateRequest conditionCreateRequest,
       @RequestPart(value = "file") MultipartFile multipartFile) throws IOException {
-    /**
-     * TODO: user 도메인 구현 후 수정 예정
-     */
-    final Long userId = 1L;
-    return RestResponse.of(reportService.saveCondition(userId, binId, conditionCreateRequest, multipartFile));
+    return RestResponse.of(
+        reportService.saveCondition(userId, binId, conditionCreateRequest, multipartFile));
   }
 }
