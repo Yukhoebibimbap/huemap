@@ -30,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class SuggestionService {
 
 	private final SuggestionRepository suggestionRepository;
+	private final static int SUGGESTION_COUNT_LIMIT=3;
 
 	@Transactional
 	public SuggestionCreateResponse save(SuggestionCreateRequest suggestionCreateRequest, Long userId) {
@@ -61,7 +62,8 @@ public class SuggestionService {
 		LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0));
 		LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59));
 
-		if (suggestionRepository.countByUserIdAndCreatedAtBetween(userId, startDatetime, endDatetime) >= 3) {
+		if (suggestionRepository.countByUserIdAndCreatedAtBetween(userId, startDatetime, endDatetime)
+			>= SUGGESTION_COUNT_LIMIT) {
 			throw new SuggestionLimitExceededException();
 		}
 	}
