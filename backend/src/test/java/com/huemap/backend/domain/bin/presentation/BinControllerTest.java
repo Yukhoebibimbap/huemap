@@ -86,7 +86,7 @@ public class BinControllerTest extends ControllerTest {
 				//given
 				final Long id = 1L;
 				final Bin bin = getBin();
-				given(binService.findById(id)).willReturn(BinDetailResponse.toDto(bin,anyBoolean()));
+				given(binService.findById(id)).willReturn(BinDetailResponse.toDto(bin, true));
 
 				//when
 				final ResultActions perform = requestFindById(id);

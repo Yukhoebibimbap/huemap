@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.huemap.backend.common.annotation.AuthRequired;
+import com.huemap.backend.common.annotation.CurrentUserId;
 import com.huemap.backend.common.response.success.RestResponse;
 import com.huemap.backend.domain.bin.domain.BinType;
 import com.huemap.backend.domain.suggestion.application.SuggestionService;
@@ -30,11 +32,9 @@ public class SuggestionController {
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping("bin-location")
-	public RestResponse save(@RequestBody @Valid SuggestionCreateRequest suggestionCreateRequest) {
-		/**
-		 * TODO: user 도메인 구현 후 수정 예정
-		 */
-		final Long userId = 1L;
+	@AuthRequired
+	public RestResponse save(@CurrentUserId Long userId,
+													 @RequestBody @Valid SuggestionCreateRequest suggestionCreateRequest) {
 		return RestResponse.of(suggestionService.save(suggestionCreateRequest, userId));
 	}
 

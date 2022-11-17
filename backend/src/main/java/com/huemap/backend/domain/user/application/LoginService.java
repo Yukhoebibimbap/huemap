@@ -6,4 +6,6 @@ import com.huemap.backend.domain.user.dto.response.UserLoginResponse;
 public interface LoginService {
 
   UserLoginResponse login(UserLoginRequest userLoginRequest);
+
+  Long getCurrentUser();
 }
