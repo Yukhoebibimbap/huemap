@@ -15,7 +15,7 @@ class MapView extends StatelessWidget {
   Widget build(BuildContext context) {
     viewModel = Provider.of<MapViewModel>(context);
     return FutureBuilder(
-      future: viewModel.loadCompleted,
+      future: Future.wait([viewModel.binLoadCompleted, viewModel.assetLoadCompleted]),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Flexible(
@@ -33,6 +33,7 @@ class MapView extends StatelessWidget {
                       initialUrl: viewModel.url,
                       onWebViewCreated: (controller) {
                         viewModel.controller = controller;
+
                       },
                       javascriptMode: JavascriptMode.unrestricted,
                       javascriptChannels: viewModel.channel,
