@@ -1,10 +1,12 @@
 package com.huemap.backend.domain.report.application;
 
-import static com.huemap.backend.common.utils.GeometryUtil.*;
+import static com.huemap.backend.common.utils.GeometryUtil.convertPoint;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.locationtech.jts.geom.Point;
 import org.springframework.context.ApplicationEventPublisher;
@@ -14,15 +16,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
+import com.huemap.backend.common.exception.EntityNotFoundException;
+import com.huemap.backend.common.exception.InvalidValueException;
+import com.huemap.backend.common.response.error.ErrorCode;
+import com.huemap.backend.common.utils.GeometryUtil;
 import com.huemap.backend.domain.bin.domain.Bin;
 import com.huemap.backend.domain.bin.domain.BinRepository;
 import com.huemap.backend.domain.bin.domain.BinType;
 import com.huemap.backend.domain.bin.domain.ConditionType;
 import com.huemap.backend.domain.bin.event.BinCreateEvent;
-import com.huemap.backend.common.exception.EntityNotFoundException;
-import com.huemap.backend.common.exception.InvalidValueException;
-import com.huemap.backend.common.response.error.ErrorCode;
-import com.huemap.backend.common.utils.GeometryUtil;
 import com.huemap.backend.domain.report.domain.Closure;
 import com.huemap.backend.domain.report.domain.Condition;
 import com.huemap.backend.domain.report.domain.Image;
@@ -131,10 +133,12 @@ public class ReportService {
     return ConditionMapper.INSTANCE.toDto(condition);
   }
 
-  public ConditionResponse findByConditionType(String gu, ConditionType type, LocalDateTime startDate,
+  public List<ConditionResponse> findAllConditionByGuAndType(String gu, ConditionType type, LocalDateTime startDate,
       LocalDateTime endDate) {
 
-    return null;
+    return (List<ConditionResponse>)reportRepository.findAllConditionByGuAndTypeAndCreatedAtBetween(gu, type, startDate,
+            endDate)
+        .stream().map(e -> ConditionResponse.toDto((Condition)e)).collect(Collectors.toList());
   }
 
   private void sendSocketMessage(Condition condition) {
