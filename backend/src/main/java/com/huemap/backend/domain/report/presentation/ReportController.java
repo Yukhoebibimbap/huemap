@@ -86,11 +86,11 @@ public class ReportController {
   }
 
   @GetMapping("report-condition")
-  public ResponseEntity<RestResponse> findById(@PathParam("gu") String gu, @PathParam("type") ConditionType type,
+  public ResponseEntity<RestResponse> findAllConditionByGuAndType(@PathParam("gu") String gu, @PathParam("type") ConditionType type,
       @PathParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startDate,
       @PathParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endDate) {
 
-    RestResponse response = RestResponse.of(reportService.findByConditionType(gu, type, startDate, endDate));
+    RestResponse response = RestResponse.of(reportService.findAllConditionByGuAndType(gu, type, startDate, endDate));
     return ResponseEntity.ok(response);
   }
 }
