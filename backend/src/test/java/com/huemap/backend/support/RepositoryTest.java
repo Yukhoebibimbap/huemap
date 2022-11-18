@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Import;
 import com.huemap.backend.common.config.RedisConfig;
 import com.huemap.backend.domain.bin.domain.BinRepository;
 import com.huemap.backend.domain.report.domain.ReportRepository;
+import com.huemap.backend.domain.suggestion.domain.SuggestionRepository;
 
 @Import({TestRedisConfig.class, RedisConfig.class})
 @DataJpaTest
@@ -17,5 +18,8 @@ public class RepositoryTest {
 
   @Autowired
   protected BinRepository binRepository;
+
+  @Autowired
+  protected SuggestionRepository suggestionRepository;
 
 }
