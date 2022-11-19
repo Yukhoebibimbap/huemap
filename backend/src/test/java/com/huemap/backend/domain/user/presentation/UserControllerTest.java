@@ -2,8 +2,6 @@ package com.huemap.backend.domain.user.presentation;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.DisplayName;
@@ -11,9 +9,11 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import com.huemap.backend.common.exception.EntityNotFoundException;
+import com.huemap.backend.common.exception.InvalidValueException;
+import com.huemap.backend.common.response.error.ErrorCode;
 import com.huemap.backend.common.response.success.RestResponse;
 import com.huemap.backend.domain.user.dto.request.UserCreateRequest;
 import com.huemap.backend.domain.user.dto.request.UserLoginRequest;
@@ -143,6 +143,27 @@ public class UserControllerTest extends ControllerTest {
     }
 
     @Nested
+    @DisplayName("중복된 이메일에 대하여 회원가입을 한다면")
+    class Context_with_already_exist {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final UserCreateRequest request = new UserCreateRequest("huemap@gmail.com", "name", "Password1234!");
+        willThrow(new InvalidValueException(ErrorCode.USER_EMAIL_DUPLICATED))
+            .given(userService)
+            .save(any(UserCreateRequest.class));
+
+        //when
+        final ResultActions perform = requestSave(request);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
     @DisplayName("email, name, password가 올바른 값으로 입력되면")
     class Context_with_valid_email_name_password {
 
@@ -240,6 +261,48 @@ public class UserControllerTest extends ControllerTest {
       void It_throws_exception(String password) throws Exception {
         //given
         final UserLoginRequest request = new UserLoginRequest("huemap@gmail.com", password);
+
+        //when
+        final ResultActions perform = requestLogin(request);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("존재하지 않은 이메일에 대하여 로그인을 한다면")
+    class Context_with_not_exist_email {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final UserLoginRequest request = new UserLoginRequest("huemap@gmail.com", "Password1234!");
+        willThrow(new EntityNotFoundException(ErrorCode.USER_NOT_FOUND))
+            .given(loginService)
+            .login(any(UserLoginRequest.class));
+
+        //when
+        final ResultActions perform = requestLogin(request);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("일치하지 않은 비밀번호에 대하여 로그인을 한다면")
+    class Context_with_not_match_password {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final UserLoginRequest request = new UserLoginRequest("huemap@gmail.com", "Password1234!");
+        willThrow(new InvalidValueException(ErrorCode.LOGIN_PASSWORD_NOT_MATCH))
+            .given(loginService)
+            .login(any(UserLoginRequest.class));
 
         //when
         final ResultActions perform = requestLogin(request);
