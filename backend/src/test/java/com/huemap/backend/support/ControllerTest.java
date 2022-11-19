@@ -2,6 +2,8 @@ package com.huemap.backend.support;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huemap.backend.common.config.RedisConfig;
@@ -61,5 +65,28 @@ public class ControllerTest {
   @BeforeEach
   void initEach() {
     given(authInterceptor.preHandle(any(), any(), any())).willReturn(true);
+  }
+
+  protected ResultActions requestGet(final String url) throws Exception {
+    return mockMvc.perform(get(url))
+                  .andDo(print());
+  }
+
+  protected ResultActions requestPost(final String url, final Object request) throws Exception {
+    final String content = objectMapper.writeValueAsString(request);
+
+    return mockMvc.perform(post(url)
+                               .contentType(MediaType.APPLICATION_JSON)
+                               .content(content))
+                  .andDo(print());
+  }
+
+  protected ResultActions requestPut(final String url, final Object request) throws Exception {
+    final String content = objectMapper.writeValueAsString(request);
+
+    return mockMvc.perform(put(url)
+                               .contentType(MediaType.APPLICATION_JSON)
+                               .content(content))
+                  .andDo(print());
   }
 }

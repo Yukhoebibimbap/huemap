@@ -3,8 +3,6 @@ package com.huemap.backend.domain.suggestion.presentation;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -13,7 +11,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.huemap.backend.common.response.success.RestResponse;
@@ -155,14 +152,5 @@ public class SuggestionControllerTest extends ControllerTest {
 		private ResultActions requestSave(final SuggestionCreateRequest request) throws Exception {
 			return requestPost("/api/v1/suggestions/bin-location", request);
 		}
-	}
-
-	private ResultActions requestPost(final String url, final Object request) throws Exception {
-		final String content = objectMapper.writeValueAsString(request);
-
-		return mockMvc.perform(post(url)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(content))
-			.andDo(print());
 	}
 }

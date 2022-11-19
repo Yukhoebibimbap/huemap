@@ -1,10 +1,7 @@
 package com.huemap.backend.domain.bin.presentation;
 
 import static com.huemap.backend.support.TestUtils.getBin;
-import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -120,9 +117,5 @@ public class BinControllerTest extends ControllerTest {
 		private ResultActions requestFindById(final Long id) throws Exception {
 			return requestGet("/api/v1/bins/" + id);
 		}
-	}
-
-	private ResultActions requestGet(final String url) throws Exception {
-		return mockMvc.perform(get(url)).andDo(print());
 	}
 }
