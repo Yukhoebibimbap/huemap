@@ -1,0 +1,40 @@
+.overlay {
+    position: relative;
+    top: -145px;
+    width: 150px;
+    height: 250px;
+    background-color: #fff;
+    border: none;
+    border-radius: 8px;
+    line-height: 1.3;
+    z-index: 15;
+  }
+  
+
+  .overlayImg {
+    width: 100%;
+    height: 50%;
+    border-radius: 8px 8px 0 0;
+    object-fit: cover;
+  }
+  
+  .overlayInfoFrame {
+    width: 100%;
+    height: 50%;
+    padding: 5px 10px;
+  }
+  
+  .overlayTime {
+    width: 100%;
+    font-size: 15px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .overlayInfo {
+    color: #717171;
+    font-size: 12px;
+  }
+  

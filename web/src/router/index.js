@@ -17,12 +17,8 @@ const router = new Router({
       component: ()=>import('../view/selectGuPage')
     },
     {
-      path: '/state/:gu',
+      path: '/state/:gu/:conditionType',
       component: ()=>import('../view/binStatePage')
-    },
-    {
-      path: '/chat/:gu',
-      component: ()=>import('../view/chatTest2')
     },
     
   ]
