@@ -276,13 +276,4 @@ public class UserControllerTest extends ControllerTest {
       return requestPost("/api/v1/users/login", request);
     }
   }
-
-  private ResultActions requestPost(final String url, final Object request) throws Exception {
-    final String content = objectMapper.writeValueAsString(request);
-
-    return mockMvc.perform(post(url)
-                               .contentType(MediaType.APPLICATION_JSON)
-                               .content(content))
-                  .andDo(print());
-  }
 }
