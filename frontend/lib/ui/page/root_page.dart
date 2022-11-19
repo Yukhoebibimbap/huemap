@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:huemap_app/ui/viewmodel/map_viewmodel.dart';
 import 'package:huemap_app/ui/view/user_view.dart';
 
-void main(){runApp(const MaterialApp(home:RootPage()));}
+// void main(){runApp(const MaterialApp(home:RootPage()));}
 
 class RootPage extends StatefulWidget {
   const RootPage({Key? key}) : super(key: key);
