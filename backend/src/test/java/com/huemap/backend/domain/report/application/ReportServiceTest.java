@@ -182,8 +182,7 @@ public class ReportServiceTest {
                                                                         126.987755);
         final Bin bin = getBin();
         final Presence presence = getPresence(bin);
-        given(binRepository.findCandidateBinByTypeAndLocation(any(BinType.class),
-                                                              any(Point.class)))
+        given(binRepository.findBinByTypeAndLocation(any(BinType.class), any(Point.class)))
             .willReturn(Optional.of(bin));
         given(reportRepository.save(any(Presence.class))).willReturn(presence);
 
