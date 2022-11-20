@@ -6,7 +6,7 @@
           v-model="conditionType"
           :items="conditionTypeList"
           item-text="text"
-          label="폐수거함 유형"
+          label="상태"
           outlined
           @change="setConditionType"
           return-object
