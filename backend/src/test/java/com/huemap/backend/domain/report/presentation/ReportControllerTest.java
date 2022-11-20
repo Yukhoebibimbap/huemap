@@ -284,7 +284,7 @@ public class ReportControllerTest extends ControllerTest {
     }
 
     @Nested
-    @DisplayName("핀의  위도가 -90 ~ 90 이외의 값이거나 올바르지 않은 형식으로 들어오면")
+    @DisplayName("핀의 위도가 -90 ~ 90 이외의 값이거나 올바르지 않은 형식으로 들어오면")
     class Context_with_invalid_range_latitude {
 
       @ParameterizedTest
@@ -304,7 +304,7 @@ public class ReportControllerTest extends ControllerTest {
     }
 
     @Nested
-    @DisplayName("핀의  경도가 null로 들어오면")
+    @DisplayName("핀의 경도가 null로 들어오면")
     class Context_with_null_longitude {
 
       @Test
@@ -418,7 +418,7 @@ public class ReportControllerTest extends ControllerTest {
     }
 
     @Nested
-    @DisplayName("핀의  경도가 null로 들어오면")
+    @DisplayName("투표자의 경도가 null로 들어오면")
     class Context_with_null_longitude {
 
       @Test
@@ -437,7 +437,7 @@ public class ReportControllerTest extends ControllerTest {
     }
 
     @Nested
-    @DisplayName("핀의 경도가 -180 ~ 180 이외의 값이거나 올바르지 않은 형식으로 들어오면")
+    @DisplayName("투표자의 경도가 -180 ~ 180 이외의 값이거나 올바르지 않은 형식으로 들어오면")
     class Context_with_invalid_range_longitude {
 
       @ParameterizedTest
@@ -457,8 +457,74 @@ public class ReportControllerTest extends ControllerTest {
     }
 
     @Nested
-    @DisplayName("핀의 위도, 경도, 타입이 올바른 값으로 입력되면")
-    class Context_with_valid_latitude_longitude_type {
+    @DisplayName("존재하지 않은 폐수거함으로 투표를 한다면")
+    class Context_with_not_found_bin {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final Long binId = 1L;
+        final PresenceVoteRequest request = new PresenceVoteRequest(37.5833354, 126.9876779);
+        willThrow(new EntityNotFoundException(ErrorCode.BIN_NOT_FOUND))
+            .given(reportService)
+            .votePresence(anyLong(), any(PresenceVoteRequest.class));
+
+        //when
+        final ResultActions perform = requestVotePresence(binId, request);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("투표하려는 폐수거함의 거리 차이가 10m 이상인 곳에서 투표를 한다면")
+    class Context_with_distance_far_bin {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final Long binId = 1L;
+        final PresenceVoteRequest request = new PresenceVoteRequest(37.5833354, 126.9876779);
+        willThrow(new InvalidValueException(ErrorCode.DISTANCE_FAR))
+            .given(reportService)
+            .votePresence(anyLong(), any(PresenceVoteRequest.class));
+
+        //when
+        final ResultActions perform = requestVotePresence(binId, request);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("투표하려는 폐수거함이 존재 제보되지 않은 폐수거함이면")
+    class Context_with_not_exist_presence {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final Long binId = 1L;
+        final PresenceVoteRequest request = new PresenceVoteRequest(37.5833354, 126.9876779);
+        willThrow(new EntityNotFoundException(ErrorCode.PRESENCE_NOT_FOUND))
+            .given(reportService)
+            .votePresence(anyLong(), any(PresenceVoteRequest.class));
+
+        //when
+        final ResultActions perform = requestVotePresence(binId, request);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("투표자의 위도, 경도가 올바른 값으로 입력되면")
+    class Context_with_valid_latitude_longitude {
 
       @Test
       @DisplayName("200을 응답한다.")
@@ -666,6 +732,74 @@ public class ReportControllerTest extends ControllerTest {
                                                              "imagefile.png",
                                                              "image/png",
                                                              "<<png data>>".getBytes());
+
+        //when
+        final ResultActions perform = requestSaveCondition(binId, dto, file);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("존재하지 않은 폐수거함으로 상태 제보를 한다면")
+    class Context_with_not_found_bin {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final Long binId = 1L;
+        final ConditionCreateRequest request = new ConditionCreateRequest(ConditionType.FULL,
+                                                                          37.5833354,
+                                                                          126.9876779);
+        final String content = objectMapper.writeValueAsString(request);
+        final MockMultipartFile dto = new MockMultipartFile("dto",
+                                                            "",
+                                                            "application/json",
+                                                            content.getBytes(StandardCharsets.UTF_8));
+        final MockMultipartFile file = new MockMultipartFile("file",
+                                                             "imagefile.png",
+                                                             "image/png",
+                                                             "<<png data>>".getBytes());
+        willThrow(new EntityNotFoundException(ErrorCode.BIN_NOT_FOUND))
+            .given(reportService)
+            .saveCondition(anyLong(), anyLong(), any(ConditionCreateRequest.class),
+                           any(MultipartFile.class));
+
+        //when
+        final ResultActions perform = requestSaveCondition(binId, dto, file);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("제보하려는 폐수거함의 거리 차이가 10m 이상인 곳에서 상태 제보를 한다면")
+    class Context_with_distance_far_bin {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final Long binId = 1L;
+        final ConditionCreateRequest request = new ConditionCreateRequest(ConditionType.FULL,
+                                                                          37.5833354,
+                                                                          126.9876779);
+        final String content = objectMapper.writeValueAsString(request);
+        final MockMultipartFile dto = new MockMultipartFile("dto",
+                                                            "",
+                                                            "application/json",
+                                                            content.getBytes(StandardCharsets.UTF_8));
+        final MockMultipartFile file = new MockMultipartFile("file",
+                                                             "imagefile.png",
+                                                             "image/png",
+                                                             "<<png data>>".getBytes());
+        willThrow(new InvalidValueException(ErrorCode.DISTANCE_FAR))
+            .given(reportService)
+            .saveCondition(anyLong(), anyLong(), any(ConditionCreateRequest.class),
+                           any(MultipartFile.class));
 
         //when
         final ResultActions perform = requestSaveCondition(binId, dto, file);

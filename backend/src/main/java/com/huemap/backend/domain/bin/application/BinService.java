@@ -61,9 +61,9 @@ public class BinService {
 	}
 
 	private void validateCandidateBinAlreadyExist(BinType type, Point location) {
-		binRepository.findCandidateBinByTypeAndLocation(type, location)
+		binRepository.findBinByTypeAndLocation(type, location)
 								 .ifPresent(b -> {
-									 throw new InvalidValueException(ErrorCode.CANDIDATE_BIN_DUPLICATED);
+									 throw new InvalidValueException(ErrorCode.BIN_DUPLICATED);
 								 });
 	}
 }

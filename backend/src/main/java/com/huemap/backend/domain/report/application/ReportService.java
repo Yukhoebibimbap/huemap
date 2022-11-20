@@ -87,7 +87,7 @@ public class ReportService {
                                         presenceCreateRequest.getLongitude());
     publisher.publishEvent(BinCreateEvent.candidateOf(type, location));
 
-    final Bin bin = binRepository.findCandidateBinByTypeAndLocation(type, location)
+    final Bin bin = binRepository.findBinByTypeAndLocation(type, location)
                                  .orElseThrow(() -> new EntityNotFoundException(ErrorCode.BIN_NOT_FOUND));
 
     final Presence presence = (Presence)reportRepository.save(Presence.of(userId, bin));

@@ -144,8 +144,7 @@ public class BinServiceTest {
                                                                 convertPoint(37.583297,
                                                                              126.987755));
         final Bin bin = getBin();
-        given(binRepository.findCandidateBinByTypeAndLocation(any(BinType.class),
-                                                              any(Point.class)))
+        given(binRepository.findBinByTypeAndLocation(any(BinType.class), any(Point.class)))
             .willReturn(Optional.of(bin));
 
         // when, then
@@ -153,7 +152,7 @@ public class BinServiceTest {
             () -> binService.save(event))
             .isInstanceOf(InvalidValueException.class)
             .extracting("errorCode")
-            .isEqualTo(ErrorCode.CANDIDATE_BIN_DUPLICATED);
+            .isEqualTo(ErrorCode.BIN_DUPLICATED);
       }
     }
 
@@ -169,8 +168,7 @@ public class BinServiceTest {
                                                                 convertPoint(37.583297,
                                                                              126.987755));
         final Bin bin = getBin();
-        given(binRepository.findCandidateBinByTypeAndLocation(any(BinType.class),
-                                                              any(Point.class)))
+        given(binRepository.findBinByTypeAndLocation(any(BinType.class), any(Point.class)))
             .willReturn(Optional.empty());
         given(binRepository.save(any(Bin.class))).willReturn(bin);
 

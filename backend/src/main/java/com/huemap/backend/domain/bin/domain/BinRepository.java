@@ -10,6 +10,6 @@ public interface BinRepository extends JpaRepository<Bin, Long> {
 
 	List<Bin> findAllByType(BinType type);
 
-	Optional<Bin> findCandidateBinByTypeAndLocation(BinType type, Point location);
+	Optional<Bin> findBinByTypeAndLocation(BinType type, Point location);
 
 }
