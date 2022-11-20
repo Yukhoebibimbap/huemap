@@ -10,6 +10,7 @@
     <v-spacer></v-spacer>
 
       <v-btn href="/state/select/gu" color="primary">폐수거함 상태</v-btn>
+      <v-btn href="/suggestion/select/gu" color="primary">폐수거함 건의</v-btn>
     </v-app-bar>
 </template>
 
