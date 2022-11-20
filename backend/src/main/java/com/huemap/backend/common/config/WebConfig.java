@@ -7,7 +7,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.huemap.backend.common.resolver.AuthInterceptor;
+import com.huemap.backend.common.interceptor.AuthInterceptor;
 import com.huemap.backend.common.resolver.CurrentUserIdResolver;
 
 import lombok.RequiredArgsConstructor;

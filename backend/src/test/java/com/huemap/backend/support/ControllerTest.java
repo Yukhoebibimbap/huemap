@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huemap.backend.common.config.RedisConfig;
-import com.huemap.backend.common.resolver.AuthInterceptor;
+import com.huemap.backend.common.interceptor.AuthInterceptor;
 import com.huemap.backend.domain.bin.application.BinService;
 import com.huemap.backend.domain.bin.presentation.BinController;
 import com.huemap.backend.domain.report.application.ReportService;
