@@ -6,6 +6,7 @@ def kmeans(bins):
     x=[]
     y=[]
     for bin in bins:
+        
         x.append(bin["x"])
         y.append(bin["y"])
   
