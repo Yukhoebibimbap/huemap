@@ -2,6 +2,7 @@
     <v-container>
       <div id="pollution-map"></div>
       <v-btn href="/suggestion/강남구/GENERAL" color="primary">강남구</v-btn>
+      <v-btn href="/suggestion/영등포구/GENERAL" color="primary">영등포구</v-btn>
     </v-container>
       
       
