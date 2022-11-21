@@ -1,7 +1,7 @@
 from flask import Flask,jsonify,request
 import configparser
 from flask_mysqldb import MySQL
-
+from service.kmeansCluster import kmeans
 
 app = Flask(__name__)
 
@@ -29,9 +29,10 @@ def fetchall_cursor(fetchall_query):
     cursor = db_connection()
     cursor.execute(fetchall_query)
     row = cursor.fetchall()
-    resp = jsonify(row)
-    resp.status_code=200
-    return resp
+    print("로우",type(row))
+    # resp = jsonify(row)
+    # resp.status_code=200
+    return row
 
 
 @app.route('/data/healthCheck',methods = ['GET'])
@@ -40,8 +41,10 @@ def index():
 
 @app.route('/data/bins',methods = ['GET'])
 def cluster():
-    all_items =fetchall_cursor("""select ST_X(location) as latitude, ST_X(location) as longitude from suggestion""")
-    return all_items
+    bins=fetchall_cursor("""select ST_X(location) as x, ST_X(location) as y from suggestion where type='GENERAL'""")
+    d=kmeans(bins)
+    print(type(d))
+    return d
 
 
 if __name__ == '__main__':
