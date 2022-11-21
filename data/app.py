@@ -29,9 +29,7 @@ def fetchall_cursor(fetchall_query):
     cursor = db_connection()
     cursor.execute(fetchall_query)
     row = cursor.fetchall()
-    print("로우",type(row))
-    # resp = jsonify(row)
-    # resp.status_code=200
+
     return row
 
 
@@ -42,9 +40,8 @@ def index():
 @app.route('/data/bins',methods = ['GET'])
 def cluster():
     bins=fetchall_cursor("""select ST_Y(location) as x, ST_X(location) as y from suggestion where type='GENERAL'""")
-    d=kmeans(bins)
-    print(type(d))
-    return d
+    
+    return kmeans(bins)
 
 
 if __name__ == '__main__':
