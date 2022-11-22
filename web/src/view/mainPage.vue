@@ -66,6 +66,7 @@ export default {
         this.displayMarker([[this.latitude, this.longitude]]);
       },
       displayMarker(markerPositions) {
+        
         if (this.markers.length > 0) {
           this.markers.forEach((marker) => marker.setMap(null));
         }
@@ -102,7 +103,6 @@ export default {
           data.data.map(x=>{
             list.push([x.latitude,x.longitude])
           })
-          console.log(list)
         })
         .catch(()=>{alert("실패")})
 
