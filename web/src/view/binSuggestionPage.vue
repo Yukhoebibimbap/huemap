@@ -11,6 +11,13 @@
           @change="setBinType"
           return-object
     ></v-select>
+    <v-text-field
+            v-model="kmeans_k"
+            :counter="2"
+            label="폐수거함 설치 갯수"
+            required
+    ></v-text-field>
+    <v-btn @click="clustering()">클러스터링</v-btn>
   </v-row>
     </v-container>
     
@@ -38,6 +45,7 @@
           {text:'폐의약품' ,value:'MEDICINE'},
         ],
         binType:"",
+        kmeans_k:4
       }
     },
     computed:{
@@ -58,12 +66,11 @@
         await this.$axios.get(`/api/v1/suggestions/bin-location?gu=${this.$route.params.gu}&type=${this.$route.params.binType}&startDate=${this.startDate}&endDate=${this.endDate}`)
         .then(result=>{
           const {data}=result
-          console.log(data)
           if (data.data.length>0){
             this.displayMarker(data.data)
           }
         })
-        .catch(err=>{console.log(err)})
+        .catch(err=>{})
 
       
       },
@@ -77,42 +84,90 @@
           this.map = new kakao.maps.Map(container, options);
         },
        
-       async displayMarker(dataList) {
+      async displayMarker(dataList) {
 
-          var bins = []
+        var bins = []
 
-          for(let data of dataList){
-           
-            bins.push({
-              position : new kakao.maps.LatLng(data.latitude, data.longitude),
-            })
-            
-          }
+        for(let data of dataList){
           
-          if (bins.length > 0) {
-            this.markers = bins.map(
-                (bin) =>{
-                  
-                  var marker=new kakao.maps.Marker({
-                    map: this.map,
-                    position:bin.position,
-                  })
-        
-                }
-            );
-    
-          }
-          const bounds = bins.reduce(
-                (bounds, bin) => bounds.extend(bin.position),
-                new kakao.maps.LatLngBounds()
-            );
-    
-            this.map.setBounds(bounds);
+          bins.push({
+            position : new kakao.maps.LatLng(data.latitude, data.longitude),
+          })
           
-        },
-        async setBinType(){
-          this.$router.push(`/suggestion/${this.$route.params.gu}/${this.binType.value}`)
         }
+        
+        if (bins.length > 0) {
+          for(let bin of bins){
+            this.markers.push(
+              new kakao.maps.Marker({
+                  map: this.map,
+                  position:bin.position,
+                })
+            )
+          }
+        
+          const bounds = bins.reduce(
+              (bounds, bin) => bounds.extend(bin.position),
+              new kakao.maps.LatLngBounds()
+          );
+  
+          this.map.setBounds(bounds);
+        }
+          
+      },
+
+      async setBinType(){
+        this.$router.push(`/suggestion/${this.$route.params.gu}/${this.binType.value}`)
+      },
+
+      async displayCluster(dataList) {
+        console.log(dataList)
+        var bins = []
+
+        for(let data of dataList){
+
+          bins.push({
+            position : new kakao.maps.LatLng(data[0], data[1]),
+          })
+          
+        }
+
+        if (bins.length > 0) {
+          for(let bin of bins){
+            this.markers.push(
+              new kakao.maps.Marker({
+                  map: this.map,
+                  position:bin.position,
+                })
+            )
+          }
+
+          const bounds = bins.reduce(
+              (bounds, bin) => bounds.extend(bin.position),
+              new kakao.maps.LatLngBounds()
+          );
+
+          this.map.setBounds(bounds);
+        }
+          
+      },
+
+      async clustering(){
+        if (this.markers.length > 0) {
+        this.markers.forEach((marker) => marker.setMap(null));
+        }
+
+        await this.$axios.get(`/data/bins?k=${this.kmeans_k}&gu=${this.$route.params.gu}&type=${this.$route.params.binType}&startDate=${this.startDate}&endDate=${this.endDate}`)
+        .then(result=>{
+          const {data}=result
+
+          if (data.length>0){
+            this.displayCluster(data)
+          }
+        })
+        .catch(err=>{})
+        
+      }
 
     }
   }

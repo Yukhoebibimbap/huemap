@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.cluster import KMeans
 from flask import jsonify
 
-def kmeans(bins):
+def kmeans(bins, k):
     x=[]
     y=[]
     for bin in bins:
@@ -13,7 +13,7 @@ def kmeans(bins):
 
     feature=pd.DataFrame({'x':x,'y':y})
 
-    kmeans = KMeans(n_clusters=4)
+    kmeans = KMeans(n_clusters=k)
     kmeans.fit(feature)     
     centroids  = kmeans.cluster_centers_
 

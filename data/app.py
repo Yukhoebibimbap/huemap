@@ -39,9 +39,13 @@ def index():
 
 @app.route('/data/bins',methods = ['GET'])
 def cluster():
-    bins=fetchall_cursor("""select ST_Y(location) as x, ST_X(location) as y from suggestion where type='GENERAL'""")
-    
-    return kmeans(bins)
+
+    query="""select ST_Y(location) as x, ST_X(location) as y from suggestion where type='{}' and gu='{}' and """\
+    """(created_at between '{}' and '{}')""".format(request.args["type"],request.args["gu"],request.args["startDate"],request.args["endDate"])
+
+    bins=fetchall_cursor(query)
+
+    return kmeans(bins, int(request.args["k"]))
 
 
 if __name__ == '__main__':
