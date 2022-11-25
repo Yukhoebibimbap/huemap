@@ -52,7 +52,7 @@
     computed:{
 
       socket(){
-        return io.connect(`http://localhost:8081`,{
+        return io.connect(`${process.env.VUE_APP_URL}`,{
           cors:{origin:'*'},
           path: '/socket.io',
           query: { room: this.$route.params.gu }
