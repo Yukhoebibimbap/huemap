@@ -12,7 +12,7 @@ function initMarker (lat, lng, id, type) {
         )
     }));
     kakao.maps.event.addListener(markers[markers.length-1], 'click', function() {
-        onClickMarker.postMessage('marker is clicked. id: ' + id);
+        onClickMarker.postMessage(id);
     })
 }
 
@@ -55,6 +55,14 @@ function dropPin(mouseEvent) {
     custom.setPosition(mouseEvent.latLng);
 }
 
+function openSuggestion() {
+    onClickSuggestion.postMessage('test')
+}
+
+function openReport() {
+    onClickReport.postMessage('test')
+}
+
 kakao.maps.event.addListener(pinDropped, 'click', function() {
     var position = pinDropped.getPosition();
     //onClickMarker.postMessage('lat: ' + position.getLat().toPrecision(9) + ', lng: ' + position.getLng().toPrecision(9));
@@ -62,12 +70,16 @@ kakao.maps.event.addListener(pinDropped, 'click', function() {
     custom.setMap(custom.getMap() ? null : map);
 });
 
+kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+    onClickMap.postMessage('click');
+});
+
 custom = new kakao.maps.CustomOverlay({
     clickable: true,
     content: '<div class="customoverlay">' +
-    '  <button class="title">건의</button>' +
-    '  <button class="title">제보</button>' +
+    '  <button class="title" onclick="openSuggestion()">건의</button>' +
+    '  <button class="title" onclick="openReport()">제보</button>' +
     '</div>'
 });
 
-map.setMaxLevel(3);
+map.setMaxLevel(6);

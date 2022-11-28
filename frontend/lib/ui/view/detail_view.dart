@@ -21,9 +21,9 @@ class DetailView extends StatelessWidget {
                   child: Stack(
                     alignment: AlignmentDirectional.topStart,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.all(12),
-                        child: Icon(Icons.reply, size: 30),
+                      TextButton(
+                        onPressed: viewModel.hide_all,
+                        child: Icon(Icons.reply, color: Colors.black,size: 30),
                       ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width,
@@ -42,7 +42,7 @@ class DetailView extends StatelessWidget {
                                 width: MediaQuery.of(context).size.width * 0.7,
                                 height: MediaQuery.of(context).size.height * 0.25,
                                 child:  Column(
-                                  children: model.temp_format.asMap().entries.map<Widget>(
+                                  children: Provider.of<MapViewModel>(context).temp_format.asMap().entries.map<Widget>(
                                           (entry) => Expanded(
                                         child: Row(
                                           children: [

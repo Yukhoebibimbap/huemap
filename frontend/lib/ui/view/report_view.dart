@@ -8,19 +8,22 @@ class ReportView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MapViewModel viewModel = new MapViewModel();
+    viewModel = Provider.of<MapViewModel>(context);
+    List<String> dropdownList = ['일반 쓰레기', '재활용 쓰레기', '폐형광등', '폐건전지', '의류','폐의약품'];
+    String selectedDropdown = '일반 쓰레기';
 
     return Consumer<MapViewModel>(
         builder: (context, countProvider, child) => Visibility(
             visible: Provider.of<MapViewModel>(context).report_visible,
             child: Expanded(
-              flex: 15,
+              flex: 10,
               child: SingleChildScrollView(
                 child: Container(
                   child: Stack(
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.all(12),
-                        child: Icon(Icons.reply, size: 30),
+                      TextButton(
+                        onPressed: viewModel.hide_all,
+                        child: Icon(Icons.reply, color: Colors.black,size: 30),
                       ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width,
@@ -31,26 +34,26 @@ class ReportView extends StatelessWidget {
                               const Padding(
                                 padding: EdgeInsets.all(8),
                                 child: Text(
-                                  '새 수거함 제보 & 건의',
+                                  '새 수거함 건의',
                                   style: TextStyle(fontSize: 24, color:Colors.black),
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.all(8),
-                                child: Container(
-                                    decoration: const BoxDecoration(
-                                      color: Colors.grey,
-                                    ),
-                                    width: MediaQuery.of(context).size.width * 0.7,
-                                    height: MediaQuery.of(context).size.height * 0.25,
-                                    child: Center(
-                                      child: TextButton(
-                                        onPressed: () {},
-                                        child: Icon(Icons.photo_camera, color: Colors.black,size: 100),
-                                      ),
-                                    )
-                                ),
-                              ),
+                              // Padding(
+                              //   padding: EdgeInsets.all(8),
+                              //   child: Container(
+                              //       decoration: const BoxDecoration(
+                              //         color: Colors.grey,
+                              //       ),
+                              //       width: MediaQuery.of(context).size.width * 0.7,
+                              //       height: MediaQuery.of(context).size.height * 0.25,
+                              //       child: Center(
+                              //         child: TextButton(
+                              //           onPressed: () {},
+                              //           child: Icon(Icons.photo_camera, color: Colors.black,size: 100),
+                              //         ),
+                              //       )
+                              //   ),
+                              // ),
                               Padding(
                                 padding: EdgeInsets.fromLTRB(30,15,5,5),
                                 child: Row(
@@ -74,8 +77,8 @@ class ReportView extends StatelessWidget {
                                     children: [
                                       Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: const [
-                                            Padding(
+                                          children: [
+                                            const Padding(
                                               padding: EdgeInsets.fromLTRB(30,0,0,0),
                                               child: Text(
                                                 "사용자 위치",
@@ -87,20 +90,28 @@ class ReportView extends StatelessWidget {
                                             ),
                                             Padding(
                                               padding: EdgeInsets.fromLTRB(30,0,50,0),
-                                              child: Text(
-                                                "불일치",
-                                                style: TextStyle(
-                                                    fontSize: 18.0,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w300),
+                                              child: Row(
+                                                children: const [
+                                                  Text(
+                                                    "불일치",
+                                                    style: TextStyle(
+                                                        fontSize: 18.0,
+                                                        color: Colors.black,
+                                                        fontWeight: FontWeight.w300),
+                                                  ),
+                                                  Padding(
+                                                      padding: EdgeInsets.all(5),
+                                                      child: Icon(Icons.circle, size: 30, color: Colors.red,)
+                                                  )
+                                                ],
                                               ),
-                                            )
+                                            ),
                                           ]
                                       ),
                                       Padding(padding: EdgeInsets.all(15),),
                                       Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: const [
+                                          children: [
                                             Padding(
                                               padding: EdgeInsets.fromLTRB(30,0,0,0),
                                               child: Text(
@@ -111,14 +122,27 @@ class ReportView extends StatelessWidget {
                                                     fontWeight: FontWeight.w300),
                                               ),
                                             ),
+                                            // Padding(
+                                            //   padding: EdgeInsets.fromLTRB(30,0,50,0),
+                                            //   child: Text(
+                                            //     "재활용",
+                                            //     style: TextStyle(
+                                            //         fontSize: 18.0,
+                                            //         color: Colors.black,
+                                            //         fontWeight: FontWeight.w300),
+                                            //   ),
+                                            // ),
                                             Padding(
-                                              padding: EdgeInsets.fromLTRB(30,0,50,0),
-                                              child: Text(
-                                                "재활용",
-                                                style: TextStyle(
-                                                    fontSize: 18.0,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w300),
+                                              padding: EdgeInsets.fromLTRB(0,0,50,0),
+                                              child: DropdownButton(
+                                                  value: selectedDropdown,
+                                                  items: dropdownList.map((String item) {
+                                                    return DropdownMenuItem<String>(
+                                                      child: Text('$item'),
+                                                      value: item,
+                                                    );
+                                                  }).toList(),
+                                                  onChanged: (dynamic value) {}
                                               ),
                                             )
                                           ]

@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:huemap_app/data/model/bin.dart';
+import 'package:huemap_app/data/model/binDetail.dart';
 import 'package:huemap_app/data/datasource/remote_datasource.dart';
 
 class BinRepository {
@@ -14,5 +17,9 @@ class BinRepository {
 
     Future<List<Bin>> getBins(Type t) async {
       return await _remoteDataSource.getBins(t);
+    }
+
+    Future<BinDetail?> getBinDetail(String id) async {
+      return await _remoteDataSource.getBinDetail(id);
     }
 }
