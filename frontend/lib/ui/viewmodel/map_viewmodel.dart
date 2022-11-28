@@ -43,6 +43,14 @@ class MapViewModel with ChangeNotifier{
   final onMarker = <bool>[true,false,false,false,false,false];
   bool onPinDrop = false;
 
+  bool _pin_visible = false;
+  bool get pin_visible => _pin_visible;
+  bool _report_visible = false;
+  bool get report_visible => _report_visible;
+
+  final pin_detail = ['도로명 주소', '상세 설명', '수거함 종류', '수거함 부재 제보 횟수'];
+  final temp_format = ['서울 동대문구 휘경동 268-1','정류소','일반 쓰레기',''];
+
   MapViewModel() {
     // 데이터 계층 연결, 자바스크립트 채널 생성
     _binRepository = BinRepository();
@@ -52,6 +60,7 @@ class MapViewModel with ChangeNotifier{
 
     channel = {JavascriptChannel(name: 'onClickMarker', onMessageReceived: (message) {
       Fluttertoast.showToast(msg: message.message);
+      toggle_detail();
     })};
   }
 
@@ -177,5 +186,17 @@ class MapViewModel with ChangeNotifier{
     }
 
     return (url = Uri(scheme: 'file', path: htmlPath).toString());
+  }
+
+  void toggle_detail() {
+    _pin_visible = !_pin_visible;
+    _report_visible = false;
+    notifyListeners();
+  }
+
+  void toggle_report() {
+    _report_visible = !_report_visible;
+    _pin_visible = false;
+    notifyListeners();
   }
 }

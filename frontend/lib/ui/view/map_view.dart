@@ -7,6 +7,8 @@ import 'package:huemap_app/data/model/bin.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:huemap_app/ui/viewmodel/map_viewmodel.dart';
+import 'package:huemap_app/ui/view/detail_view.dart';
+import 'package:huemap_app/ui/view/report_view.dart';
 
 class MapView extends StatelessWidget {
   late MapViewModel viewModel;
@@ -29,20 +31,29 @@ class MapView extends StatelessWidget {
             child: Container(
               child: Stack(
                 children: [
-                  WebView(
-                      initialUrl: viewModel.url,
-                      onWebViewCreated: (controller) {
-                        viewModel.controller = controller;
+                  Column(
+                    children: [
+                      Expanded(
+                        flex: 10,
+                        child: WebView(
+                            initialUrl: viewModel.url,
+                            onWebViewCreated: (controller) {
+                              viewModel.controller = controller;
 
-                      },
-                      javascriptMode: JavascriptMode.unrestricted,
-                      javascriptChannels: viewModel.channel,
+                            },
+                            javascriptMode: JavascriptMode.unrestricted,
+                            javascriptChannels: viewModel.channel,
 
-                      onPageFinished: (url) {
-                        viewModel.initBinMarker(Type.general);
-                        viewModel.setBinMarker(Type.general);
-                        viewModel.controller!.runJavascript("map.panTo(new kakao.maps.LatLng(37.495716, 127.029214))");
-                      }
+                            onPageFinished: (url) {
+                              viewModel.initBinMarker(Type.general);
+                              viewModel.setBinMarker(Type.general);
+                              viewModel.controller!.runJavascript("map.panTo(new kakao.maps.LatLng(37.495716, 127.029214))");
+                            }
+                        ),
+                      ),
+                      const DetailView(),
+                      // const ReportView(),
+                    ],
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left:10, top: 0, right: 10, bottom: 20),
