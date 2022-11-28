@@ -52,7 +52,7 @@ class MapView extends StatelessWidget {
                         ),
                       ),
                       const DetailView(),
-                      // const ReportView(),
+                      const ReportView(),
                     ],
                   ),
                   Padding(
