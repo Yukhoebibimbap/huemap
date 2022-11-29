@@ -10,9 +10,9 @@
       dark
       fluid
     >
-    <v-card elevation="0"><v-card-title></v-card-title></v-card>
-    <v-card elevation="0"><v-card-title></v-card-title></v-card>
-    <v-card elevation="0"><v-card-title></v-card-title></v-card>
+    <v-card elevation="0" color="#212121"><v-card-title></v-card-title></v-card>
+    <v-card elevation="0" color="#212121"><v-card-title></v-card-title></v-card>
+    <v-card elevation="0" color="#212121"><v-card-title></v-card-title></v-card>
     <v-row justify="center">
       <v-icon class="mx-2" color="#898989">mdi-delete-empty</v-icon><v-btn elevation="0" @click="draw('GENERAL')" color="#212121">일반 쓰레기</v-btn>
     </v-row>

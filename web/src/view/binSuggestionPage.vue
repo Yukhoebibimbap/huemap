@@ -1,23 +1,66 @@
 <template>
-    <v-container>
+    <v-container width="100%" height="100%" fluid class="ma-0 pa-0">
       <v-row>
-      <div id="map"></div>
-      <v-select
-          v-model="binType"
-          :items="binTypeList"
-          item-text="text"
-          label="폐수거함 유형"
-          outlined
-          @change="setBinType"
-          return-object
-    ></v-select>
-    <v-text-field
+        
+      <v-card
+      height="800px"
+      width="20%"
+      class="rounded-0"
+      elevation="8"
+      color="#212121"
+      dark
+      fluid
+    >
+    <v-card elevation="0" color="#212121"><v-card-title></v-card-title></v-card>
+    <v-card elevation="0" color="#212121"><v-card-title></v-card-title></v-card>
+    <v-card elevation="0" color="#212121"><v-card-title></v-card-title></v-card>
+    <v-row justify="center">
+      <v-icon class="mx-2" color="#898989">mdi-delete-empty</v-icon><v-btn elevation="0" @click="setBinType('GENERAL')" color="#212121">일반 쓰레기</v-btn>
+    </v-row>
+
+    <v-row justify="center">
+      <v-icon class="mx-2" color="#898989">mdi-recycle</v-icon><v-btn elevation="0" @click="setBinType('RECYCLE')" color="#212121">재활용</v-btn>
+    </v-row>
+
+    <v-row justify="center">
+      <v-icon class="mx-2" color="#898989">mdi-tshirt-crew</v-icon><v-btn elevation="0" @click="setBinType('CLOTHES')" color="#212121">의류수거함</v-btn>
+    </v-row>
+
+    <v-row justify="center">
+      <v-icon class="mx-2" color="#898989">mdi-battery-charging</v-icon><v-btn elevation="0" @click="setBinType('BATTERY')" color="#212121">폐건전지</v-btn>
+    </v-row>
+    <v-row justify="center">
+      <v-icon class="mx-2" color="#898989">mdi-medical-bag</v-icon><v-btn elevation="0" @click="setBinType('MEDICINE')" color="#212121">폐의약품</v-btn>
+    </v-row>
+    <v-row justify="center">
+      <v-icon class="mx-2" color="#898989">mdi-lightbulb-on</v-icon><v-btn elevation="0" @click="setBinType('LAMP')" color="#212121">폐형광등</v-btn>
+    </v-row>
+    
+
+    <v-row justify="center" class="mt-10">
+      <v-col
+      cols="12"
+          sm="6"
+        >
+      <v-text-field
             v-model="kmeans_k"
             :counter="2"
             label="폐수거함 설치 갯수"
             required
     ></v-text-field>
-    <v-btn @click="clustering()">클러스터링</v-btn>
+    </v-col>
+    </v-row>
+    <v-row justify="center">
+      <v-icon class="mx-2" color="#898989">mdi-google-analytics</v-icon><v-btn @click="clustering()" elevation="0" color="#212121">클러스터링</v-btn>
+    </v-row>
+
+    </v-card>
+
+
+
+      <div id="map"></div>
+      
+    
   </v-row>
     </v-container>
     
@@ -116,8 +159,8 @@
           
       },
 
-      async setBinType(){
-        this.$router.push(`/suggestion/${this.$route.params.gu}/${this.binType.value}`)
+      async setBinType(type){
+        this.$router.push(`/suggestion/${this.$route.params.gu}/${type}`)
       },
 
       async displayCluster(dataList) {
@@ -175,17 +218,11 @@
   
   
   <style scoped>
-  /* .test {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  } */
+
   
   #map {
-    width: 800px;
-    height: 600px;
+    width: 80%;
+    height: 800px;
     border: 1px #a8a8a8 solid;
   }
 
