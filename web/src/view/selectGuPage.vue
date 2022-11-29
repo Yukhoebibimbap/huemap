@@ -96,7 +96,14 @@
      
       
         kakao.maps.event.addListener(polygon, 'click', ()=> {
-          this.$router.push(`/${this.$route.params.type}/${name}/GENERAL`)   
+          if (this.$route.params.type=="state"){
+            this.$router.push(`/${this.$route.params.type}/${name}/FULL`)
+          }
+          else if (this.$route.params.type=="suggestion"){
+            this.$router.push(`/${this.$route.params.type}/${name}/GENERAL`)
+          }
+
+             
         });
 
     },
