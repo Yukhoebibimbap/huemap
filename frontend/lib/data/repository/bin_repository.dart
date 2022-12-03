@@ -15,4 +15,8 @@ class BinRepository {
     Future<List<Bin>> getBins(Type t) async {
       return await _remoteDataSource.getBins(t);
     }
+
+    Future<String> vote(voteInfo) async {
+      return await _remoteDataSource.vote(voteInfo);
+    }
 }
