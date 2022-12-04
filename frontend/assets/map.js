@@ -6,8 +6,8 @@ function initMarker (lat, lng, id, type, isCandidate) {
         title: String(id),
         position: new kakao.maps.LatLng(lat, lng),
         image: new kakao.maps.MarkerImage(
-            (isCandidate)?'markers/tile00' + type + '.png':
-            'markers/candidate00' + type + '.png',
+            (isCandidate)?'markers/candidate00' + type + '.png':
+            'markers/tile00' + type + '.png',
             new kakao.maps.Size(24, 36),
             {offset: new kakao.maps.Point(12, 0)}
         )
