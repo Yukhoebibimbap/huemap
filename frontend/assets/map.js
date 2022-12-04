@@ -53,6 +53,7 @@ var pinDropped = new kakao.maps.Marker(
 function dropPin(mouseEvent) {
     pinDropped.setPosition(mouseEvent.latLng);
     custom.setPosition(mouseEvent.latLng);
+    onDropCustom.postMessage('{\"lat\":' + mouseEvent.latLng.getLat().toPrecision(9) + ', \"lng\":' + mouseEvent.latLng.getLng().toPrecision(9) + '}');
 }
 
 function openSuggestion() {
@@ -65,8 +66,8 @@ function openReport() {
 
 kakao.maps.event.addListener(pinDropped, 'click', function() {
     var position = pinDropped.getPosition();
-    //onClickMarker.postMessage('lat: ' + position.getLat().toPrecision(9) + ', lng: ' + position.getLng().toPrecision(9));
-
+    onDropCustom.postMessage('{\"lat\":' + position.getLat().toPrecision(9) + ', \"lng\":' + position.getLng().toPrecision(9) + '}');
+    map.panTo(new kakao.maps.LatLng(position.getLat().toPrecision(9), position.getLng().toPrecision(9)));
     custom.setMap(custom.getMap() ? null : map);
 });
 

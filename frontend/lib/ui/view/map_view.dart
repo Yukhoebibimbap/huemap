@@ -4,11 +4,16 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:huemap_app/data/model/bin.dart';
+import 'package:huemap_app/ui/view/suggestion_view.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:huemap_app/ui/viewmodel/map_viewmodel.dart';
 import 'package:huemap_app/ui/view/detail_view.dart';
 import 'package:huemap_app/ui/view/report_view.dart';
+import 'package:huemap_app/ui/view/suggestion_view.dart';
+import 'package:huemap_app/ui/view/missing_view.dart';
+import 'package:huemap_app/ui/view/condition_view.dart';
+import 'package:huemap_app/ui/view/dialog_view.dart';
 
 class MapView extends StatelessWidget {
   late MapViewModel viewModel;
@@ -53,6 +58,9 @@ class MapView extends StatelessWidget {
                       ),
                       const DetailView(),
                       const ReportView(),
+                      const SuggestionView(),
+                      const MissingView(),
+                      const ConditionView(),
                     ],
                   ),
                   Padding(
@@ -104,7 +112,8 @@ class MapView extends StatelessWidget {
                         child:Container(),
                       ),
                     ]
-                  )
+                  ),
+                  const DialogView()
                 ]
               )
             )

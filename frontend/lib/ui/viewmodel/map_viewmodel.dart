@@ -46,13 +46,22 @@ class MapViewModel with ChangeNotifier{
   final onMarker = <bool>[true,false,false,false,false,false];
   bool onPinDrop = false;
 
-  bool _pin_visible = false;
-  bool get pin_visible => _pin_visible;
+  bool _detail_visible = false;
+  bool get detail_visible => _detail_visible;
   bool _report_visible = false;
   bool get report_visible => _report_visible;
+  bool _suggestion_visible = false;
+  bool get suggestion_visible => _suggestion_visible;
+  bool _missing_visible = false;
+  bool get missing_visible => _missing_visible;
+  bool _dialog_visible = false;
+  bool get dialog_visible => _dialog_visible;
+  bool condition_visible = false;
 
   final pin_detail = ['도로명 주소', '상세 설명', '수거함 종류'];
   var temp_format = ['서울특별시 동작구 동작대로29길 69','두성프라자 건물 뒷편','폐건전지'];
+  var dropMenu = '일반 쓰레기';
+  var conditionMenu = '가득참';
 
   MapViewModel() {
     // 데이터 계층 연결, 자바스크립트 채널 생성
@@ -68,13 +77,16 @@ class MapViewModel with ChangeNotifier{
         toggleBinDetail(id);
       }),
       JavascriptChannel(name: 'onClickSuggestion', onMessageReceived: (message) {
-        toggle_detail();
+        toggle_suggestion();
       }),
       JavascriptChannel(name: 'onClickReport', onMessageReceived: (message) {
         toggle_report();
       }),
       JavascriptChannel(name: 'onClickMap', onMessageReceived: (message) {
         hide_all();
+      }),
+      JavascriptChannel(name: 'onDropCustom', onMessageReceived: (message) {
+        parseLatLng(message.message);
       })
     };
   }
@@ -214,19 +226,42 @@ class MapViewModel with ChangeNotifier{
   }
 
   void toggle_detail() {
-    _pin_visible = true;
+    _detail_visible = true;
     _report_visible = false;
+    _suggestion_visible = false;
+    _missing_visible = false;
+  }
+
+  void toggle_suggestion() {
+    _suggestion_visible = true;
+    _detail_visible = false;
+    _report_visible = false;
+    _missing_visible = false;
+    notifyListeners();
   }
 
   void toggle_report() {
-    _report_visible = !_report_visible;
-    _pin_visible = false;
+    _report_visible = true;
+    _detail_visible = false;
+    _suggestion_visible = false;
+    _missing_visible = false;
+    notifyListeners();
+  }
+
+  void toggle_missing() {
+    _missing_visible = true;
+    _report_visible = false;
+    _detail_visible = false;
+    _suggestion_visible = false;
     notifyListeners();
   }
 
   void hide_all() {
     _report_visible = false;
-    _pin_visible = false;
+    _detail_visible = false;
+    _suggestion_visible = false;
+    _missing_visible = false;
+    condition_visible = false;
     notifyListeners();
   }
 
@@ -242,6 +277,39 @@ class MapViewModel with ChangeNotifier{
       notifyListeners();
       controller!.runJavascript("map.panTo(new kakao.maps.LatLng(${_binDetail.lat}, ${_binDetail.lng}))");
     });
+    notifyListeners();
+  }
+
+  void parseLatLng(String LatLng) {
+    log(LatLng);
+    Map<String, dynamic> json = jsonDecode(LatLng);
+    var lat = json['lat'];
+    var lng = json['lng'];
+    log(lat.toString());
+    log(lng.toString());
+  }
+
+  void changeDropMenu(String menu) {
+    dropMenu = menu;
+    notifyListeners();
+  }
+
+  void showDialog() {
+    _dialog_visible = !_dialog_visible;
+    notifyListeners();
+  }
+
+  void toggleCondition() {
+    condition_visible = !condition_visible;
+    _report_visible = false;
+    _detail_visible = false;
+    _suggestion_visible = false;
+    _missing_visible = false;
+    notifyListeners();
+  }
+
+  void changeConditionMenu(String menu) {
+    conditionMenu = menu;
     notifyListeners();
   }
 }
