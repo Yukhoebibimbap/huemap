@@ -20,6 +20,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 
 import 'package:huemap_app/data/model/bin.dart';
+import 'package:huemap_app/data/model/binDetail.dart';
 import 'package:huemap_app/data/repository/bin_repository.dart';
 import 'package:huemap_app/get_current_position.dart';
 import 'package:huemap_app/data/model/voteInfo.dart';
@@ -36,6 +37,8 @@ class MapViewModel with ChangeNotifier{
   Map<int, List<Bin>> get items => _items;
   late Map<int, int> offset = <int, int>{};
   final Map<int, List<Bin>> _items = <int, List<Bin>>{};
+  BinDetail get binDetail => _binDetail;
+  late BinDetail _binDetail = <dynamic, dynamic>{} as BinDetail;
 
   late Future<List<Bin>> binLoadCompleted;
   late Future<String> assetLoadCompleted;
@@ -44,6 +47,23 @@ class MapViewModel with ChangeNotifier{
   final onMarker = <bool>[true,false,false,false,false,false];
   bool onPinDrop = false;
 
+  bool _detail_visible = false;
+  bool get detail_visible => _detail_visible;
+  bool _report_visible = false;
+  bool get report_visible => _report_visible;
+  bool _suggestion_visible = false;
+  bool get suggestion_visible => _suggestion_visible;
+  bool _missing_visible = false;
+  bool get missing_visible => _missing_visible;
+  bool _dialog_visible = false;
+  bool get dialog_visible => _dialog_visible;
+  bool condition_visible = false;
+
+  final pin_detail = ['도로명 주소', '상세 설명', '수거함 종류'];
+  var temp_format = ['서울특별시 동작구 동작대로29길 69','두성프라자 건물 뒷편','폐건전지'];
+  var dropMenu = '일반 쓰레기';
+  var conditionMenu = '가득참';
+
   MapViewModel() {
     // 데이터 계층 연결, 자바스크립트 채널 생성
     _binRepository = BinRepository();
@@ -51,9 +71,25 @@ class MapViewModel with ChangeNotifier{
     assetLoadCompleted = loadAssets();
 
 
-    channel = {JavascriptChannel(name: 'onClickMarker', onMessageReceived: (message) {
-      Fluttertoast.showToast(msg: message.message);
-    })};
+    channel = {
+      JavascriptChannel(name: 'onClickMarker', onMessageReceived: (message) {
+        // Fluttertoast.showToast(msg: message.message);
+        var id = message.message;
+        toggleBinDetail(id);
+      }),
+      JavascriptChannel(name: 'onClickSuggestion', onMessageReceived: (message) {
+        toggle_suggestion();
+      }),
+      JavascriptChannel(name: 'onClickReport', onMessageReceived: (message) {
+        toggle_report();
+      }),
+      JavascriptChannel(name: 'onClickMap', onMessageReceived: (message) {
+        hide_all();
+      }),
+      JavascriptChannel(name: 'onDropCustom', onMessageReceived: (message) {
+        parseLatLng(message.message);
+      })
+    };
   }
 
   Future<List<Bin>> loadItems(Type t) async {
@@ -66,6 +102,16 @@ class MapViewModel with ChangeNotifier{
     });
 
     return binData;
+  }
+
+  Future<Future<BinDetail?>?> loadBinDetail(String id) async {
+    late Future<BinDetail?>? binDetail;
+    binDetail = _binRepository.getBinDetail(id);
+    binDetail?.then((data) {
+      _binDetail = data!;
+    });
+
+    return binDetail;
   }
 
   // 타입 버튼을 처음 누를때 먼저 호출
@@ -152,6 +198,7 @@ class MapViewModel with ChangeNotifier{
     ByteData current = await rootBundle.load('assets/markers/current.png');
     List<ByteData> pins = [];
     for(var i=0; i<6; i++) {
+      // log('assets/markers/tile00$i.png');
       pins.add(await rootBundle.load('assets/markers/tile00$i.png'));
     }
     List<ByteData> candidates = [];
@@ -197,5 +244,93 @@ class MapViewModel with ChangeNotifier{
     } else {
       // 실패 메세지를 띄운다.
     }
+  }
+
+  void toggle_detail() {
+    _detail_visible = true;
+    _report_visible = false;
+    _suggestion_visible = false;
+    _missing_visible = false;
+  }
+
+  void toggle_suggestion() {
+    _suggestion_visible = true;
+    _detail_visible = false;
+    _report_visible = false;
+    _missing_visible = false;
+    notifyListeners();
+  }
+
+  void toggle_report() {
+    _report_visible = true;
+    _detail_visible = false;
+    _suggestion_visible = false;
+    _missing_visible = false;
+    notifyListeners();
+  }
+
+  void toggle_missing() {
+    _missing_visible = true;
+    _report_visible = false;
+    _detail_visible = false;
+    _suggestion_visible = false;
+    notifyListeners();
+  }
+
+  void hide_all() {
+    _report_visible = false;
+    _detail_visible = false;
+    _suggestion_visible = false;
+    _missing_visible = false;
+    condition_visible = false;
+    notifyListeners();
+  }
+
+  void toggleBinDetail(String id) {
+    loadBinDetail(id).then((_) {
+      List<String> temp = [];
+      temp.add(_binDetail.address);
+      temp.add(_binDetail.addressDesc);
+      temp.add(binTypesKor[_binDetail.type]);
+
+      temp_format = temp;
+      toggle_detail();
+      notifyListeners();
+      controller!.runJavascript("map.panTo(new kakao.maps.LatLng(${_binDetail.lat}, ${_binDetail.lng}))");
+    });
+    notifyListeners();
+  }
+
+  void parseLatLng(String LatLng) {
+    log(LatLng);
+    Map<String, dynamic> json = jsonDecode(LatLng);
+    var lat = json['lat'];
+    var lng = json['lng'];
+    log(lat.toString());
+    log(lng.toString());
+  }
+
+  void changeDropMenu(String menu) {
+    dropMenu = menu;
+    notifyListeners();
+  }
+
+  void showDialog() {
+    _dialog_visible = !_dialog_visible;
+    notifyListeners();
+  }
+
+  void toggleCondition() {
+    condition_visible = !condition_visible;
+    _report_visible = false;
+    _detail_visible = false;
+    _suggestion_visible = false;
+    _missing_visible = false;
+    notifyListeners();
+  }
+
+  void changeConditionMenu(String menu) {
+    conditionMenu = menu;
+    notifyListeners();
   }
 }

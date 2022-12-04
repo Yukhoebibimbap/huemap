@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:huemap_app/data/model/bin.dart';
+import 'package:huemap_app/data/model/binDetail.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -33,6 +34,25 @@ class RemoteDataSource {
     }
   }
 
+  Future<BinDetail?> getBinDetail(String id) async {
+    BinDetail? binDetail;
+
+    var path = '/api/v1/bins/$id';
+    // var params = <String, String>{};
+    // params.addAll({'type': t.toParameter()});
+    final uri = Uri.https('huemap.shop', path);
+    final res = await http.get(uri);
+    if (res.statusCode == HttpStatus.ok) {
+      final decoded = utf8.decode(res.bodyBytes);
+      Map<String, dynamic> json = jsonDecode(decoded);
+      binDetail = BinDetail.fromJson(json['data']);
+
+      return binDetail;
+    } else {
+      throw Exception("Error on Response");
+    }
+  }
+  
   Future<int> postSignUpInfo(signUpInfo) async {
     const path = '/api/v1/users';
     final uri = Uri.https('huemap.shop', path);

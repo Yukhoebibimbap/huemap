@@ -43,6 +43,7 @@ android {
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -56,4 +57,11 @@ android {
 
 flutter {
     source '../..'
+}
+
+dependencies {
+//    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    // ------ MultiDex 설정 추가 ------> //
+    implementation 'com.android.support:multidex:2.0.1'
+    // <------ MultiDex 설정 추가 ------ //
 }
