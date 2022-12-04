@@ -13,7 +13,7 @@ class DetailView extends StatelessWidget {
 
     return Consumer<MapViewModel>(
           builder: (context, countProvider, child) => Visibility(
-            visible: Provider.of<MapViewModel>(context).pin_visible,
+            visible: Provider.of<MapViewModel>(context).detail_visible,
             child: Expanded(
               flex: 14,
               child: SingleChildScrollView(
@@ -103,7 +103,7 @@ class DetailView extends StatelessWidget {
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             ElevatedButton(
-                                                onPressed: () {viewModel.toggle_report();},
+                                                onPressed: () {viewModel.toggle_missing();},
                                                 style: ElevatedButton.styleFrom(
                                                   fixedSize: const Size(130,30),
                                                   backgroundColor: Color(0xFFCCE6F4), // Background color
@@ -111,7 +111,7 @@ class DetailView extends StatelessWidget {
                                                 child: Text("잘못된 위치 제보",style:TextStyle(color: Colors.black))
                                             ),
                                             ElevatedButton(
-                                                onPressed: () {},
+                                                onPressed: () {viewModel.toggleCondition();},
                                                 style: ElevatedButton.styleFrom(
                                                   fixedSize: const Size(130,30),
                                                   backgroundColor: Color(0xFFCCE6F4), // Background color

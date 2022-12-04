@@ -16,7 +16,7 @@ class ReportView extends StatelessWidget {
         builder: (context, countProvider, child) => Visibility(
             visible: Provider.of<MapViewModel>(context).report_visible,
             child: Expanded(
-              flex: 10,
+              flex: 7,
               child: SingleChildScrollView(
                 child: Container(
                   child: Stack(
@@ -34,7 +34,7 @@ class ReportView extends StatelessWidget {
                               const Padding(
                                 padding: EdgeInsets.all(8),
                                 child: Text(
-                                  '새 수거함 건의',
+                                  '새 수거함 제보',
                                   style: TextStyle(fontSize: 24, color:Colors.black),
                                 ),
                               ),
@@ -54,61 +54,61 @@ class ReportView extends StatelessWidget {
                               //       )
                               //   ),
                               // ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(30,15,5,5),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: const [
-                                    Text(
-                                      "수거함 주소",
-                                      style: TextStyle(
-                                          fontSize: 24.0,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w300),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              // Padding(
+                              //   padding: EdgeInsets.fromLTRB(30,15,5,5),
+                              //   child: Row(
+                              //     mainAxisAlignment: MainAxisAlignment.start,
+                              //     crossAxisAlignment: CrossAxisAlignment.center,
+                              //     children: const [
+                              //       Text(
+                              //         "수거함 주소",
+                              //         style: TextStyle(
+                              //             fontSize: 24.0,
+                              //             color: Colors.black,
+                              //             fontWeight: FontWeight.w300),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
                               Padding(
                                 padding: EdgeInsets.all(8),
                                 child:  Column(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            const Padding(
-                                              padding: EdgeInsets.fromLTRB(30,0,0,0),
-                                              child: Text(
-                                                "사용자 위치",
-                                                style: TextStyle(
-                                                    fontSize: 18.0,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w300),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.fromLTRB(30,0,50,0),
-                                              child: Row(
-                                                children: const [
-                                                  Text(
-                                                    "불일치",
-                                                    style: TextStyle(
-                                                        fontSize: 18.0,
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.w300),
-                                                  ),
-                                                  Padding(
-                                                      padding: EdgeInsets.all(5),
-                                                      child: Icon(Icons.circle, size: 30, color: Colors.red,)
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ]
-                                      ),
-                                      Padding(padding: EdgeInsets.all(15),),
+                                      // Row(
+                                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      //     children: [
+                                      //       const Padding(
+                                      //         padding: EdgeInsets.fromLTRB(30,0,0,0),
+                                      //         child: Text(
+                                      //           "사용자 위치",
+                                      //           style: TextStyle(
+                                      //               fontSize: 18.0,
+                                      //               color: Colors.black,
+                                      //               fontWeight: FontWeight.w300),
+                                      //         ),
+                                      //       ),
+                                      //       Padding(
+                                      //         padding: EdgeInsets.fromLTRB(30,0,50,0),
+                                      //         child: Row(
+                                      //           children: const [
+                                      //             Text(
+                                      //               "불일치",
+                                      //               style: TextStyle(
+                                      //                   fontSize: 18.0,
+                                      //                   color: Colors.black,
+                                      //                   fontWeight: FontWeight.w300),
+                                      //             ),
+                                      //             Padding(
+                                      //                 padding: EdgeInsets.all(5),
+                                      //                 child: Icon(Icons.circle, size: 30, color: Colors.red,)
+                                      //             )
+                                      //           ],
+                                      //         ),
+                                      //       ),
+                                      //     ]
+                                      // ),
+                                      // Padding(padding: EdgeInsets.all(15),),
                                       Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
@@ -135,14 +135,14 @@ class ReportView extends StatelessWidget {
                                             Padding(
                                               padding: EdgeInsets.fromLTRB(0,0,50,0),
                                               child: DropdownButton(
-                                                  value: selectedDropdown,
+                                                  value: Provider.of<MapViewModel>(context).dropMenu,
                                                   items: dropdownList.map((String item) {
                                                     return DropdownMenuItem<String>(
                                                       child: Text('$item'),
                                                       value: item,
                                                     );
                                                   }).toList(),
-                                                  onChanged: (dynamic value) {}
+                                                  onChanged: (dynamic value) {viewModel.changeDropMenu(value);}
                                               ),
                                             )
                                           ]
@@ -153,7 +153,7 @@ class ReportView extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.all(10),
                                 child: ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () {viewModel.showDialog();},
                                     style: ElevatedButton.styleFrom(
                                       fixedSize: const Size(130,30),
                                       backgroundColor: Color(0xFFCCE6F4), // Background color
