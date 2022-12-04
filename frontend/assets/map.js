@@ -1,12 +1,13 @@
 var markers = [];
 
-function initMarker (lat, lng, id, type) {
+function initMarker (lat, lng, id, type, isCandidate) {
     markers.push(new kakao.maps.Marker({
         map: map,
         title: String(id),
         position: new kakao.maps.LatLng(lat, lng),
         image: new kakao.maps.MarkerImage(
-            'markers/tile00' + type + '.png',
+            (isCandidate)?'markers/tile00' + type + '.png':
+            'markers/candidate00' + type + '.png',
             new kakao.maps.Size(24, 36),
             {offset: new kakao.maps.Point(12, 0)}
         )

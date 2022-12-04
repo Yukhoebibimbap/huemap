@@ -22,4 +22,8 @@ class BinRepository {
     Future<BinDetail?> getBinDetail(String id) async {
       return await _remoteDataSource.getBinDetail(id);
     }
+    
+    Future<String> vote(voteInfo) async {
+      return await _remoteDataSource.vote(voteInfo);
+    }
 }

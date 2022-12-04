@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:huemap_app/ui/viewmodel/map_viewmodel.dart';
 import 'package:huemap_app/ui/view/user_view.dart';
 
-void main(){runApp(const MaterialApp(debugShowCheckedModeBanner: false,home:RootPage()));}
+// void main(){runApp(const MaterialApp(debugShowCheckedModeBanner: false,home:RootPage()));}
 
 class RootPage extends StatefulWidget {
   const RootPage({Key? key}) : super(key: key);
@@ -30,7 +30,7 @@ class _RootPageState extends State<RootPage> {
       ])
   ];
 
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {

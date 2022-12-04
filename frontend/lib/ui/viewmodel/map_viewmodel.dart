@@ -23,6 +23,7 @@ import 'package:huemap_app/data/model/bin.dart';
 import 'package:huemap_app/data/model/binDetail.dart';
 import 'package:huemap_app/data/repository/bin_repository.dart';
 import 'package:huemap_app/get_current_position.dart';
+import 'package:huemap_app/data/model/voteInfo.dart';
 
 import 'package:flutter/services.dart' show ImmutableBuffer, rootBundle;
 
@@ -118,7 +119,7 @@ class MapViewModel with ChangeNotifier{
     String script = "";
 
     for(var j in _items[t.index]!) {
-      script += "initMarker(${j.lat}, ${j.lng}, ${j.id}, ${t.index});";
+      script += "initMarker(${j.lat}, ${j.lng}, ${j.id}, ${t.index}, ${j.isCandidate});";
     }
 
     controller!.runJavascript(script);
@@ -200,7 +201,10 @@ class MapViewModel with ChangeNotifier{
       // log('assets/markers/tile00$i.png');
       pins.add(await rootBundle.load('assets/markers/tile00$i.png'));
     }
-
+    List<ByteData> candidates = [];
+    for(var i=0; i<6; i++) {
+      candidates.add(await rootBundle.load('assets/markers/candidate00$i.png'));
+    }
 
     final tempDir = await getTemporaryDirectory();
     final cssPath = '${tempDir.path}/map.css';
@@ -221,8 +225,25 @@ class MapViewModel with ChangeNotifier{
         pins[i].buffer.asUint8List()
       );
     }
+    for(var i=0; i<6; i++) {
+      await File('${pinPath}candidate00$i.png').writeAsBytes(
+          candidates[i].buffer.asUint8List()
+      );
+    }
 
     return (url = Uri(scheme: 'file', path: htmlPath).toString());
+  }
+
+  void vote(binId) async {
+    final pos = await determinePosition();
+    String result = await _binRepository.vote(VoteInfo(
+      binId, pos.latitude, pos.longitude
+    ));
+    if(result == 'ok') {
+      // 성공 메세지를 띄우고 voteView를 닫는다.
+    } else {
+      // 실패 메세지를 띄운다.
+    }
   }
 
   void toggle_detail() {
