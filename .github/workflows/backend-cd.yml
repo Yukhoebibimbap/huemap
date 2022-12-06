@@ -21,6 +21,7 @@ jobs:
       RDS_ENDPOINT: ${{ secrets.RDS_ENDPOINT }}
       DB_USERNAME: ${{ secrets.DB_USERNAME }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      JWT_CLIENT_SECRET: ${{ secrets.JWT_CLIENT_SECRET }}
 
     steps:
       - uses: actions/checkout@v3
