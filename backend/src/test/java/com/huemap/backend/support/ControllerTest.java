@@ -1,11 +1,8 @@
 package com.huemap.backend.support;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,7 +14,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huemap.backend.common.config.RedisConfig;
-import com.huemap.backend.common.interceptor.AuthInterceptor;
 import com.huemap.backend.domain.bin.application.BinService;
 import com.huemap.backend.domain.bin.presentation.BinController;
 import com.huemap.backend.domain.report.application.ReportService;
@@ -58,14 +54,6 @@ public class ControllerTest {
 
   @MockBean
   protected SuggestionService suggestionService;
-
-  @MockBean
-  protected AuthInterceptor authInterceptor;
-
-  @BeforeEach
-  void initEach() {
-    given(authInterceptor.preHandle(any(), any(), any())).willReturn(true);
-  }
 
   protected ResultActions requestGet(final String url) throws Exception {
     return mockMvc.perform(get(url))
