@@ -33,3 +33,9 @@ cloud:
 socket:
   host: 127.0.0.1
   port: 8081
+
+jwt:
+  header: Authorization
+  issuer: huemap
+  client-secret: ${JWT_CLIENT_SECRET}
+  expiry-seconds: 1800000
