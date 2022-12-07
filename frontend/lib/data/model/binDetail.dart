@@ -16,7 +16,7 @@ class BinDetail {
         lat = json['latitude'],
         lng = json['longitude'],
         address = json['address'],
-        addressDesc = json['addressDescription'],
+        addressDesc = json['addressDescription'] ?? "",
         type = json['type'],
         updatedAt = json['updatedAt'],
         hasClosure = json['hasClosure'],
