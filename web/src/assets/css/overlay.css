@@ -1,3 +1,9 @@
+.area{
+  background-color: #fff;
+  border-color: black;
+}
+
+
 .overlay {
     position: relative;
     top: -145px;

@@ -1,16 +1,34 @@
 <template>
-    <v-container>
+    <v-container width="100%" height="100%" fluid class="ma-0 pa-0">
+      
       <v-row>
+        <v-card
+      height="800px"
+      width="20%"
+      class="rounded-0"
+      elevation="8"
+      color="#212121"
+      dark
+      fluid
+    >
+    <v-card elevation="0" color="#212121"><v-card-title></v-card-title></v-card>
+    <v-card elevation="0" color="#212121"><v-card-title></v-card-title></v-card>
+    <v-card elevation="0" color="#212121"><v-card-title></v-card-title></v-card>
+    <v-row justify="center">
+      <v-icon class="mx-2" color="#898989">mdi-delete</v-icon><v-btn elevation="0" @click="setConditionType('FULL')" color="#212121">가득 참</v-btn>
+    </v-row>
+
+    <v-row justify="center">
+      <v-icon class="mx-2" color="#898989">mdi-cup-off</v-icon><v-btn elevation="0" @click="setConditionType('DAMAGED')" color="#212121">손상</v-btn>
+    </v-row>
+
+    <v-row justify="center">
+      <v-icon class="mx-2" color="#898989">mdi-bug</v-icon><v-btn elevation="0" @click="setConditionType('DIRTY')" color="#212121">더러움</v-btn>
+    </v-row>
+
+    </v-card>
+
       <div id="map"></div>
-      <v-select
-          v-model="conditionType"
-          :items="conditionTypeList"
-          item-text="text"
-          label="폐수거함 유형"
-          outlined
-          @change="setConditionType"
-          return-object
-    ></v-select>
   </v-row>
     </v-container>
     
@@ -52,7 +70,7 @@
     computed:{
 
       socket(){
-        return io.connect(`http://localhost:8081`,{
+        return io.connect(`${process.env.VUE_APP_URL}`,{
           cors:{origin:'*'},
           path: '/socket.io',
           query: { room: this.$route.params.gu }
@@ -225,8 +243,8 @@
                 infowindow.setMap();
             };
         },
-        async setConditionType(){
-          this.$router.push(`/state/${this.$route.params.gu}/${this.conditionType.value}`)
+        async setConditionType(type){
+          this.$router.push(`/state/${this.$route.params.gu}/${type}`)
         }
 
     }
@@ -244,8 +262,8 @@
   } */
   
   #map {
-    width: 800px;
-    height: 600px;
+    width: 80%;
+    height: 800px;
     border: 1px #a8a8a8 solid;
   }
 
