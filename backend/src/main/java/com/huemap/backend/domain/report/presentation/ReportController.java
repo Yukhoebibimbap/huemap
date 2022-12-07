@@ -22,12 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.huemap.backend.common.response.success.RestResponse;
+import com.huemap.backend.common.security.CurrentUser;
 import com.huemap.backend.domain.bin.domain.ConditionType;
 import com.huemap.backend.domain.report.application.ReportService;
 import com.huemap.backend.domain.report.dto.request.ClosureCreateRequest;
 import com.huemap.backend.domain.report.dto.request.ConditionCreateRequest;
 import com.huemap.backend.domain.report.dto.request.PresenceCreateRequest;
 import com.huemap.backend.domain.report.dto.request.PresenceVoteRequest;
+import com.huemap.backend.domain.user.domain.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,20 +43,20 @@ public class ReportController {
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("{binId}/report-closures")
   public RestResponse saveClosure(
-      Long userId,
+      @CurrentUser User user,
       @PathVariable Long binId,
       @RequestBody @Valid ClosureCreateRequest closureCreateRequest
   ) {
-    return RestResponse.of(reportService.saveClosure(userId, binId, closureCreateRequest));
+    return RestResponse.of(reportService.saveClosure(user.getId(), binId, closureCreateRequest));
   }
 
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("report-presences")
   public RestResponse savePresence(
-      Long userId,
+      @CurrentUser User user,
       @RequestBody @Valid PresenceCreateRequest presenceCreateRequest
   ) {
-    return RestResponse.of(reportService.savePresence(userId, presenceCreateRequest));
+    return RestResponse.of(reportService.savePresence(user.getId(), presenceCreateRequest));
   }
 
   @ResponseStatus(HttpStatus.OK)
@@ -71,12 +73,12 @@ public class ReportController {
       value = "{binId}/report-condition",
       consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public RestResponse saveCondition(
-      Long userId,
+      @CurrentUser User user,
       @PathVariable Long binId,
       @RequestPart(value = "dto") @Valid ConditionCreateRequest conditionCreateRequest,
       @RequestPart(value = "file") MultipartFile multipartFile) throws IOException {
     return RestResponse.of(
-        reportService.saveCondition(userId, binId, conditionCreateRequest, multipartFile));
+        reportService.saveCondition(user.getId(), binId, conditionCreateRequest, multipartFile));
   }
 
   @GetMapping("report-condition")
