@@ -28,11 +28,15 @@ public class User extends BaseEntity {
   @NotNull
   private String password;
 
+  @NotNull
+  private Role role;
+
   @Builder
   public User(final String email, final String name, final String password) {
     this.email = email;
     this.name = name;
     this.password = encryptPassword(password);
+    this.role = Role.ROLE_USER;
   }
 
   private String encryptPassword(String password) {
@@ -43,5 +47,9 @@ public class User extends BaseEntity {
     if (!PasswordEncrypter.isMatch(passwordToCheck, password)) {
       throw new InvalidValueException(ErrorCode.LOGIN_PASSWORD_NOT_MATCH);
     }
+  }
+
+  public String roleName() {
+    return role.name();
   }
 }
