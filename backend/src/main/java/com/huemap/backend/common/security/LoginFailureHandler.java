@@ -10,6 +10,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.huemap.backend.common.response.error.ErrorCode;
 import com.huemap.backend.common.response.error.ErrorResponse;
 
 public class LoginFailureHandler implements AuthenticationFailureHandler {
@@ -17,11 +18,9 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
   @Override
   public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                       AuthenticationException exception) throws IOException {
-    response.setStatus(HttpStatus.UNAUTHORIZED.value());
+    response.setStatus(HttpStatus.BAD_REQUEST.value());
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");
-    new ObjectMapper().writeValue(response.getWriter(),
-                                  ErrorResponse.of(HttpStatus.BAD_REQUEST.value(),
-                                                   exception.getMessage()));
+    new ObjectMapper().writeValue(response.getWriter(), ErrorResponse.of(ErrorCode.BAD_LOGIN));
   }
 }
