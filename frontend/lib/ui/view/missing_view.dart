@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:huemap_app/ui/viewmodel/map_viewmodel.dart';
+import 'package:huemap_app/constant_value.dart';
 
 class MissingView extends StatelessWidget {
   const MissingView({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class MissingView extends StatelessWidget {
         builder: (context, countProvider, child) => Visibility(
             visible: Provider.of<MapViewModel>(context).missing_visible,
             child: Expanded(
-              flex: 10,
+              flex: 6,
               child: SingleChildScrollView(
                   child: Container(
                     child: Stack(
@@ -108,52 +109,42 @@ class MissingView extends StatelessWidget {
                                               ),
                                             ]
                                         ),
-                                        Padding(padding: EdgeInsets.all(15),),
-                                        Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.fromLTRB(30,0,0,0),
-                                                child: Text(
-                                                  "수거함 종류",
-                                                  style: TextStyle(
-                                                      fontSize: 18.0,
-                                                      color: Colors.black,
-                                                      fontWeight: FontWeight.w300),
-                                                ),
-                                              ),
-                                              // Padding(
-                                              //   padding: EdgeInsets.fromLTRB(30,0,50,0),
-                                              //   child: Text(
-                                              //     "재활용",
-                                              //     style: TextStyle(
-                                              //         fontSize: 18.0,
-                                              //         color: Colors.black,
-                                              //         fontWeight: FontWeight.w300),
-                                              //   ),
-                                              // ),
-                                              Padding(
-                                                padding: EdgeInsets.fromLTRB(0,0,50,0),
-                                                child: DropdownButton(
-                                                    value: Provider.of<MapViewModel>(context).dropMenu,
-                                                    items: dropdownList.map((String item) {
-                                                      return DropdownMenuItem<String>(
-                                                        child: Text('$item'),
-                                                        value: item,
-                                                      );
-                                                    }).toList(),
-                                                    onChanged: (dynamic value) {viewModel.changeDropMenu(value);}
-                                                ),
-                                              )
-                                            ]
-                                        ),
+                                        // Padding(padding: EdgeInsets.all(15),),
+                                        // Row(
+                                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        //     children: [
+                                        //       Padding(
+                                        //         padding: EdgeInsets.fromLTRB(30,0,0,0),
+                                        //         child: Text(
+                                        //           "수거함 종류",
+                                        //           style: TextStyle(
+                                        //               fontSize: 18.0,
+                                        //               color: Colors.black,
+                                        //               fontWeight: FontWeight.w300),
+                                        //         ),
+                                        //       ),
+                                        //       Padding(
+                                        //         padding: EdgeInsets.fromLTRB(0,0,50,0),
+                                        //         child: DropdownButton(
+                                        //             value: Provider.of<MapViewModel>(context).dropBinMenu,
+                                        //             items: dropdownList.map((String item) {
+                                        //               return DropdownMenuItem<String>(
+                                        //                 child: Text('$item'),
+                                        //                 value: item,
+                                        //               );
+                                        //             }).toList(),
+                                        //             onChanged: (dynamic value) {viewModel.changeDropBinMenu(value);}
+                                        //         ),
+                                        //       )
+                                        //     ]
+                                        // ),
                                       ]
                                   ),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.all(10),
                                   child: ElevatedButton(
-                                      onPressed: () {viewModel.showDialog();},
+                                      onPressed: () {viewModel.showDialog(Dialog_Type.submit, Widget_Type.missing);},
                                       style: ElevatedButton.styleFrom(
                                         fixedSize: const Size(130,30),
                                         backgroundColor: Color(0xFFCCE6F4), // Background color
