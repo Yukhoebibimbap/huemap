@@ -14,6 +14,7 @@ public enum ErrorCode {
 	BIN_DUPLICATED(400, "이미 폐수거함이 존재합니다."),
 	KAKAO_MAP_REQUEST_INVALID(400, "카카오맵 OPEN API 요청 값이 적절하지 않습니다."),
 	USER_EMAIL_DUPLICATED(400, "중복된 이메일입니다."),
+	USER_NOT_FOUND(400, "사용자를 찾을 수 없습니다."),
 	BAD_LOGIN(400, "잘못된 아이디 또는 패스워드입니다."),
 
 	SUGGESTION_LIMIT_EXCEEDED(400, "하루 제안 횟수를 초과하였습니다"),
