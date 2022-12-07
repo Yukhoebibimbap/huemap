@@ -1,6 +1,5 @@
 package com.huemap.backend.common.security;
 
-import java.time.Duration;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import com.huemap.backend.common.config.JwtConfig;
-import com.huemap.backend.common.redis.RedisService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -23,18 +21,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TokenProvider {
   private final JwtConfig jwtConfig;
-  private final RedisService redisService;
 
   public String createAccessToken(String username) {
     int expirySeconds = jwtConfig.getExpirySeconds();
     return createToken(username, expirySeconds);
-  }
-
-  public String createRefreshToken(String username) {
-    int expirySeconds = jwtConfig.getExpirySeconds() * 48 * 14;
-    String refreshToken = createToken(username, expirySeconds);
-    redisService.setValues(username, refreshToken, Duration.ofMillis(expirySeconds));
-    return refreshToken;
   }
 
   private String createToken(String username, int expirySeconds) {
