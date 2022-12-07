@@ -14,8 +14,8 @@ class DialogView extends StatelessWidget {
         builder: (context, countProvider, child) => Visibility(
             visible: Provider.of<MapViewModel>(context).dialog_visible,
             child: AlertDialog(
-              actionsAlignment: MainAxisAlignment.spaceBetween,
-              title: new Text("작성한 내용으로 제출합니다."),
+              actionsAlignment: MainAxisAlignment.center,
+              title: Text(viewModel.dialog_title),
               actions: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -24,19 +24,22 @@ class DialogView extends StatelessWidget {
                       fixedSize: const Size(130,30),
                       backgroundColor: Color(0xFFCCE6F4), // Background color
                     ),
-                    child: new Text("아니오", style:TextStyle(color: Colors.black)),
-                    onPressed: () {viewModel.showDialog();},
+                    child: new Text("예", style:TextStyle(color: Colors.black)),
+                    onPressed: () {viewModel.dialogLeftPressed();},
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      fixedSize: const Size(130,30),
-                      backgroundColor: Color(0xFFCCE6F4), // Background color
+                Visibility(
+                  visible: Provider.of<MapViewModel>(context).double_button_dialog,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: const Size(130,30),
+                        backgroundColor: Color(0xFFCCE6F4), // Background color
+                      ),
+                      child: new Text("아니오", style:TextStyle(color: Colors.black)),
+                      onPressed: () {viewModel.dialogRightPressed();},
                     ),
-                    child: new Text("예", style:TextStyle(color: Colors.black)),
-                    onPressed: () {viewModel.showDialog();},
                   ),
                 ),
               ],
