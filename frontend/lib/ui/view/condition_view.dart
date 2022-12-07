@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:huemap_app/ui/viewmodel/map_viewmodel.dart';
-import 'package:huemap_app/ui/get_camera_image.dart';
+import 'package:huemap_app/get_camera_image.dart';
+import 'package:huemap_app/constant_value.dart';
 
 class ConditionView extends StatelessWidget {
   const ConditionView({Key? key}) : super(key: key);
@@ -156,7 +157,7 @@ class ConditionView extends StatelessWidget {
                                 Padding(
                                   padding: EdgeInsets.all(10),
                                   child: ElevatedButton(
-                                      onPressed: () {viewModel.showDialog();},
+                                      onPressed: () {viewModel.showDialog(Dialog_Type.submit, Widget_Type.report);},
                                       style: ElevatedButton.styleFrom(
                                         fixedSize: const Size(130,30),
                                         backgroundColor: Color(0xFFCCE6F4), // Background color
