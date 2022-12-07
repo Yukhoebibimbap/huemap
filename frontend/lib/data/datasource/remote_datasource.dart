@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:huemap_app/data/model/bin.dart';
 import 'package:huemap_app/data/model/binDetail.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:requests/requests.dart';
 
 class RemoteDataSource {
   RemoteDataSource._privateConstructor();
@@ -42,11 +44,12 @@ class RemoteDataSource {
     // params.addAll({'type': t.toParameter()});
     final uri = Uri.https('huemap.shop', path);
     final res = await http.get(uri);
+    print('Response body: ${res.body}');
     if (res.statusCode == HttpStatus.ok) {
       final decoded = utf8.decode(res.bodyBytes);
       Map<String, dynamic> json = jsonDecode(decoded);
       binDetail = BinDetail.fromJson(json['data']);
-
+      log(json['data'].toString());
       return binDetail;
     } else {
       throw Exception("Error on Response");
@@ -105,8 +108,10 @@ class RemoteDataSource {
     );
     final decoded = utf8.decode(res.bodyBytes);
     var json = jsonDecode(decoded);
-
+    print('Response header: ${res.headers}');
+    print('Response body: ${res.body}');
     if(res.statusCode == HttpStatus.created){
+      log("success");
       return json['data']['id'];
     } else if(json['message'] == '사용자를 찾을 수 없습니다.') {
       return -1;
@@ -139,5 +144,87 @@ class RemoteDataSource {
       return json['message'];
     }
 
+  }
+
+  Future<String> reportPresences(reportPresencesRequest) async {
+    const path = '/api/v1/bins/report-presences';
+    var url = 'https://huemap.shop/api/v1/bins/report-presences';
+    final uri = Uri.https('huemap.shop', path);
+    final headers = {'Content-Type' : 'application/json'};
+    final encoding = Encoding.getByName('utf-8');
+    final jsonString = jsonEncode(reportPresencesRequest);
+    log(path);
+    log(jsonString);
+    final res = await Requests.post(
+      url,
+      body: reportPresencesRequest.toJson(),
+      withCredentials: true,
+    );
+    // final res = await http.post(
+    //     uri,
+    //     // headers: headers,
+    //     body: jsonString,
+    //     encoding: encoding
+    // );
+    print('Response header: ${res.headers}');
+    print('Response body: ${res.body}');
+    final decoded = utf8.decode(res.bodyBytes);
+    final json = jsonDecode(decoded);
+
+    if(json['message'] == 'ok'){
+      return json['data']['id'];
+    } else {
+      return json['message'];
+    }
+  }
+
+  Future<String> reportClosures(binId, reportClosuresRequest) async {
+    String path = '/api/v1/bins/$binId/report-closures';
+    final uri = Uri.https('huemap.shop', path);
+    final headers = {'Content-Type' : 'application/json'};
+    final encoding = Encoding.getByName('utf-8');
+    final jsonString = jsonEncode(reportClosuresRequest);
+    log(path);
+    log(jsonString);
+    final res = await http.post(
+        uri,
+        headers: headers,
+        body: jsonString,
+        encoding: encoding
+    );
+
+    final decoded = utf8.decode(res.bodyBytes);
+    final json = jsonDecode(decoded);
+
+    if(json['message'] == 'ok'){
+      return json['data']['id'];
+    } else {
+      return json['message'];
+    }
+  }
+
+  Future<String> suggestBinLocation(suggestBinLocationRequest) async {
+    String path = '/api/v1/suggestions/bin-location';
+    final uri = Uri.https('huemap.shop', path);
+    final headers = {'Content-Type' : 'application/json'};
+    final encoding = Encoding.getByName('utf-8');
+    final jsonString = jsonEncode(suggestBinLocationRequest);
+    log(path);
+    log(jsonString);
+    final res = await http.post(
+        uri,
+        headers: headers,
+        body: jsonString,
+        encoding: encoding
+    );
+    final decoded = utf8.decode(res.bodyBytes);
+    final json = jsonDecode(decoded);
+
+    if(json['message'] == 'ok'){
+
+      return json['data']['id'];
+    } else {
+      return json['message'];
+    }
   }
 }

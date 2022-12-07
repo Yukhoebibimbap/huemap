@@ -1,15 +1,15 @@
-class SaveReportRequest {
+class ReportPresencesRequest {
   String type;
   double latitude;
   double longitude;
 
-  SaveReportRequest(this.type, this.latitude, this.longitude);
+  ReportPresencesRequest(this.type, this.latitude, this.longitude);
 
-  Map<String, String> toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'type': type,
-      'latitude': latitude.toString(),
-      'longitude': longitude.toString()
+      'latitude': latitude,
+      'longitude': longitude
     };
   }
 }
