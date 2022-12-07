@@ -1,8 +1,11 @@
 package com.huemap.backend.support;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -11,9 +14,13 @@ import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huemap.backend.common.config.RedisConfig;
+import com.huemap.backend.common.security.TokenProvider;
 import com.huemap.backend.domain.bin.application.BinService;
 import com.huemap.backend.domain.bin.presentation.BinController;
 import com.huemap.backend.domain.report.application.ReportService;
@@ -51,8 +58,18 @@ public class ControllerTest {
   @MockBean
   protected SuggestionService suggestionService;
 
+  @BeforeEach
+  public void setUp(WebApplicationContext webApplicationContext) {
+    this.mockMvc = MockMvcBuilders
+        .webAppContextSetup(webApplicationContext)
+        .addFilters(new CharacterEncodingFilter("UTF-8", true))
+        .apply(springSecurity())
+        .build();
+  }
+
   protected ResultActions requestGet(final String url) throws Exception {
-    return mockMvc.perform(get(url))
+    return mockMvc.perform(get(url)
+                               .with(csrf()))
                   .andDo(print());
   }
 
@@ -60,6 +77,7 @@ public class ControllerTest {
     final String content = objectMapper.writeValueAsString(request);
 
     return mockMvc.perform(post(url)
+                               .with(csrf())
                                .contentType(MediaType.APPLICATION_JSON)
                                .content(content))
                   .andDo(print());
@@ -69,6 +87,7 @@ public class ControllerTest {
     final String content = objectMapper.writeValueAsString(request);
 
     return mockMvc.perform(put(url)
+                               .with(csrf())
                                .contentType(MediaType.APPLICATION_JSON)
                                .content(content))
                   .andDo(print());

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.huemap.backend.support.ControllerTest;
@@ -22,6 +23,7 @@ import com.huemap.backend.common.response.error.ErrorCode;
 @DisplayName("BinController의")
 public class BinControllerTest extends ControllerTest {
 
+	@WithMockUser
 	@Nested
 	@DisplayName("findAll 메소드는")
 	class findAll {
@@ -69,6 +71,7 @@ public class BinControllerTest extends ControllerTest {
 		}
 	}
 
+	@WithMockUser
 	@Nested
 	@DisplayName("findById 메소드는")
 	class findById {

@@ -18,10 +18,12 @@ import com.huemap.backend.domain.bin.domain.BinType;
 import com.huemap.backend.domain.suggestion.dto.request.SuggestionCreateRequest;
 import com.huemap.backend.domain.suggestion.dto.response.SuggestionCreateResponse;
 import com.huemap.backend.support.ControllerTest;
+import com.huemap.backend.support.WithMockCustomUser;
 
 @DisplayName("SuggestionController의")
 public class SuggestionControllerTest extends ControllerTest {
 
+	@WithMockCustomUser
 	@Nested
 	@DisplayName("save 메소드는")
 	class findAll {

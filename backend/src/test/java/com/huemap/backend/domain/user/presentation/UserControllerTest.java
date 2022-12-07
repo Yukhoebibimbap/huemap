@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.huemap.backend.common.exception.InvalidValueException;
@@ -21,6 +22,7 @@ import com.huemap.backend.support.ControllerTest;
 @DisplayName("UserController의")
 public class UserControllerTest extends ControllerTest {
 
+  @WithMockUser
   @Nested
   @DisplayName("save 메소드는")
   class save {
