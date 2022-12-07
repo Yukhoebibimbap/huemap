@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.huemap.backend.common.annotation.AuthRequired;
-import com.huemap.backend.common.annotation.CurrentUserId;
 import com.huemap.backend.common.response.success.RestResponse;
+import com.huemap.backend.common.security.CurrentUser;
 import com.huemap.backend.domain.bin.domain.BinType;
 import com.huemap.backend.domain.suggestion.application.SuggestionService;
 import com.huemap.backend.domain.suggestion.dto.request.SuggestionCreateRequest;
+import com.huemap.backend.domain.user.domain.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,10 +32,11 @@ public class SuggestionController {
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping("bin-location")
-	@AuthRequired
-	public RestResponse save(@CurrentUserId Long userId,
-													 @RequestBody @Valid SuggestionCreateRequest suggestionCreateRequest) {
-		return RestResponse.of(suggestionService.save(suggestionCreateRequest, userId));
+	public RestResponse save(
+			@CurrentUser User user,
+		  @RequestBody @Valid SuggestionCreateRequest suggestionCreateRequest
+	) {
+		return RestResponse.of(suggestionService.save(suggestionCreateRequest, user.getId()));
 	}
 
 	@GetMapping("bin-location")

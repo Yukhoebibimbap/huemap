@@ -6,7 +6,6 @@ import org.mapstruct.factory.Mappers;
 
 import com.huemap.backend.domain.user.dto.request.UserCreateRequest;
 import com.huemap.backend.domain.user.dto.response.UserCreateResponse;
-import com.huemap.backend.domain.user.dto.response.UserLoginResponse;
 
 @Mapper(
     componentModel = "spring",
@@ -20,5 +19,4 @@ public interface UserMapper {
 
   UserCreateResponse toCreateDto(User user);
 
-  UserLoginResponse toLoginDto(User user);
 }

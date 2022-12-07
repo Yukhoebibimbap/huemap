@@ -10,10 +10,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.huemap.backend.common.response.success.RestResponse;
-import com.huemap.backend.domain.user.application.LoginService;
 import com.huemap.backend.domain.user.application.UserService;
 import com.huemap.backend.domain.user.dto.request.UserCreateRequest;
-import com.huemap.backend.domain.user.dto.request.UserLoginRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
   private final UserService userService;
-  private final LoginService loginService;
 
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
@@ -31,13 +28,5 @@ public class UserController {
       @RequestBody @Valid UserCreateRequest userCreateRequest
   ) {
     return RestResponse.of(userService.save(userCreateRequest));
-  }
-
-  @ResponseStatus(HttpStatus.CREATED)
-  @PostMapping("login")
-  public RestResponse login(
-      @RequestBody @Valid UserLoginRequest userLoginRequest
-  ) {
-    return RestResponse.of(loginService.login(userLoginRequest));
   }
 }

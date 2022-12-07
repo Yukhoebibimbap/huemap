@@ -1,11 +1,13 @@
 package com.huemap.backend.infrastructure.socket.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.corundumstudio.socketio.SocketIOServer;
 
+@ConfigurationProperties(prefix = "socket")
 @Configuration
 public class SocketIOConfig {
 

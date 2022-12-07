@@ -1,6 +1,7 @@
 package com.huemap.backend.domain.report.presentation;
 
 import static org.mockito.BDDMockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -32,11 +33,12 @@ import com.huemap.backend.domain.report.dto.request.PresenceVoteRequest;
 import com.huemap.backend.domain.report.dto.response.ClosureCreateResponse;
 import com.huemap.backend.domain.report.dto.response.ConditionCreateResponse;
 import com.huemap.backend.domain.report.dto.response.PresenceCreateResponse;
-
+import com.huemap.backend.support.WithMockCustomUser;
 
 @DisplayName("ReportController의")
 public class ReportControllerTest extends ControllerTest {
 
+  @WithMockCustomUser
   @Nested
   @DisplayName("saveClosure 메소드는")
   class saveClosure {
@@ -214,6 +216,7 @@ public class ReportControllerTest extends ControllerTest {
     }
   }
 
+  @WithMockCustomUser
   @Nested
   @DisplayName("savePresence 메소드는")
   class savePresence {
@@ -254,6 +257,7 @@ public class ReportControllerTest extends ControllerTest {
 
         //when
         final ResultActions perform = mockMvc.perform(post("/api/v1/bins/report-presences")
+                                                          .with(csrf())
                                                           .contentType(MediaType.APPLICATION_JSON)
                                                           .content(request))
                                              .andDo(print());
@@ -374,6 +378,7 @@ public class ReportControllerTest extends ControllerTest {
     }
   }
 
+  @WithMockCustomUser
   @Nested
   @DisplayName("votePresence 메소드는")
   class votePresence {
@@ -548,6 +553,7 @@ public class ReportControllerTest extends ControllerTest {
     }
   }
 
+  @WithMockCustomUser
   @Nested
   @DisplayName("saveCondition 메소드는")
   class saveCondition {
@@ -611,7 +617,8 @@ public class ReportControllerTest extends ControllerTest {
                                                           .file(file)
                                                           .contentType("multipart/form-data")
                                                           .accept(MediaType.APPLICATION_JSON)
-                                                          .characterEncoding("UTF-8"))
+                                                          .characterEncoding("UTF-8")
+                                                          .with(csrf()))
                                              .andDo(print());
 
         //then
@@ -857,7 +864,8 @@ public class ReportControllerTest extends ControllerTest {
                                .file(file)
                                .contentType("multipart/form-data")
                                .accept(MediaType.APPLICATION_JSON)
-                               .characterEncoding("UTF-8"))
+                               .characterEncoding("UTF-8")
+                               .with(csrf()))
                   .andDo(print());
   }
 }
