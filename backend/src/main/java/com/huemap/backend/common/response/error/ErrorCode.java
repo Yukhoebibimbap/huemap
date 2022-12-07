@@ -17,6 +17,7 @@ public enum ErrorCode {
 	USER_NOT_FOUND(400, "사용자를 찾을 수 없습니다."),
 	LOGIN_PASSWORD_NOT_MATCH(400, "비밀번호가 일치하지 않습니다."),
 	AUTH_ERROR(400,  "인증 관련 오류가 발생했습니다."),
+	BAD_LOGIN(400, "잘못된 아이디 또는 패스워드입니다."),
 
 	SUGGESTION_LIMIT_EXCEEDED(400, "하루 제안 횟수를 초과하였습니다"),
 	PRESENCE_NOT_FOUND(400, "존재 폐수거함 제보를 찾을 수 없습니다.");
