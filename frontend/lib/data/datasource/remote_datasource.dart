@@ -7,9 +7,11 @@ import 'package:huemap_app/data/model/bin.dart';
 import 'package:huemap_app/data/model/binDetail.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:requests/requests.dart';
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:form_data/form_data.dart' as form_data;
 
 class RemoteDataSource {
   RemoteDataSource._privateConstructor();
@@ -249,7 +251,18 @@ class RemoteDataSource {
   }
 
   Future<String> reportCondition(binId, file_path, voteCandidateRequest) async {
-    // var dio = Dio();
+    // var _dio = Dio();
+    // Dio addInterceptors(Dio dio) {
+    //   return dio..interceptors.add(InterceptorsWrapper(
+    //       onRequest: (RequestOptions options) => requestInterceptor(options),
+    //       onResponse: (Response response) => responseInterceptor(response),
+    //       onError: (DioError dioError) => errorInterceptor(dioError)));
+    // }
+    // void setupDio() {
+    //   _dio.interceptors.add(DioInterceptors());
+    //   _dio.options.baseUrl = _config.restBaseURL;
+    //   _dio.options.contentType = 'application/json';
+    // };
     // dio.interceptors.add(PrettyDioLogger());
     // dio.interceptors.add(PrettyDioLogger(
     //     requestHeader: true,
@@ -259,30 +272,34 @@ class RemoteDataSource {
     //     error: true,
     //     compact: true,
     //     maxWidth: 90));
-    // https://huemap.shop/
-    String path = 'https://huemap.shop/api/v1/bins/$binId/report-condition';
-    final uri = Uri.https('huemap.shop', path);
-    final token = await flutter_storage.read(key: 'jwt');
-    log(path);
-    log(token!);
-    final headers = {
-      // "Content-Type": "application/json",
-      // "Accept": "application/json",
-      'Authorization': 'Bearer $token',
-    };
-    final encoding = Encoding.getByName('utf-8');
-    final jsonString = jsonEncode(voteCandidateRequest);
-    // // log(jsonString);
-    // final res = await http.post(
-    //     uri,
-    //     headers: headers,
-    //     body: jsonString,
-    //     encoding: encoding
-    // );
+    // // https://huemap.shop/
+    // String path = 'https://huemap.shop/api/v1/bins/$binId/report-condition';
+    // final uri = Uri.https('huemap.shop', path);
+    // final token = await flutter_storage.read(key: 'jwt');
+    // // log(path);
+    // // log(token!);
+    // final headers = {
+    //   "Content-Type": "multipart/form-data; application/json; charset=utf-8",
+    //   'Authorization': 'Bearer $token',
+    // };
+    // final encoding = Encoding.getByName('utf-8');
+    // final jsonString = jsonEncode(voteCandidateRequest);
+    // // // log(jsonString);
+    // // final res = await http.post(
+    // //     uri,
+    // //     headers: headers,
+    // //     body: jsonString,
+    // //     encoding: encoding
+    // // );
     // var formData = FormData.fromMap({
-    //   'file': await MultipartFile.fromFile(file_path,filename: 'upload.jpg'),
+    //   // 'file': await MultipartFile.fromFile(file_path,filename: 'upload.jpg', contentType: MediaType('multipart','form-data')),
     //   'dto': jsonString
     // });
+    // // var formData = form_data.FormData();
+    // // formData.addFile('file', await File(file_path).readAsBytes(),
+    // //     filename: 'upload.png', contentType: 'multipart/form-data'
+    // // );
+    // // formData.add('dto', jsonString);
     // final res = await dio.post(
     //     path,
     //     data: formData,
@@ -291,36 +308,46 @@ class RemoteDataSource {
     //       // 'Accept-Encoding': "gzip, deflate, br",
     //       // 'Accept': '*/*',
     //       // 'Connection': 'keep-alive',
-    //       'Content-Type': 'multipart/form-data; application/json; charset=utf-8'
+    //       'Content-Type': 'application/json'
     //     })
     // );
 
-    final request = http.MultipartRequest('POST', Uri.parse(path));
-    request.headers.addAll({
-      'Authorization': 'Bearer $token',
-    });
-    request.fields['dto']=jsonString;
-    request.files.add(
-        await http.MultipartFile.fromPath(
-          'file', file_path,
-          // contentType: MediaType,
-        )
-    );
-    var res = await request.send();
+    // final request = http.MultipartRequest('POST', Uri.parse(path));
+    // request.headers.addAll({
+    //   "Content-Type": "application/json",
+    //   'Authorization': 'Bearer $token',
+    // });
+    // request.fields['dto']=jsonString;
+    // request.files.add(
+    //     await http.MultipartFile.fromPath(
+    //       'file', file_path,
+    //       contentType: MediaType('multipart','form-data'),
+    //     )
+    // );
+    // print(request.headers);
+    // print(request.files);
+    // print(request.fields);
+    // var res = await request.send();
     // print('Response body: ${request.headers}');
-    final response = await res.stream.bytesToString();
-    final json = jsonDecode(response);
-    print('Response body: ${json}');
+    // final json = jsonDecode(res.data);
+    // print('Response body: ${json}');
+
+    // final url = Uri.parse('https://huemap.shop/api/v1/bins/$binId/report-condition');
+
+    // final format = DateFormat('yyyy-MM-dd');
+    // final completionDate = format.format(project.completionDate);
 
 
-    if(res.statusCode == HttpStatus.created){
-      return '정상적으로 처리되었습니다.';
-    } else if (res.statusCode == HttpStatus.unauthorized) {
-      return 'unauthorized';
-    } else {
-      // final decoded = utf8.decode(res.stream.bytesToString());
-      return 'fail';
-    }
+
+    // if(res.statusCode == HttpStatus.created){
+    //   return '정상적으로 처리되었습니다.';
+    // } else if (res.statusCode == HttpStatus.unauthorized) {
+    //   return 'unauthorized';
+    // } else {
+    //   // final decoded = utf8.decode(res.stream.bytesToString());
+    //   return 'fail';
+    // }
+    return "fuck u";
   }
 
   Future<String> suggestBinLocation(suggestBinLocationRequest) async {

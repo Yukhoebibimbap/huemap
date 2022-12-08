@@ -471,7 +471,7 @@ class MapViewModel with ChangeNotifier{
     notifyListeners();
   }
 
-  void updateFile(File? file) {
+  void updateFile(String file) {
     image_path = file;
     notifyListeners();
   }
