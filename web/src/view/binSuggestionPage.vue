@@ -88,13 +88,16 @@
           {text:'폐의약품' ,value:'MEDICINE'},
         ],
         binType:"",
-        kmeans_k:4
+        kmeans_k:4,
       }
     },
     computed:{
-
+      location () {
+        return this.$store.getters.location
+      }
     },
     async mounted (){
+      console.log(this.location)
       if (window.kakao && window.kakao.maps) {
         this.initMap();
       } else {
@@ -121,7 +124,7 @@
       initMap() {
           const container = document.getElementById("map");
           const options = {
-            center: new kakao.maps.LatLng(37.50856152, 127.0450995),
+            center: new kakao.maps.LatLng(this.location.get(this.$route.params.gu)[1], this.location.get(this.$route.params.gu)[0]),
             level: 7,
           };
           this.map = new kakao.maps.Map(container, options);

@@ -68,6 +68,9 @@
       }
     },
     computed:{
+      location () {
+        return this.$store.getters.location
+      },
 
       socket(){
         return io.connect(`${process.env.VUE_APP_URL}`,{
@@ -115,12 +118,11 @@
       initMap() {
           const container = document.getElementById("map");
           const options = {
-            center: new kakao.maps.LatLng(37.50856152, 127.0450995),
+            center: new kakao.maps.LatLng(this.location.get(this.$route.params.gu)[1], this.location.get(this.$route.params.gu)[0]),
             level: 7,
           };
           this.map = new kakao.maps.Map(container, options);
           
-          // this.displayMarker([[this.latitude, this.longitude]]);
         },
        
        async displayMarker(dataList) {
