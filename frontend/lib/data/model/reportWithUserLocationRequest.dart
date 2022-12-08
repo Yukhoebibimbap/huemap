@@ -1,8 +1,8 @@
-class ReportClosuresRequest {
+class ReportWithUserLocationRequest {
   double latitude;
   double longitude;
 
-  ReportClosuresRequest(this.latitude, this.longitude);
+  ReportWithUserLocationRequest(this.latitude, this.longitude);
 
   Map<String, dynamic> toJson() {
     return {

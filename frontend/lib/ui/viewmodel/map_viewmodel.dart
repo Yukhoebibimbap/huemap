@@ -24,7 +24,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:huemap_app/data/model/bin.dart';
 import 'package:huemap_app/data/model/binDetail.dart';
 import 'package:huemap_app/data/model/reportPresencesRequest.dart';
-import 'package:huemap_app/data/model/reportClosuresRequest.dart';
+import 'package:huemap_app/data/model/reportWithUserLocationRequest.dart';
 import 'package:huemap_app/data/model/suggestBinLocationRequest.dart';
 import 'package:huemap_app/data/repository/bin_repository.dart';
 import 'package:huemap_app/data/repository/report_repository.dart';
@@ -371,8 +371,8 @@ class MapViewModel with ChangeNotifier{
     if (dia_t == Dialog_Type.submit) {
       dialog_title = "작성한 내용으로 제출합니다.";
     }
-    if (dia_t == Dialog_Type.response) {
-
+    if (dia_t == Dialog_Type.vote) {
+      dialog_title = "해당 위치에 투표함이 존재합니까?";
     }
     // if () {
     //
@@ -398,7 +398,7 @@ class MapViewModel with ChangeNotifier{
     }
     if (wid_type == Widget_Type.missing) {
       final pos = await determinePosition();
-      final reportClosuresRequest = ReportClosuresRequest(pos.latitude, pos.longitude);
+      final reportClosuresRequest = ReportWithUserLocationRequest(pos.latitude, pos.longitude);
       var result = await _reportRepository.reportClosures(currentBinId, reportClosuresRequest);
       log(result);
       dialog_title = result;
@@ -408,6 +408,15 @@ class MapViewModel with ChangeNotifier{
     if (wid_type == Widget_Type.suggest) {
       final suggestBinLocationRequest = SuggestBinLocationRequest(dropGuMenu, custom_lat, custom_lng, binTypesEng[dropBinMenu]);
       var result = await _suggestRepository.suggestBinLocation(suggestBinLocationRequest);
+      log(result);
+      dialog_title = result;
+      double_button_dialog = false;
+      showDialog(Dialog_Type.response, Widget_Type.missing);
+    }
+    if (wid_type == Widget_Type.vote) {
+      final pos = await determinePosition();
+      final voteCandidate = ReportWithUserLocationRequest(pos.latitude, pos.longitude);
+      var result = await _reportRepository.voteCandidate(currentBinId, voteCandidate);
       log(result);
       dialog_title = result;
       double_button_dialog = false;

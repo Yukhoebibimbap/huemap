@@ -148,32 +148,31 @@ class RemoteDataSource {
 
   Future<String> reportPresences(reportPresencesRequest) async {
     const path = '/api/v1/bins/report-presences';
-    var url = 'https://huemap.shop/api/v1/bins/report-presences';
     final uri = Uri.https('huemap.shop', path);
-    final headers = {'Content-Type' : 'application/json'};
+    final token = await flutter_storage.read(key: 'jwt');
+    log(token!);
+    final headers = {
+      "Content-Type": "application/json",
+      "Accept": "*/*",
+      'Authorization': 'Bearer $token',
+    };
     final encoding = Encoding.getByName('utf-8');
     final jsonString = jsonEncode(reportPresencesRequest);
-    log(path);
-    log(jsonString);
-    final res = await Requests.post(
-      url,
-      body: reportPresencesRequest.toJson(),
-      withCredentials: true,
+    final res = await http.post(
+        uri,
+        headers: headers,
+        body: jsonString,
+        encoding: encoding
     );
-    // final res = await http.post(
-    //     uri,
-    //     // headers: headers,
-    //     body: jsonString,
-    //     encoding: encoding
-    // );
-    print('Response header: ${res.headers}');
-    print('Response body: ${res.body}');
+    // print('Response header: ${res.headers}');
+    // print('Response body: ${res.body}');
     final decoded = utf8.decode(res.bodyBytes);
     final json = jsonDecode(decoded);
 
-    if(json['message'] == 'ok'){
-      return json['data']['id'];
+    if(res.statusCode == HttpStatus.created){
+      return '정상적으로 처리 되었습니다.';
     } else {
+      log('failed');
       return json['message'];
     }
   }
@@ -181,10 +180,16 @@ class RemoteDataSource {
   Future<String> reportClosures(binId, reportClosuresRequest) async {
     String path = '/api/v1/bins/$binId/report-closures';
     final uri = Uri.https('huemap.shop', path);
-    final headers = {'Content-Type' : 'application/json'};
+    final token = await flutter_storage.read(key: 'jwt');
+    log(token!);
+    final headers = {
+      "Content-Type": "application/json",
+      "Accept": "*/*",
+      'Authorization': 'Bearer $token',
+    };
     final encoding = Encoding.getByName('utf-8');
     final jsonString = jsonEncode(reportClosuresRequest);
-    log(path);
+    // log(path);
     log(jsonString);
     final res = await http.post(
         uri,
@@ -196,9 +201,40 @@ class RemoteDataSource {
     final decoded = utf8.decode(res.bodyBytes);
     final json = jsonDecode(decoded);
 
-    if(json['message'] == 'ok'){
-      return json['data']['id'];
+    if(res.statusCode == HttpStatus.created){
+      return '정상적으로 처리되었습니다.';
     } else {
+      return json['message'];
+    }
+  }
+
+  Future<String> voteCandidate(binId, reportClosuresRequest) async {
+    String path = '/api/v1/bins/$binId/vote';
+    final uri = Uri.https('huemap.shop', path);
+    final token = await flutter_storage.read(key: 'jwt');
+    log(path);
+    log(token!);
+    final headers = {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      'Authorization': 'Bearer $token',
+    };
+    final encoding = Encoding.getByName('utf-8');
+    final jsonString = jsonEncode(reportClosuresRequest);
+    log(jsonString);
+    final res = await http.put(
+        uri,
+        headers: headers,
+        body: jsonString,
+        encoding: encoding
+    );
+
+    if(res.statusCode == HttpStatus.ok){
+      return '정상적으로 처리되었습니다.';
+    } else {
+      final decoded = utf8.decode(res.bodyBytes);
+      final json = jsonDecode(decoded);
+      print('Response body: ${res.body}');
       return json['message'];
     }
   }
@@ -206,10 +242,15 @@ class RemoteDataSource {
   Future<String> suggestBinLocation(suggestBinLocationRequest) async {
     String path = '/api/v1/suggestions/bin-location';
     final uri = Uri.https('huemap.shop', path);
-    final headers = {'Content-Type' : 'application/json'};
+    final token = await flutter_storage.read(key: 'jwt');
+    log(token!);
+    final headers = {
+      "Content-Type": "application/json",
+      "Accept": "*/*",
+      'Authorization': 'Bearer $token',
+    };
     final encoding = Encoding.getByName('utf-8');
     final jsonString = jsonEncode(suggestBinLocationRequest);
-    log(path);
     log(jsonString);
     final res = await http.post(
         uri,
@@ -220,9 +261,8 @@ class RemoteDataSource {
     final decoded = utf8.decode(res.bodyBytes);
     final json = jsonDecode(decoded);
 
-    if(json['message'] == 'ok'){
-
-      return json['data']['id'];
+    if(res.statusCode == HttpStatus.created){
+      return '정상적으로 처리되었습니다.';
     } else {
       return json['message'];
     }

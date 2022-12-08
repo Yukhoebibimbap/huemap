@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:huemap_app/ui/viewmodel/map_viewmodel.dart';
+import 'package:huemap_app/constant_value.dart';
 
 class DetailView extends StatelessWidget {
   const DetailView({Key? key}) : super(key: key);
@@ -138,7 +139,7 @@ class DetailView extends StatelessWidget {
                                         child: Row(
                                           children: [
                                             ElevatedButton(
-                                                onPressed: () {},
+                                                onPressed: () {viewModel.showDialog(Dialog_Type.vote, Widget_Type.vote);},
                                                 style: ElevatedButton.styleFrom(
                                                   fixedSize: const Size(130,30),
                                                   backgroundColor: Color(0xFFCCE6F4), // Background color

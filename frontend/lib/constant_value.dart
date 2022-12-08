@@ -13,6 +13,7 @@ class ConstantValue {
 enum Dialog_Type  {
   submit,
   response,
+  vote,
 }
 
 enum Widget_Type  {
