@@ -16,11 +16,26 @@ class BinDetail {
         lat = json['latitude'],
         lng = json['longitude'],
         address = json['address'],
-        addressDesc = json['addressDescription'],
+        addressDesc = json['addressDescription'] ?? "",
         type = json['type'],
         updatedAt = json['updatedAt'],
         hasClosure = json['hasClosure'],
         isCandidate = json['isCandidate'];
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'gu': gu,
+      'latitude': lat,
+      'longitude': lng,
+      'address': address,
+      'addressDescription': addressDesc,
+      'type': type,
+      'updatedAt': updatedAt,
+      'hasClosure': hasClosure,
+      'isCandidate': isCandidate
+    };
+  }
 }
 
 final Map detailString = {

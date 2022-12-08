@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -9,8 +11,10 @@ import 'package:huemap_app/ui/page/root_page.dart';
 class LoginViewModel with ChangeNotifier {
   late final _signInfoRepository;
 
-  bool isEmailValid = true;
-  bool isPasswordValid = true;
+  // bool isEmailValid = true;
+  // bool isPasswordValid = true;
+  bool isValidData = true;
+  String errorMessage = "";
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -26,14 +30,21 @@ class LoginViewModel with ChangeNotifier {
     signInInfo.email = emailController.text;
     signInInfo.password = passwordController.text;
 
-    var result = await _signInfoRepository.postSignInInfo(signInInfo);
 
-    if(result > -1) {
+    String result = await _signInfoRepository.postSignInInfo(signInInfo);
+    // String? value = await SignInfoRepository.flutter_storage.read(key: 'jwt');
+    // log(value!);
+    if(result == 'success') {
       Navigator.of(context).pop();
     } else {
+      // result = -result;
+      //
+      // isEmailValid = !(result%2 == 1);
+      // result ~/= 2;
+      // isPasswordValid = !(result%2 == 1);
+      isValidData = false;
+      errorMessage = result;
 
-      isEmailValid = false;
-      isPasswordValid = false;
 
       notifyListeners();
     }

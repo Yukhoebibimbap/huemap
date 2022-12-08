@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:huemap_app/ui/viewmodel/map_viewmodel.dart';
+import 'package:huemap_app/constant_value.dart';
 
 class DetailView extends StatelessWidget {
   const DetailView({Key? key}) : super(key: key);
@@ -22,7 +23,7 @@ class DetailView extends StatelessWidget {
                     alignment: AlignmentDirectional.topStart,
                     children: [
                       TextButton(
-                        onPressed: viewModel.hide_all,
+                        onPressed: viewModel.pop_bottom_widget,
                         child: Icon(Icons.reply, color: Colors.black,size: 30),
                       ),
                       SizedBox(
@@ -39,35 +40,38 @@ class DetailView extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.all(8),
                               child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.7,
-                                height: MediaQuery.of(context).size.height * 0.25,
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                height: MediaQuery.of(context).size.height * 0.075 * viewModel.pin_detail_index.length,
                                 child:  Column(
-                                  children: Provider.of<MapViewModel>(context).temp_format.asMap().entries.map<Widget>(
+                                  children: Provider.of<MapViewModel>(context).pin_detail_data.asMap().entries.map<Widget>(
                                           (entry) => Expanded(
                                         child: Row(
                                           children: [
                                             Expanded(
-                                              flex: 2,
+                                              flex: 3,
                                               child: Container(
                                                   decoration: BoxDecoration(
                                                       border: Border.all(color:Colors.grey)
                                                   ),
                                                   alignment: Alignment.center,
                                                   child: Text(
-                                                      viewModel.pin_detail[entry.key],
+                                                      viewModel.pin_detail_index[entry.key],
                                                       style: const TextStyle(color:Colors.black),
                                                       textAlign: TextAlign.center
                                                   )
                                               ),
                                             ),
                                             Expanded(
-                                              flex: 5,
+                                              flex: 10,
                                               child: Container(
                                                   decoration: BoxDecoration(
                                                       border: Border.all(color:Colors.grey)
                                                   ),
                                                   alignment: Alignment.center,
-                                                  child: Text(entry.value.toString(),style: const TextStyle(color:Colors.black))
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: Text(entry.value.toString(),style: const TextStyle(color:Colors.black)),
+                                                  )
                                               ),
                                             ),
                                           ],
@@ -76,6 +80,15 @@ class DetailView extends StatelessWidget {
                                   ).toList(),
                                 ),
                               ),
+                            ),
+                            Visibility(
+                                visible: Provider.of<MapViewModel>(context).closure_warning_message,
+                                child: Text(
+                                  "주의 : 잘못된 위치 제보를 받은 수거함입니다.",
+                                  style: TextStyle(
+                                      color: Colors.redAccent,
+                                      fontWeight: FontWeight.w300),
+                                )
                             ),
                             Padding(
                               padding: EdgeInsets.fromLTRB(30,15,5,5),
@@ -103,7 +116,7 @@ class DetailView extends StatelessWidget {
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             ElevatedButton(
-                                                onPressed: () {viewModel.toggle_missing();},
+                                                onPressed: () {viewModel.toggle_bottom_widget('missing');},
                                                 style: ElevatedButton.styleFrom(
                                                   fixedSize: const Size(130,30),
                                                   backgroundColor: Color(0xFFCCE6F4), // Background color
@@ -111,7 +124,7 @@ class DetailView extends StatelessWidget {
                                                 child: Text("잘못된 위치 제보",style:TextStyle(color: Colors.black))
                                             ),
                                             ElevatedButton(
-                                                onPressed: () {viewModel.toggleCondition();},
+                                                onPressed: () {viewModel.toggle_bottom_widget('condition');},
                                                 style: ElevatedButton.styleFrom(
                                                   fixedSize: const Size(130,30),
                                                   backgroundColor: Color(0xFFCCE6F4), // Background color
@@ -121,17 +134,20 @@ class DetailView extends StatelessWidget {
                                           ]
                                       ),
                                       Padding(padding: EdgeInsets.all(5)),
-                                      Row(
-                                        children: [
-                                          ElevatedButton(
-                                              onPressed: () {},
-                                              style: ElevatedButton.styleFrom(
-                                                fixedSize: const Size(130,30),
-                                                backgroundColor: Color(0xFFCCE6F4), // Background color
-                                              ),
-                                              child: Text("투표",style:TextStyle(color: Colors.black))
-                                          ),
-                                        ],
+                                      Visibility(
+                                        visible: Provider.of<MapViewModel>(context).show_vote_button,
+                                        child: Row(
+                                          children: [
+                                            ElevatedButton(
+                                                onPressed: () {viewModel.showDialog(Dialog_Type.vote, Widget_Type.vote);},
+                                                style: ElevatedButton.styleFrom(
+                                                  fixedSize: const Size(130,30),
+                                                  backgroundColor: Color(0xFFCCE6F4), // Background color
+                                                ),
+                                                child: Text("투표",style:TextStyle(color: Colors.black))
+                                            ),
+                                          ],
+                                        ),
                                       )
                                     ],
                                   ),

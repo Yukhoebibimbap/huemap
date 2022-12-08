@@ -17,7 +17,7 @@ class SignInfoRepository {
     return await _remoteDataSource.postSignUpInfo(signUpInfo);
   }
 
-  Future<int> postSignInInfo(signInInfo) async {
+  Future<String> postSignInInfo(signInInfo) async {
     return await _remoteDataSource.postSignInInfo(signInInfo);
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:huemap_app/ui/viewmodel/map_viewmodel.dart';
+import 'package:huemap_app/constant_value.dart';
 
 class ReportView extends StatelessWidget {
   const ReportView({Key? key}) : super(key: key);
@@ -135,14 +136,14 @@ class ReportView extends StatelessWidget {
                                             Padding(
                                               padding: EdgeInsets.fromLTRB(0,0,50,0),
                                               child: DropdownButton(
-                                                  value: Provider.of<MapViewModel>(context).dropMenu,
+                                                  value: Provider.of<MapViewModel>(context).dropBinMenu,
                                                   items: dropdownList.map((String item) {
                                                     return DropdownMenuItem<String>(
                                                       child: Text('$item'),
                                                       value: item,
                                                     );
                                                   }).toList(),
-                                                  onChanged: (dynamic value) {viewModel.changeDropMenu(value);}
+                                                  onChanged: (dynamic value) {viewModel.changeDropBinMenu(value);}
                                               ),
                                             )
                                           ]
@@ -153,7 +154,7 @@ class ReportView extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.all(10),
                                 child: ElevatedButton(
-                                    onPressed: () {viewModel.showDialog();},
+                                    onPressed: () {viewModel.showDialog(Dialog_Type.submit, Widget_Type.report);},
                                     style: ElevatedButton.styleFrom(
                                       fixedSize: const Size(130,30),
                                       backgroundColor: Color(0xFFCCE6F4), // Background color

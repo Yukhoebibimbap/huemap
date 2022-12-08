@@ -87,32 +87,35 @@ class MapView extends StatelessWidget {
                       ]
                     ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: FloatingActionButton(
-                          onPressed: viewModel.togglePinDrop,
-                          backgroundColor: viewModel.onPinDrop ? Colors.blueAccent : Colors.white,
-                          foregroundColor: viewModel.onPinDrop ? Colors.white : Colors.blueAccent,
-                          child: const Icon(Icons.pin_drop),
+                  Visibility(
+                    visible: viewModel.show_floating_button,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: FloatingActionButton(
+                            onPressed: viewModel.togglePinDrop,
+                            backgroundColor: viewModel.onPinDrop ? Colors.blueAccent : Colors.white,
+                            foregroundColor: viewModel.onPinDrop ? Colors.white : Colors.blueAccent,
+                            child: const Icon(Icons.pin_drop),
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: FloatingActionButton(
-                          onPressed: viewModel.panToCurrent,
-                          child: const Icon(Icons.my_location),
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: FloatingActionButton(
+                            onPressed: viewModel.panToCurrent,
+                            child: const Icon(Icons.my_location),
+                          ),
                         ),
-                      ),
-                      Flexible(
-                        fit: FlexFit.tight,
-                        flex: 0,
-                        child:Container(),
-                      ),
-                    ]
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 0,
+                          child:Container(),
+                        ),
+                      ]
+                    ),
                   ),
                   const DialogView()
                 ]
