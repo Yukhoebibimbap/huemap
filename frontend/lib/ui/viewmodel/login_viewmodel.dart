@@ -17,6 +17,7 @@ class LoginViewModel with ChangeNotifier {
 
   final signInInfo = SignInInfo('', '');
 
+
   LoginViewModel () {
     _signInfoRepository = SignInfoRepository();
   }
@@ -27,16 +28,12 @@ class LoginViewModel with ChangeNotifier {
 
     var result = await _signInfoRepository.postSignInInfo(signInInfo);
 
-    if(true) {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => (RootPage()))
-      );
+    if(result > -1) {
+      Navigator.of(context).pop();
     } else {
-      result = -result;
 
-      isEmailValid = !(result%2 == 1);
-      result ~/= 2;
-      isPasswordValid = !(result%2 == 1);
+      isEmailValid = false;
+      isPasswordValid = false;
 
       notifyListeners();
     }

@@ -17,6 +17,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter/material.dart';
 
 
 import 'package:huemap_app/data/model/bin.dart';
@@ -24,6 +25,8 @@ import 'package:huemap_app/data/model/binDetail.dart';
 import 'package:huemap_app/data/repository/bin_repository.dart';
 import 'package:huemap_app/get_current_position.dart';
 import 'package:huemap_app/data/model/voteInfo.dart';
+import 'package:huemap_app/data/model/userInfo.dart';
+import 'package:huemap_app/ui/page/login_page.dart';
 
 import 'package:flutter/services.dart' show ImmutableBuffer, rootBundle;
 
@@ -64,12 +67,14 @@ class MapViewModel with ChangeNotifier{
   var dropMenu = '일반 쓰레기';
   var conditionMenu = '가득참';
 
+  var context;
+
   MapViewModel() {
+
     // 데이터 계층 연결, 자바스크립트 채널 생성
     _binRepository = BinRepository();
     binLoadCompleted = loadItems(Type.general);
     assetLoadCompleted = loadAssets();
-
 
     channel = {
       JavascriptChannel(name: 'onClickMarker', onMessageReceived: (message) {
@@ -78,10 +83,14 @@ class MapViewModel with ChangeNotifier{
         toggleBinDetail(id);
       }),
       JavascriptChannel(name: 'onClickSuggestion', onMessageReceived: (message) {
-        toggle_suggestion();
+        if(checkLogin()) {
+          toggle_suggestion();
+        }
       }),
       JavascriptChannel(name: 'onClickReport', onMessageReceived: (message) {
-        toggle_report();
+        if(checkLogin()) {
+          toggle_report();
+        }
       }),
       JavascriptChannel(name: 'onClickMap', onMessageReceived: (message) {
         hide_all();
@@ -332,5 +341,19 @@ class MapViewModel with ChangeNotifier{
   void changeConditionMenu(String menu) {
     conditionMenu = menu;
     notifyListeners();
+  }
+
+  bool checkLogin() {
+    final userInfo = UserInfo();
+    if(userInfo.id == -1) {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => (LoginPage()))
+      );
+    }
+    if(userInfo.id != -1) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
