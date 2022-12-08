@@ -45,6 +45,9 @@ dependencies:
   permission_handler: ^10.2.0
   flutter_secure_storage:
   requests:
+  dio: ^4.0.6
+  pretty_dio_logger: ^1.1.1
+  stack: ^0.0.1
 
 dev_dependencies:
   flutter_test:
