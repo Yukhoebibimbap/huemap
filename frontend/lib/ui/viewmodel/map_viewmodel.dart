@@ -429,7 +429,7 @@ class MapViewModel with ChangeNotifier{
       notifyListeners();
       if (wid_type == Widget_Type.unauthorized) {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => (LoginView()))
+            builder: (context) => (LoginPage()))
         );
       }
       return;
