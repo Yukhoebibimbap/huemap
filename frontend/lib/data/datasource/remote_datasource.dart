@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:huemap_app/data/model/bin.dart';
 import 'package:huemap_app/data/model/binDetail.dart';
 
@@ -11,6 +12,7 @@ import 'package:requests/requests.dart';
 class RemoteDataSource {
   RemoteDataSource._privateConstructor();
   static final RemoteDataSource _instance = RemoteDataSource._privateConstructor();
+  static final flutter_storage = FlutterSecureStorage();
 
   factory RemoteDataSource() {
     return _instance;
@@ -94,7 +96,7 @@ class RemoteDataSource {
     }
   }
 
-  Future<int> postSignInInfo(signInInfo) async {
+  Future<String> postSignInInfo(signInInfo) async {
     const path = '/api/v1/users/login';
     final uri = Uri.https('huemap.shop', path);
     final headers = {'Content-Type' : 'application/json'};
@@ -108,15 +110,13 @@ class RemoteDataSource {
     );
     final decoded = utf8.decode(res.bodyBytes);
     var json = jsonDecode(decoded);
-    print('Response header: ${res.headers}');
     print('Response body: ${res.body}');
-    if(res.statusCode == HttpStatus.created){
-      log("success");
-      return json['data']['id'];
-    } else if(json['message'] == '사용자를 찾을 수 없습니다.') {
-      return -1;
+    if(res.statusCode == HttpStatus.ok){
+      flutter_storage.write(key: 'jwt', value: json['accessToken']);
+      log('success');
+      return 'success';
     } else {
-      return -2;
+      return json['message'];
     }
   }
 

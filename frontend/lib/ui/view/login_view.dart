@@ -47,15 +47,15 @@ class LoginView extends StatelessWidget {
                     )
                   )
                 ),
-                viewModel.isEmailValid ? const SizedBox.shrink() :
-                Container(
-                  padding: const EdgeInsets.only(left: 10, bottom: 20),
-                  child:
-                  const Text(
-                      '사용자를 찾을 수 없습니다.',
-                      style: TextStyle(color: Colors.redAccent)
-                  ),
-                ),
+                // viewModel.isEmailValid ? const SizedBox.shrink() :
+                // Container(
+                //   padding: const EdgeInsets.only(left: 10, bottom: 20),
+                //   child:
+                //   const Text(
+                //       '사용자를 찾을 수 없습니다.',
+                //       style: TextStyle(color: Colors.redAccent)
+                //   ),
+                // ),
                 Container(
                   padding: const EdgeInsets.only(left: 10),
                   child: const Text('비밀번호'),
@@ -75,15 +75,24 @@ class LoginView extends StatelessWidget {
                         )
                     )
                 ),
-               viewModel.isPasswordValid ? const SizedBox.shrink() :
-               Container(
-                 padding: const EdgeInsets.only(left: 10, bottom: 20),
-                 child:
-                 const Text(
-                     '비밀번호가 일치하지 않습니다.',
-                     style: TextStyle(color: Colors.redAccent)
-                 ),
-               ),
+               // viewModel.isPasswordValid ? const SizedBox.shrink() :
+               // Container(
+               //   padding: const EdgeInsets.only(left: 10, bottom: 20),
+               //   child:
+               //   const Text(
+               //       '비밀번호가 일치하지 않습니다.',
+               //       style: TextStyle(color: Colors.redAccent)
+               //   ),
+               // ),
+                viewModel.isValidData ? const SizedBox.shrink() :
+                Container(
+                  padding: const EdgeInsets.only(left: 10, bottom: 20),
+                  child:
+                  Text(
+                      viewModel.errorMessage,
+                      style: TextStyle(color: Colors.redAccent)
+                  ),
+                ),
                 Container(
                   padding: EdgeInsets.only(bottom: 30, top: 20),
                   child: Row(
