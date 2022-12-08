@@ -485,6 +485,7 @@ class MapViewModel with ChangeNotifier{
   void updateFile(String file) {
     image_path = file;
     notifyListeners();
+  }
 
   bool checkLogin() {
     final userInfo = UserInfo();
