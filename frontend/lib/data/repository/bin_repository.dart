@@ -19,7 +19,7 @@ class BinRepository {
       return await _remoteDataSource.getBins(t);
     }
 
-    Future<BinDetail?> getBinDetail(String id) async {
+    Future<Map<String,dynamic>> getBinDetail(String id) async {
       return await _remoteDataSource.getBinDetail(id);
     }
     

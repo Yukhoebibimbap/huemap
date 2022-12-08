@@ -11,8 +11,9 @@ class ConditionView extends StatelessWidget {
   Widget build(BuildContext context) {
     MapViewModel viewModel = new MapViewModel();
     viewModel = Provider.of<MapViewModel>(context);
-    List<String> dropdownList = ['가득참', '주변 더러움', '수거함 불량'];
-    String selectedDropdown = '가득참';
+    final constantValue = ConstantValue();
+    // List<String> dropdownList = ['가득참', '주변 더러움', '수거함 불량'];
+    // String selectedDropdown = '가득참';
 
     return Consumer<MapViewModel>(
         builder: (context, countProvider, child) => Visibility(
@@ -24,7 +25,7 @@ class ConditionView extends StatelessWidget {
                     child: Stack(
                       children: [
                         TextButton(
-                          onPressed: viewModel.hide_all,
+                          onPressed: viewModel.pop_bottom_widget,
                           child: Icon(Icons.reply, color: Colors.black,size: 30),
                         ),
                         SizedBox(
@@ -43,7 +44,7 @@ class ConditionView extends StatelessWidget {
                                 const Padding(
                                   padding: EdgeInsets.all(8),
                                   child:
-                                  CameraExample(),
+                                  CameraView(),
                                   // Container(
                                   //     decoration: const BoxDecoration(
                                   //       color: Colors.grey,
@@ -140,7 +141,7 @@ class ConditionView extends StatelessWidget {
                                                 padding: EdgeInsets.fromLTRB(0,0,50,0),
                                                 child: DropdownButton(
                                                     value: Provider.of<MapViewModel>(context).conditionMenu,
-                                                    items: dropdownList.map((String item) {
+                                                    items: constantValue.dropdownConditionList.map((String item) {
                                                       return DropdownMenuItem<String>(
                                                         child: Text('$item'),
                                                         value: item,
@@ -157,7 +158,7 @@ class ConditionView extends StatelessWidget {
                                 Padding(
                                   padding: EdgeInsets.all(10),
                                   child: ElevatedButton(
-                                      onPressed: () {viewModel.showDialog(Dialog_Type.submit, Widget_Type.report);},
+                                      onPressed: () {viewModel.showDialog(Dialog_Type.submit, Widget_Type.condition);},
                                       style: ElevatedButton.styleFrom(
                                         fixedSize: const Size(130,30),
                                         backgroundColor: Color(0xFFCCE6F4), // Background color

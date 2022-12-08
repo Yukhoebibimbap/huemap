@@ -23,7 +23,7 @@ class MissingView extends StatelessWidget {
                     child: Stack(
                       children: [
                         TextButton(
-                          onPressed: viewModel.hide_all,
+                          onPressed: viewModel.pop_bottom_widget,
                           child: Icon(Icons.reply, color: Colors.black,size: 30),
                         ),
                         SizedBox(

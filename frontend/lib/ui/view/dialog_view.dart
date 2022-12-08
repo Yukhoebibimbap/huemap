@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:huemap_app/ui/viewmodel/map_viewmodel.dart';
+import 'package:huemap_app/ui/viewmodel/login_viewmodel.dart';
 
 class DialogView extends StatelessWidget {
   const DialogView({Key? key}) : super(key: key);
@@ -9,6 +10,8 @@ class DialogView extends StatelessWidget {
   Widget build(BuildContext context) {
     MapViewModel viewModel = new MapViewModel();
     viewModel = Provider.of<MapViewModel>(context);
+    // LoginViewModel loginViewModel = new LoginViewModel();
+    // loginViewModel = Provider.of<LoginViewModel>(context) ;
 
     return Consumer<MapViewModel>(
         builder: (context, countProvider, child) => Visibility(
@@ -25,7 +28,7 @@ class DialogView extends StatelessWidget {
                       backgroundColor: Color(0xFFCCE6F4), // Background color
                     ),
                     child: new Text("예", style:TextStyle(color: Colors.black)),
-                    onPressed: () {viewModel.dialogLeftPressed();},
+                    onPressed: () {viewModel.dialogLeftPressed(context);},
                   ),
                 ),
                 Visibility(

@@ -23,7 +23,7 @@ class DetailView extends StatelessWidget {
                     alignment: AlignmentDirectional.topStart,
                     children: [
                       TextButton(
-                        onPressed: viewModel.hide_all,
+                        onPressed: viewModel.pop_bottom_widget,
                         child: Icon(Icons.reply, color: Colors.black,size: 30),
                       ),
                       SizedBox(
@@ -40,15 +40,15 @@ class DetailView extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.all(8),
                               child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.7,
-                                height: MediaQuery.of(context).size.height * 0.25,
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                height: MediaQuery.of(context).size.height * 0.075 * viewModel.pin_detail_index.length,
                                 child:  Column(
                                   children: Provider.of<MapViewModel>(context).pin_detail_data.asMap().entries.map<Widget>(
                                           (entry) => Expanded(
                                         child: Row(
                                           children: [
                                             Expanded(
-                                              flex: 2,
+                                              flex: 3,
                                               child: Container(
                                                   decoration: BoxDecoration(
                                                       border: Border.all(color:Colors.grey)
@@ -62,7 +62,7 @@ class DetailView extends StatelessWidget {
                                               ),
                                             ),
                                             Expanded(
-                                              flex: 5,
+                                              flex: 10,
                                               child: Container(
                                                   decoration: BoxDecoration(
                                                       border: Border.all(color:Colors.grey)
@@ -116,7 +116,7 @@ class DetailView extends StatelessWidget {
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             ElevatedButton(
-                                                onPressed: () {viewModel.toggle_missing();},
+                                                onPressed: () {viewModel.toggle_bottom_widget('missing');},
                                                 style: ElevatedButton.styleFrom(
                                                   fixedSize: const Size(130,30),
                                                   backgroundColor: Color(0xFFCCE6F4), // Background color
@@ -124,7 +124,7 @@ class DetailView extends StatelessWidget {
                                                 child: Text("잘못된 위치 제보",style:TextStyle(color: Colors.black))
                                             ),
                                             ElevatedButton(
-                                                onPressed: () {viewModel.toggleCondition();},
+                                                onPressed: () {viewModel.toggle_bottom_widget('condition');},
                                                 style: ElevatedButton.styleFrom(
                                                   fixedSize: const Size(130,30),
                                                   backgroundColor: Color(0xFFCCE6F4), // Background color

@@ -8,6 +8,8 @@ import 'package:huemap_app/data/model/binDetail.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:requests/requests.dart';
+import 'package:dio/dio.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class RemoteDataSource {
   RemoteDataSource._privateConstructor();
@@ -38,7 +40,7 @@ class RemoteDataSource {
     }
   }
 
-  Future<BinDetail?> getBinDetail(String id) async {
+  Future<Map<String,dynamic>> getBinDetail(String id) async {
     BinDetail? binDetail;
 
     var path = '/api/v1/bins/$id';
@@ -52,7 +54,7 @@ class RemoteDataSource {
       Map<String, dynamic> json = jsonDecode(decoded);
       binDetail = BinDetail.fromJson(json['data']);
       log(json['data'].toString());
-      return binDetail;
+      return binDetail.toJson();
     } else {
       throw Exception("Error on Response");
     }
@@ -147,6 +149,7 @@ class RemoteDataSource {
   }
 
   Future<String> reportPresences(reportPresencesRequest) async {
+    return 'unauthorized';
     const path = '/api/v1/bins/report-presences';
     final uri = Uri.https('huemap.shop', path);
     final token = await flutter_storage.read(key: 'jwt');
@@ -171,6 +174,8 @@ class RemoteDataSource {
 
     if(res.statusCode == HttpStatus.created){
       return '정상적으로 처리 되었습니다.';
+    } else if (res.statusCode == HttpStatus.unauthorized) {
+      return 'unauthorized';
     } else {
       log('failed');
       return json['message'];
@@ -203,6 +208,8 @@ class RemoteDataSource {
 
     if(res.statusCode == HttpStatus.created){
       return '정상적으로 처리되었습니다.';
+    } else if (res.statusCode == HttpStatus.unauthorized) {
+      return 'unauthorized';
     } else {
       return json['message'];
     }
@@ -231,11 +238,88 @@ class RemoteDataSource {
 
     if(res.statusCode == HttpStatus.ok){
       return '정상적으로 처리되었습니다.';
+    } else if (res.statusCode == HttpStatus.unauthorized) {
+      return 'unauthorized';
     } else {
       final decoded = utf8.decode(res.bodyBytes);
       final json = jsonDecode(decoded);
       print('Response body: ${res.body}');
       return json['message'];
+    }
+  }
+
+  Future<String> reportCondition(binId, file_path, voteCandidateRequest) async {
+    // var dio = Dio();
+    // dio.interceptors.add(PrettyDioLogger());
+    // dio.interceptors.add(PrettyDioLogger(
+    //     requestHeader: true,
+    //     requestBody: true,
+    //     responseBody: true,
+    //     responseHeader: false,
+    //     error: true,
+    //     compact: true,
+    //     maxWidth: 90));
+    // https://huemap.shop/
+    String path = 'https://huemap.shop/api/v1/bins/$binId/report-condition';
+    final uri = Uri.https('huemap.shop', path);
+    final token = await flutter_storage.read(key: 'jwt');
+    log(path);
+    log(token!);
+    final headers = {
+      // "Content-Type": "application/json",
+      // "Accept": "application/json",
+      'Authorization': 'Bearer $token',
+    };
+    final encoding = Encoding.getByName('utf-8');
+    final jsonString = jsonEncode(voteCandidateRequest);
+    // // log(jsonString);
+    // final res = await http.post(
+    //     uri,
+    //     headers: headers,
+    //     body: jsonString,
+    //     encoding: encoding
+    // );
+    // var formData = FormData.fromMap({
+    //   'file': await MultipartFile.fromFile(file_path,filename: 'upload.jpg'),
+    //   'dto': jsonString
+    // });
+    // final res = await dio.post(
+    //     path,
+    //     data: formData,
+    //     options: Options(headers: {
+    //       "Authorization": "Bearer $token",
+    //       // 'Accept-Encoding': "gzip, deflate, br",
+    //       // 'Accept': '*/*',
+    //       // 'Connection': 'keep-alive',
+    //       'Content-Type': 'multipart/form-data; application/json; charset=utf-8'
+    //     })
+    // );
+
+    final request = http.MultipartRequest('POST', Uri.parse(path));
+    request.headers.addAll({
+      'Authorization': 'Bearer $token',
+    });
+    request.fields['dto']=jsonString;
+    request.files.add(
+        await http.MultipartFile.fromPath(
+          'file', file_path,
+          // contentType: MediaType,
+        )
+    );
+    var res = await request.send();
+    // print('Response body: ${request.headers}');
+    final response = await res.stream.bytesToString();
+    final json = jsonDecode(response);
+    print('Response body: ${json}');
+
+
+    if(res.statusCode == HttpStatus.created){
+      return '정상적으로 처리되었습니다.';
+    } else if (res.statusCode == HttpStatus.unauthorized) {
+      return 'unauthorized';
+    } else {
+      // final decoded = utf8.decode(res.stream.bytesToString());
+      return 'fail';
     }
   }
 
@@ -263,6 +347,8 @@ class RemoteDataSource {
 
     if(res.statusCode == HttpStatus.created){
       return '정상적으로 처리되었습니다.';
+    } else if (res.statusCode == HttpStatus.unauthorized) {
+      return 'unauthorized';
     } else {
       return json['message'];
     }

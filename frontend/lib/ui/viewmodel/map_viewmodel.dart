@@ -14,6 +14,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:huemap_app/constant_value.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -33,6 +34,7 @@ import 'package:huemap_app/get_current_position.dart';
 import 'package:huemap_app/constant_value.dart';
 import 'package:huemap_app/data/model/voteInfo.dart';
 import 'package:huemap_app/constant_value.dart';
+import 'package:huemap_app/ui/view/login_view.dart';
 
 import 'package:flutter/services.dart' show ImmutableBuffer, rootBundle;
 
@@ -48,8 +50,9 @@ class MapViewModel with ChangeNotifier{
   Map<int, List<Bin>> get items => _items;
   late Map<int, int> offset = <int, int>{};
   final Map<int, List<Bin>> _items = <int, List<Bin>>{};
-  BinDetail get binDetail => _binDetail;
-  late BinDetail _binDetail = <dynamic, dynamic>{} as BinDetail;
+  Map<String,dynamic> get binDetail => _binDetail;
+  // late BinDetail _binDetail = <dynamic, dynamic>{} as BinDetail;
+  late Map<String,dynamic> _binDetail;
   late String currentBinId;
 
   late Future<List<Bin>> binLoadCompleted;
@@ -59,6 +62,7 @@ class MapViewModel with ChangeNotifier{
   final onMarker = <bool>[true,false,false,false,false,false];
   bool onPinDrop = false;
 
+  List<String> bottom_widget_stack = [];
   bool _detail_visible = false;
   bool get detail_visible => _detail_visible;
   bool _report_visible = false;
@@ -69,13 +73,15 @@ class MapViewModel with ChangeNotifier{
   bool get missing_visible => _missing_visible;
   bool _dialog_visible = false;
   bool get dialog_visible => _dialog_visible;
-  bool condition_visible = false;
+  bool _condition_visible = false;
+  bool get condition_visible => _condition_visible;
   bool double_button_dialog = true;
   bool _closure_warning_message = false;
   bool get closure_warning_message => _closure_warning_message;
   bool _show_vote_button = false;
   bool get show_vote_button => _show_vote_button;
-
+  bool _show_floating_button = true;
+  bool get show_floating_button => _show_floating_button;
 
   final constantValue = ConstantValue();
   var pin_detail_index = ['도로명 주소', '상세 설명', '수거함 종류'];
@@ -84,6 +90,7 @@ class MapViewModel with ChangeNotifier{
   var dropGuMenu = '강남구';
   var conditionMenu = '가득참';
   var dialog_title = '';
+  var image_path;
 
   var custom_lat;
   var custom_lng;
@@ -107,13 +114,13 @@ class MapViewModel with ChangeNotifier{
         toggleBinDetail(id);
       }),
       JavascriptChannel(name: 'onClickSuggestion', onMessageReceived: (message) {
-        toggle_suggestion();
+        toggle_bottom_widget('suggestion');
       }),
       JavascriptChannel(name: 'onClickReport', onMessageReceived: (message) {
-        toggle_report();
+        toggle_bottom_widget('report');
       }),
       JavascriptChannel(name: 'onClickMap', onMessageReceived: (message) {
-        hide_all();
+        pop_all();
       }),
       JavascriptChannel(name: 'onDropCustom', onMessageReceived: (message) {
         parseLatLng(message.message);
@@ -133,8 +140,8 @@ class MapViewModel with ChangeNotifier{
     return binData;
   }
 
-  Future<Future<BinDetail?>?> loadBinDetail(String id) async {
-    late Future<BinDetail?>? binDetail;
+  Future<Map<String,dynamic>> loadBinDetail(String id) async {
+    late Future<Map<String,dynamic>> binDetail;
     binDetail = _binRepository.getBinDetail(id);
     binDetail?.then((data) {
       _binDetail = data!;
@@ -275,54 +282,72 @@ class MapViewModel with ChangeNotifier{
     }
   }
 
-  void toggle_detail() {
-    _detail_visible = true;
-    _report_visible = false;
-    _suggestion_visible = false;
-    _missing_visible = false;
-  }
-
-  void toggle_suggestion() {
-    _suggestion_visible = true;
-    _detail_visible = false;
-    _report_visible = false;
-    _missing_visible = false;
-    notifyListeners();
-  }
-
-  void toggle_report() {
-    _report_visible = true;
-    _detail_visible = false;
-    _suggestion_visible = false;
-    _missing_visible = false;
-    notifyListeners();
-  }
-
-  void toggle_missing() {
-    _missing_visible = true;
-    _report_visible = false;
-    _detail_visible = false;
-    _suggestion_visible = false;
-    notifyListeners();
+  void pop_all() {
+    bottom_widget_stack = [];
+    _show_floating_button = true;
+    hide_all();
   }
 
   void hide_all() {
-    _report_visible = false;
     _detail_visible = false;
-    _suggestion_visible = false;
     _missing_visible = false;
-    condition_visible = false;
+    _condition_visible = false;
+    _report_visible = false;
+    _suggestion_visible = false;
+    notifyListeners();
+  }
+
+  void toggle_bottom_widget(String idx) {
+    hide_all();
+    if (idx == 'detail') {
+      pop_all();
+      bottom_widget_stack.add('detail');
+      _detail_visible = !_detail_visible;
+    }
+    if (idx == 'missing') {
+      bottom_widget_stack.add('missing');
+      _missing_visible = !_missing_visible;
+    }
+    if (idx == 'condition') {
+      bottom_widget_stack.add('condition');
+      _condition_visible = !_condition_visible;
+    }
+    if (idx == 'report') {
+      bottom_widget_stack.add('report');
+      _report_visible = !_report_visible;
+    }
+    if (idx == 'suggestion') {
+      bottom_widget_stack.add('suggestion');
+      _report_visible = !_report_visible;
+    }
+    _show_floating_button = false;
+    notifyListeners();
+  }
+
+  void pop_bottom_widget() {
+    bottom_widget_stack.removeLast();
+    if(bottom_widget_stack.isNotEmpty) {
+      var temp = bottom_widget_stack.last;
+      bottom_widget_stack.removeLast();
+      toggle_bottom_widget(temp);
+    }
+    else {
+      pop_all();
+    }
     notifyListeners();
   }
 
   void toggleBinDetail(String id) {
+    toggle_bottom_widget('detail');
     loadBinDetail(id).then((_) {
+      // _binDetail =
       currentBinId = id;
       List<String> temp = [];
-      temp.add(_binDetail.address);
-      temp.add(_binDetail.addressDesc);
-      temp.add(binTypesKor[_binDetail.type]);
-      if(_binDetail.isCandidate) {
+      temp.add(_binDetail['address']);
+      temp.add(_binDetail['addressDescription']);
+      temp.add(binTypesKor[_binDetail['type']]);
+
+      if(_binDetail['isCandidate']) {
         _show_vote_button = true;
         pin_detail_index = constantValue.binDetailIndexCandidate;
         temp.add("0"); // 수정 필요
@@ -331,7 +356,8 @@ class MapViewModel with ChangeNotifier{
         _show_vote_button = false;
         pin_detail_index = constantValue.binDetailIndex;
       }
-      if(_binDetail.hasClosure) {
+
+      if(_binDetail['hasClosure']) {
         _closure_warning_message = true;
       }
       else {
@@ -339,10 +365,13 @@ class MapViewModel with ChangeNotifier{
       }
 
       pin_detail_data = temp;
-      toggle_detail();
-      notifyListeners();
-      controller!.runJavascript("map.panTo(new kakao.maps.LatLng(${_binDetail.lat}, ${_binDetail.lng}))");
+      panToLatLng(_binDetail['latitude'], _binDetail['longitude']);
     });
+    notifyListeners();
+  }
+
+  void panToLatLng(lat,lng) {
+    controller!.runJavascript("map.panTo(new kakao.maps.LatLng($lat, $lng))");
     notifyListeners();
   }
 
@@ -381,48 +410,55 @@ class MapViewModel with ChangeNotifier{
     notifyListeners();
   }
 
-  void dialogLeftPressed() async {
+  void dialogLeftPressed(BuildContext context) async {
+    late var result;
+
     if (dia_type == Dialog_Type.response) {
       _dialog_visible = false;
       double_button_dialog = true;
       notifyListeners();
+      if (wid_type == Widget_Type.unauthorized) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => (LoginView()))
+        );
+      }
       return;
     }
     if (wid_type == Widget_Type.report) {
       final reportPresencesRequest = ReportPresencesRequest(binTypesEng[dropBinMenu], custom_lat, custom_lng);
-      var result = await _reportRepository.reportPresences(reportPresencesRequest);
-      log(result);
-      dialog_title = result;
-      double_button_dialog = false;
-      showDialog(Dialog_Type.response, Widget_Type.report);
+      result = await _reportRepository.reportPresences(reportPresencesRequest);
     }
     if (wid_type == Widget_Type.missing) {
       final pos = await determinePosition();
       final reportClosuresRequest = ReportWithUserLocationRequest(pos.latitude, pos.longitude);
-      var result = await _reportRepository.reportClosures(currentBinId, reportClosuresRequest);
-      log(result);
-      dialog_title = result;
-      double_button_dialog = false;
-      showDialog(Dialog_Type.response, Widget_Type.missing);
+      result = await _reportRepository.reportClosures(currentBinId, reportClosuresRequest);
     }
     if (wid_type == Widget_Type.suggest) {
       final suggestBinLocationRequest = SuggestBinLocationRequest(dropGuMenu, custom_lat, custom_lng, binTypesEng[dropBinMenu]);
-      var result = await _suggestRepository.suggestBinLocation(suggestBinLocationRequest);
-      log(result);
-      dialog_title = result;
-      double_button_dialog = false;
-      showDialog(Dialog_Type.response, Widget_Type.missing);
+      result = await _suggestRepository.suggestBinLocation(suggestBinLocationRequest);
     }
     if (wid_type == Widget_Type.vote) {
       final pos = await determinePosition();
       final voteCandidate = ReportWithUserLocationRequest(pos.latitude, pos.longitude);
-      var result = await _reportRepository.voteCandidate(currentBinId, voteCandidate);
-      log(result);
-      dialog_title = result;
-      double_button_dialog = false;
-      showDialog(Dialog_Type.response, Widget_Type.missing);
+      result = await _reportRepository.voteCandidate(currentBinId, voteCandidate);
+    }
+    if (wid_type == Widget_Type.condition) {
+      final pos = await determinePosition();
+      final reportConditionReq = ReportPresencesRequest(binConditionEng[conditionMenu], pos.latitude, pos.longitude);
+      result = await _reportRepository.reportCondition(currentBinId, image_path, reportConditionReq);
     }
 
+    log(result);
+    if (result == 'unauthorized') {
+      dialog_title = '인증 오류가 발생했습니다. 다시 로그인해 주세요.';
+      double_button_dialog = false;
+      showDialog(Dialog_Type.response, Widget_Type.unauthorized);
+    }
+    else {
+      dialog_title = result;
+      double_button_dialog = false;
+      showDialog(Dialog_Type.response, Widget_Type.none);
+    }
   }
 
   void dialogRightPressed() {
@@ -430,17 +466,13 @@ class MapViewModel with ChangeNotifier{
     notifyListeners();
   }
 
-  void toggleCondition() {
-    condition_visible = !condition_visible;
-    _report_visible = false;
-    _detail_visible = false;
-    _suggestion_visible = false;
-    _missing_visible = false;
+  void changeConditionMenu(String menu) {
+    conditionMenu = menu;
     notifyListeners();
   }
 
-  void changeConditionMenu(String menu) {
-    conditionMenu = menu;
+  void updateFile(File? file) {
+    image_path = file;
     notifyListeners();
   }
 }
