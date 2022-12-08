@@ -120,14 +120,10 @@ class MapViewModel with ChangeNotifier{
         toggleBinDetail(id);
       }),
       JavascriptChannel(name: 'onClickSuggestion', onMessageReceived: (message) {
-        if(checkLogin()) {
-          toggle_bottom_widget('suggestion');
-        }
+        toggle_bottom_widget('suggestion');
       }),
       JavascriptChannel(name: 'onClickReport', onMessageReceived: (message) {
-        if(checkLogin()) {
-          toggle_bottom_widget('report');
-        }
+        toggle_bottom_widget('report');
       }),
       JavascriptChannel(name: 'onClickMap', onMessageReceived: (message) {
         pop_all();
@@ -315,20 +311,28 @@ class MapViewModel with ChangeNotifier{
       _detail_visible = !_detail_visible;
     }
     if (idx == 'missing') {
-      bottom_widget_stack.add('missing');
-      _missing_visible = !_missing_visible;
+      if(checkLogin()) {
+        bottom_widget_stack.add('missing');
+        _missing_visible = !_missing_visible;
+      }
     }
     if (idx == 'condition') {
-      bottom_widget_stack.add('condition');
-      _condition_visible = !_condition_visible;
+      if(checkLogin()) {
+        bottom_widget_stack.add('condition');
+        _condition_visible = !_condition_visible;
+      }
     }
     if (idx == 'report') {
-      bottom_widget_stack.add('report');
-      _report_visible = !_report_visible;
+      if(checkLogin()) {
+        bottom_widget_stack.add('report');
+        _report_visible = !_report_visible;
+      }
     }
     if (idx == 'suggestion') {
-      bottom_widget_stack.add('suggestion');
-      _report_visible = !_report_visible;
+      if(checkLogin()) {
+        bottom_widget_stack.add('suggestion');
+        _report_visible = !_report_visible;
+      }
     }
     _show_floating_button = false;
     notifyListeners();
@@ -405,19 +409,21 @@ class MapViewModel with ChangeNotifier{
   }
 
   void showDialog(Dialog_Type dia_t, Widget_Type wid_t ) {
-    dia_type = dia_t;
-    wid_type = wid_t;
-    if (dia_t == Dialog_Type.submit) {
-      dialog_title = "작성한 내용으로 제출합니다.";
+    if(checkLogin()) {
+      dia_type = dia_t;
+      wid_type = wid_t;
+      if (dia_t == Dialog_Type.submit) {
+        dialog_title = "작성한 내용으로 제출합니다.";
+      }
+      if (dia_t == Dialog_Type.vote) {
+        dialog_title = "해당 위치에 투표함이 존재합니까?";
+      }
+      // if () {
+      //
+      // }
+      _dialog_visible = true;
+      notifyListeners();
     }
-    if (dia_t == Dialog_Type.vote) {
-      dialog_title = "해당 위치에 투표함이 존재합니까?";
-    }
-    // if () {
-    //
-    // }
-    _dialog_visible = true;
-    notifyListeners();
   }
 
   void dialogLeftPressed(BuildContext context) async {
