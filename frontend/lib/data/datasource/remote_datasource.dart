@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:huemap_app/data/model/bin.dart';
 import 'package:huemap_app/data/model/binDetail.dart';
+import 'package:huemap_app/data/model/userInfo.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -114,10 +115,15 @@ class RemoteDataSource {
     );
     final decoded = utf8.decode(res.bodyBytes);
     var json = jsonDecode(decoded);
+
     print('Response body: ${res.body}');
     if(res.statusCode == HttpStatus.ok){
       flutter_storage.write(key: 'jwt', value: json['accessToken']);
       log('success');
+      
+      final userInfo = UserInfo();
+      userInfo.setUserInfo(signInInfo.email, json['id'], json['accessToken'], json['grantType']);
+      
       return 'success';
     } else {
       return json['message'];

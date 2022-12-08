@@ -4,8 +4,10 @@ import 'package:huemap_app/ui/view/map_view.dart';
 import 'package:provider/provider.dart';
 import 'package:huemap_app/ui/viewmodel/map_viewmodel.dart';
 import 'package:huemap_app/ui/view/user_view.dart';
+import 'package:huemap_app/data/model/userInfo.dart';
+import 'package:huemap_app/ui/page/login_page.dart';
 
-// void main(){runApp(const MaterialApp(debugShowCheckedModeBanner: false,home:RootPage()));}
+void main(){runApp(const MaterialApp(debugShowCheckedModeBanner: false,home:RootPage()));}
 
 class RootPage extends StatefulWidget {
   const RootPage({Key? key}) : super(key: key);
@@ -56,8 +58,18 @@ class _RootPageState extends State<RootPage> {
     );
   }
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    final userInfo = UserInfo();
+    if(index == 1) {
+      if(userInfo.id == -1) {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => (LoginPage()))
+        );
+      }
+    }
+    if(userInfo.id != -1) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 }

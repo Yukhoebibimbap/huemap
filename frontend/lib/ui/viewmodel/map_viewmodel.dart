@@ -20,6 +20,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter/material.dart';
 
 
 import 'package:huemap_app/data/model/bin.dart';
@@ -35,6 +36,9 @@ import 'package:huemap_app/constant_value.dart';
 import 'package:huemap_app/data/model/voteInfo.dart';
 import 'package:huemap_app/constant_value.dart';
 import 'package:huemap_app/ui/view/login_view.dart';
+import 'package:huemap_app/data/model/userInfo.dart';
+import 'package:huemap_app/ui/page/login_page.dart';
+
 
 import 'package:flutter/services.dart' show ImmutableBuffer, rootBundle;
 
@@ -98,14 +102,16 @@ class MapViewModel with ChangeNotifier{
   var dia_type;
   var wid_type;
 
+  var context;
+
   MapViewModel() {
+
     // 데이터 계층 연결, 자바스크립트 채널 생성
     _binRepository = BinRepository();
     _reportRepository = ReportRepository();
     _suggestRepository = SuggestRepository();
     binLoadCompleted = loadItems(Type.general);
     assetLoadCompleted = loadAssets();
-
 
     channel = {
       JavascriptChannel(name: 'onClickMarker', onMessageReceived: (message) {
@@ -114,10 +120,14 @@ class MapViewModel with ChangeNotifier{
         toggleBinDetail(id);
       }),
       JavascriptChannel(name: 'onClickSuggestion', onMessageReceived: (message) {
-        toggle_bottom_widget('suggestion');
+        if(checkLogin()) {
+          toggle_bottom_widget('suggestion');
+        }
       }),
       JavascriptChannel(name: 'onClickReport', onMessageReceived: (message) {
-        toggle_bottom_widget('report');
+        if(checkLogin()) {
+          toggle_bottom_widget('report');
+        }
       }),
       JavascriptChannel(name: 'onClickMap', onMessageReceived: (message) {
         pop_all();
@@ -471,8 +481,23 @@ class MapViewModel with ChangeNotifier{
     notifyListeners();
   }
 
+
   void updateFile(String file) {
     image_path = file;
     notifyListeners();
+
+  bool checkLogin() {
+    final userInfo = UserInfo();
+    if(userInfo.id == -1) {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => (LoginPage()))
+      );
+    }
+    if(userInfo.id != -1) {
+      return true;
+    } else {
+      return false;
+    }
+
   }
 }

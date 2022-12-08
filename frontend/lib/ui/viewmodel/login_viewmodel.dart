@@ -21,6 +21,7 @@ class LoginViewModel with ChangeNotifier {
 
   final signInInfo = SignInInfo('', '');
 
+
   LoginViewModel () {
     _signInfoRepository = SignInfoRepository();
   }
@@ -29,13 +30,12 @@ class LoginViewModel with ChangeNotifier {
     signInInfo.email = emailController.text;
     signInInfo.password = passwordController.text;
 
+
     String result = await _signInfoRepository.postSignInInfo(signInInfo);
     // String? value = await SignInfoRepository.flutter_storage.read(key: 'jwt');
     // log(value!);
     if(result == 'success') {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => (RootPage()))
-      );
+      Navigator.of(context).pop();
     } else {
       // result = -result;
       //
@@ -44,6 +44,7 @@ class LoginViewModel with ChangeNotifier {
       // isPasswordValid = !(result%2 == 1);
       isValidData = false;
       errorMessage = result;
+
 
       notifyListeners();
     }

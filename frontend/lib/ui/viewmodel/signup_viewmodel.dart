@@ -23,6 +23,7 @@ class SignupViewModel with ChangeNotifier {
 
   final signupInfo = SignUpInfo('', '', '');
 
+
   SignupViewModel () {
     _signInfoRepository = SignInfoRepository();
   }
@@ -36,9 +37,6 @@ class SignupViewModel with ChangeNotifier {
 
     if(result >= 0) {
       Navigator.of(context).pop();
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => (RootPage()))
-      );
     } else {
       result = -result;
 
