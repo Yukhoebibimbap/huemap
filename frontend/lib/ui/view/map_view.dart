@@ -31,6 +31,7 @@ class MapView extends StatelessWidget {
           );
         }
         else {
+          viewModel.context = context;
           return Flexible (
             fit: FlexFit.tight,
             child: Container(

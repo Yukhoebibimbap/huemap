@@ -17,6 +17,7 @@ class LoginView extends StatelessWidget {
     return Container(
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: Colors.white,
           foregroundColor: Colors.black,
           elevation: 0,

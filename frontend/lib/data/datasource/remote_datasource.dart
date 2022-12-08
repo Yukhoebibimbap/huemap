@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:huemap_app/data/model/bin.dart';
 import 'package:huemap_app/data/model/binDetail.dart';
+import 'package:huemap_app/data/model/userInfo.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -106,12 +107,13 @@ class RemoteDataSource {
     final decoded = utf8.decode(res.bodyBytes);
     var json = jsonDecode(decoded);
 
-    if(res.statusCode == HttpStatus.created){
-      return json['data']['id'];
-    } else if(json['message'] == '사용자를 찾을 수 없습니다.') {
-      return -1;
+    if(res.statusCode == HttpStatus.ok){
+      final userInfo = UserInfo();
+      userInfo.setUserInfo(signInInfo.email, json['id'], json['accessToken'], json['grantType']);
+
+      return json['id'];
     } else {
-      return -2;
+      return -1;
     }
   }
 
