@@ -39,14 +39,14 @@ import lombok.RequiredArgsConstructor;
 
 @Validated
 @RestController
-@RequestMapping("api/v1/bins")
+@RequestMapping("api")
 @RequiredArgsConstructor
 public class ReportController {
 
   private final ReportService reportService;
 
   @ResponseStatus(HttpStatus.CREATED)
-  @PostMapping("{binId}/report-closures")
+  @PostMapping("v1/bins/{binId}/report-closures")
   public RestResponse saveClosure(
       @CurrentUser User user,
       @PathVariable Long binId,
@@ -56,7 +56,7 @@ public class ReportController {
   }
 
   @ResponseStatus(HttpStatus.CREATED)
-  @PostMapping("report-presences")
+  @PostMapping("v1/bins/report-presences")
   public RestResponse savePresence(
       @CurrentUser User user,
       @RequestBody @Valid PresenceCreateRequest presenceCreateRequest
@@ -65,7 +65,7 @@ public class ReportController {
   }
 
   @ResponseStatus(HttpStatus.OK)
-  @PutMapping("{binId}/vote")
+  @PutMapping("v1/bins/{binId}/vote")
   public void votePresence(
       @PathVariable Long binId,
       @RequestBody @Valid PresenceVoteRequest presenceVoteRequest
@@ -75,7 +75,20 @@ public class ReportController {
 
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping(
-      value = "{binId}/report-condition",
+      value = "v1/bins/{binId}/report-condition",
+      consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  public RestResponse saveCondition(
+      @CurrentUser User user,
+      @PathVariable Long binId,
+      @RequestPart(value = "dto") @Valid ConditionCreateRequest conditionCreateRequest,
+      @RequestPart(value = "file") MultipartFile multipartFile) throws IOException {
+    return RestResponse.of(
+        reportService.saveCondition(user.getId(), binId, conditionCreateRequest, multipartFile));
+  }
+
+  @ResponseStatus(HttpStatus.CREATED)
+  @RequestMapping("v2/bins/{binId}/report-condition")
+  @PostMapping(
       consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
   public RestResponse saveCondition(
       @CurrentUser User user,
@@ -88,7 +101,7 @@ public class ReportController {
             multipartFile));
   }
 
-  @GetMapping("report-condition")
+  @GetMapping("v1/bins/report-condition")
   public ResponseEntity<RestResponse> findAllConditionByGuAndType(@PathParam("gu") String gu, @PathParam("type") ConditionType type,
       @PathParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startDate,
       @PathParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endDate) {

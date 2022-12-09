@@ -15,21 +15,21 @@ import com.huemap.backend.common.response.success.RestResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("api/v1/bins")
+@RequestMapping("api")
 @RequiredArgsConstructor
 public class BinController {
 
 	private final BinService binService;
 
 	@Cacheable(cacheNames = "bins")
-	@GetMapping
+	@GetMapping("v1/bins")
 	public ResponseEntity<RestResponse> findAll(@RequestParam("type") BinType type) {
 
 		RestResponse response = RestResponse.of(binService.findAll(type));
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("{id}")
+	@GetMapping("v1/bins/{id}")
 	public ResponseEntity<RestResponse> findById(@PathVariable Long id) {
 
 		RestResponse response = RestResponse.of(binService.findById(id));
