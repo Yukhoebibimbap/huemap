@@ -1,10 +1,16 @@
 package com.huemap.backend.domain.report.presentation;
 
-import static org.mockito.BDDMockito.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.anyLong;
+import static org.mockito.BDDMockito.doNothing;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -19,12 +25,11 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.huemap.backend.support.ControllerTest;
-import com.huemap.backend.domain.bin.domain.BinType;
 import com.huemap.backend.common.exception.EntityNotFoundException;
 import com.huemap.backend.common.exception.InvalidValueException;
 import com.huemap.backend.common.response.error.ErrorCode;
 import com.huemap.backend.common.response.success.RestResponse;
+import com.huemap.backend.domain.bin.domain.BinType;
 import com.huemap.backend.domain.bin.domain.ConditionType;
 import com.huemap.backend.domain.report.dto.request.ClosureCreateRequest;
 import com.huemap.backend.domain.report.dto.request.ConditionCreateRequest;
@@ -33,6 +38,7 @@ import com.huemap.backend.domain.report.dto.request.PresenceVoteRequest;
 import com.huemap.backend.domain.report.dto.response.ClosureCreateResponse;
 import com.huemap.backend.domain.report.dto.response.ConditionCreateResponse;
 import com.huemap.backend.domain.report.dto.response.PresenceCreateResponse;
+import com.huemap.backend.support.ControllerTest;
 import com.huemap.backend.support.WithMockCustomUser;
 
 @DisplayName("ReportController의")
@@ -568,17 +574,17 @@ public class ReportControllerTest extends ControllerTest {
         //given
         final Long binId = 1L;
         final ConditionCreateRequest request = new ConditionCreateRequest(null,
-                                                                         37.5833354,
-                                                                         126.9876779);
+            37.5833354,
+            126.9876779);
         final String content = objectMapper.writeValueAsString(request);
         final MockMultipartFile dto = new MockMultipartFile("dto",
-                                                            "",
-                                                            "application/json",
-                                                            content.getBytes(StandardCharsets.UTF_8));
+            "",
+            "application/json",
+            content.getBytes(StandardCharsets.UTF_8));
         final MockMultipartFile file = new MockMultipartFile("file",
-                                                              "imagefile.png",
-                                                              "image/png",
-                                                              "<<png data>>".getBytes());
+            "imagefile.png",
+            "image/png",
+            "<<png data>>".getBytes());
 
         //when
         final ResultActions perform = requestSaveCondition(binId, dto, file);
@@ -603,23 +609,23 @@ public class ReportControllerTest extends ControllerTest {
         requestMap.put("longitude", 126.9876779);
         final String content = objectMapper.writeValueAsString(requestMap);
         final MockMultipartFile dto = new MockMultipartFile("dto",
-                                                            "",
-                                                            "application/json",
-                                                            content.getBytes(StandardCharsets.UTF_8));
+            "",
+            "application/json",
+            content.getBytes(StandardCharsets.UTF_8));
         final MockMultipartFile file = new MockMultipartFile("file",
-                                                             "imagefile.png",
-                                                             "image/png",
-                                                             "<<png data>>".getBytes());
+            "imagefile.png",
+            "image/png",
+            "<<png data>>".getBytes());
 
         //when
         final ResultActions perform = mockMvc.perform(multipart("/api/v1/bins/" + binId + "/report-condition")
-                                                          .file(dto)
-                                                          .file(file)
-                                                          .contentType("multipart/form-data")
-                                                          .accept(MediaType.APPLICATION_JSON)
-                                                          .characterEncoding("UTF-8")
-                                                          .with(csrf()))
-                                             .andDo(print());
+                .file(dto)
+                .file(file)
+                .contentType("multipart/form-data")
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .with(csrf()))
+            .andDo(print());
 
         //then
         perform.andExpect(status().isBadRequest());
@@ -636,17 +642,17 @@ public class ReportControllerTest extends ControllerTest {
         //given
         final Long binId = 1L;
         final ConditionCreateRequest request = new ConditionCreateRequest(ConditionType.FULL,
-                                                                          null,
-                                                                          126.9876779);
+            null,
+            126.9876779);
         final String content = objectMapper.writeValueAsString(request);
         final MockMultipartFile dto = new MockMultipartFile("dto",
-                                                            "",
-                                                            "application/json",
-                                                            content.getBytes(StandardCharsets.UTF_8));
+            "",
+            "application/json",
+            content.getBytes(StandardCharsets.UTF_8));
         final MockMultipartFile file = new MockMultipartFile("file",
-                                                             "imagefile.png",
-                                                             "image/png",
-                                                             "<<png data>>".getBytes());
+            "imagefile.png",
+            "image/png",
+            "<<png data>>".getBytes());
 
         //when
         final ResultActions perform = requestSaveCondition(binId, dto, file);
@@ -667,17 +673,17 @@ public class ReportControllerTest extends ControllerTest {
         //given
         final Long binId = 1L;
         final ConditionCreateRequest request = new ConditionCreateRequest(ConditionType.FULL,
-                                                                          latitude,
-                                                                          126.9876779);
+            latitude,
+            126.9876779);
         final String content = objectMapper.writeValueAsString(request);
         final MockMultipartFile dto = new MockMultipartFile("dto",
-                                                            "",
-                                                            "application/json",
-                                                            content.getBytes(StandardCharsets.UTF_8));
+            "",
+            "application/json",
+            content.getBytes(StandardCharsets.UTF_8));
         final MockMultipartFile file = new MockMultipartFile("file",
-                                                             "imagefile.png",
-                                                             "image/png",
-                                                             "<<png data>>".getBytes());
+            "imagefile.png",
+            "image/png",
+            "<<png data>>".getBytes());
 
         //when
         final ResultActions perform = requestSaveCondition(binId, dto, file);
@@ -697,17 +703,17 @@ public class ReportControllerTest extends ControllerTest {
         //given
         final Long binId = 1L;
         final ConditionCreateRequest request = new ConditionCreateRequest(ConditionType.FULL,
-                                                                          37.5833354,
-                                                                          null);
+            37.5833354,
+            null);
         final String content = objectMapper.writeValueAsString(request);
         final MockMultipartFile dto = new MockMultipartFile("dto",
-                                                            "",
-                                                            "application/json",
-                                                            content.getBytes(StandardCharsets.UTF_8));
+            "",
+            "application/json",
+            content.getBytes(StandardCharsets.UTF_8));
         final MockMultipartFile file = new MockMultipartFile("file",
-                                                             "imagefile.png",
-                                                             "image/png",
-                                                             "<<png data>>".getBytes());
+            "imagefile.png",
+            "image/png",
+            "<<png data>>".getBytes());
 
         //when
         final ResultActions perform = requestSaveCondition(binId, dto, file);
@@ -728,17 +734,17 @@ public class ReportControllerTest extends ControllerTest {
         //given
         final Long binId = 1L;
         final ConditionCreateRequest request = new ConditionCreateRequest(ConditionType.FULL,
-                                                                          37.5833354,
-                                                                          longitude);
+            37.5833354,
+            longitude);
         final String content = objectMapper.writeValueAsString(request);
         final MockMultipartFile dto = new MockMultipartFile("dto",
-                                                            "",
-                                                            "application/json",
-                                                            content.getBytes(StandardCharsets.UTF_8));
+            "",
+            "application/json",
+            content.getBytes(StandardCharsets.UTF_8));
         final MockMultipartFile file = new MockMultipartFile("file",
-                                                             "imagefile.png",
-                                                             "image/png",
-                                                             "<<png data>>".getBytes());
+            "imagefile.png",
+            "image/png",
+            "<<png data>>".getBytes());
 
         //when
         final ResultActions perform = requestSaveCondition(binId, dto, file);
@@ -758,21 +764,21 @@ public class ReportControllerTest extends ControllerTest {
         //given
         final Long binId = 1L;
         final ConditionCreateRequest request = new ConditionCreateRequest(ConditionType.FULL,
-                                                                          37.5833354,
-                                                                          126.9876779);
+            37.5833354,
+            126.9876779);
         final String content = objectMapper.writeValueAsString(request);
         final MockMultipartFile dto = new MockMultipartFile("dto",
-                                                            "",
-                                                            "application/json",
-                                                            content.getBytes(StandardCharsets.UTF_8));
+            "",
+            "application/json",
+            content.getBytes(StandardCharsets.UTF_8));
         final MockMultipartFile file = new MockMultipartFile("file",
-                                                             "imagefile.png",
-                                                             "image/png",
-                                                             "<<png data>>".getBytes());
+            "imagefile.png",
+            "image/png",
+            "<<png data>>".getBytes());
         willThrow(new EntityNotFoundException(ErrorCode.BIN_NOT_FOUND))
             .given(reportService)
             .saveCondition(anyLong(), anyLong(), any(ConditionCreateRequest.class),
-                           any(MultipartFile.class));
+                any(MultipartFile.class));
 
         //when
         final ResultActions perform = requestSaveCondition(binId, dto, file);
@@ -792,21 +798,21 @@ public class ReportControllerTest extends ControllerTest {
         //given
         final Long binId = 1L;
         final ConditionCreateRequest request = new ConditionCreateRequest(ConditionType.FULL,
-                                                                          37.5833354,
-                                                                          126.9876779);
+            37.5833354,
+            126.9876779);
         final String content = objectMapper.writeValueAsString(request);
         final MockMultipartFile dto = new MockMultipartFile("dto",
-                                                            "",
-                                                            "application/json",
-                                                            content.getBytes(StandardCharsets.UTF_8));
+            "",
+            "application/json",
+            content.getBytes(StandardCharsets.UTF_8));
         final MockMultipartFile file = new MockMultipartFile("file",
-                                                             "imagefile.png",
-                                                             "image/png",
-                                                             "<<png data>>".getBytes());
+            "imagefile.png",
+            "image/png",
+            "<<png data>>".getBytes());
         willThrow(new InvalidValueException(ErrorCode.DISTANCE_FAR))
             .given(reportService)
             .saveCondition(anyLong(), anyLong(), any(ConditionCreateRequest.class),
-                           any(MultipartFile.class));
+                any(MultipartFile.class));
 
         //when
         final ResultActions perform = requestSaveCondition(binId, dto, file);
@@ -826,17 +832,17 @@ public class ReportControllerTest extends ControllerTest {
         //given
         final Long binId = 1L;
         final ConditionCreateRequest request = new ConditionCreateRequest(ConditionType.FULL,
-                                                                          37.5833354,
-                                                                          126.9876779);
+            37.5833354,
+            126.9876779);
         final String content = objectMapper.writeValueAsString(request);
         final MockMultipartFile dto = new MockMultipartFile("dto",
-                                                            "",
-                                                            "application/json",
-                                                            content.getBytes(StandardCharsets.UTF_8));
+            "",
+            "application/json",
+            content.getBytes(StandardCharsets.UTF_8));
         final MockMultipartFile file = new MockMultipartFile("file",
-                                                             "imagefile.png",
-                                                             "image/png",
-                                                             "<<png data>>".getBytes());
+            "imagefile.png",
+            "image/png",
+            "<<png data>>".getBytes());
         final ConditionCreateResponse response = new ConditionCreateResponse(1L);
         final RestResponse restResponse = RestResponse.of(response);
         given(reportService.saveCondition(anyLong(), anyLong(), any(ConditionCreateRequest.class), any(
@@ -847,7 +853,7 @@ public class ReportControllerTest extends ControllerTest {
 
         //then
         perform.andExpect(status().isCreated())
-               .andExpect(content().json(objectMapper.writeValueAsString(restResponse)));
+            .andExpect(content().json(objectMapper.writeValueAsString(restResponse)));
       }
     }
 
@@ -857,15 +863,286 @@ public class ReportControllerTest extends ControllerTest {
     }
   }
 
-  private ResultActions requestPostWithMultiPart(final String url, final MockMultipartFile dto, final MockMultipartFile file) throws
-      Exception {
+  @WithMockCustomUser
+  @Nested
+  @DisplayName("saveCondition 메소드는")
+  class saveConditionV2 {
+
+    @Nested
+    @DisplayName("폐수거함 상태 유형이 null로 들어오면")
+    class Context_with_null_type {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final Long binId = 1L;
+        final String type = null;
+        final String latitude = "37.5833354";
+        final String longitude = "126.9876779";
+
+        final MockMultipartFile file = new MockMultipartFile("file",
+                                                              "imagefile.png",
+                                                              "image/png",
+                                                              "<<png data>>".getBytes());
+
+        //when
+        final ResultActions perform = requestSaveCondition(binId, type, latitude, longitude, file);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("유효하지 않은 폐수거함 상태 유형이 들어오면")
+    class Context_with_invalid_type {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final Long binId = 1L;
+        final String type = "FULL2";
+        final String latitude = "37.5833354";
+        final String longitude = "126.9876779";
+
+        final MockMultipartFile file = new MockMultipartFile("file",
+                                                             "imagefile.png",
+                                                             "image/png",
+                                                             "<<png data>>".getBytes());
+
+        //when
+        final ResultActions perform = requestSaveCondition(binId, type, latitude, longitude, file);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("상태 제보자의 위도가 null로 들어오면")
+    class Context_with_null_latitude {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final Long binId = 1L;
+        final String type = "FULL";
+        final String latitude = null;
+        final String longitude = "126.9876779";
+
+        final MockMultipartFile file = new MockMultipartFile("file",
+                                                             "imagefile.png",
+                                                             "image/png",
+                                                             "<<png data>>".getBytes());
+
+        //when
+        final ResultActions perform = requestSaveCondition(binId, type, latitude, longitude, file);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("상태 제보자의 위도가 -90 ~ 90 이외의 값이거나 올바르지 않은 형식으로 들어오면")
+    class Context_with_invalid_range_latitude {
+
+      @ParameterizedTest
+      @ValueSource(doubles = {90.1, -91, Double.MAX_VALUE})
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception(Double latitude) throws Exception {
+        //given
+        final Long binId = 1L;
+        final String type = "FULL";
+        final String longitude = "126.9876779";
+
+        final MockMultipartFile file = new MockMultipartFile("file",
+                                                             "imagefile.png",
+                                                             "image/png",
+                                                             "<<png data>>".getBytes());
+
+        //when
+        final ResultActions perform = requestSaveCondition(binId, type, String.valueOf(latitude), longitude, file);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("상태 제보자의 경도가 null로 들어오면")
+    class Context_with_null_longitude {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final Long binId = 1L;
+        final String type = "FULL";
+        final String latitude = "37.5833354";
+        final String longitude = null;
+
+        final MockMultipartFile file = new MockMultipartFile("file",
+                                                             "imagefile.png",
+                                                             "image/png",
+                                                             "<<png data>>".getBytes());
+
+        //when
+        final ResultActions perform = requestSaveCondition(binId, type, latitude, longitude, file);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("상태 제보자의 경도가 -180 ~ 180 이외의 값이거나 올바르지 않은 형식으로 들어오면")
+    class Context_with_invalid_range_longitude {
+
+      @ParameterizedTest
+      @ValueSource(doubles = {180.1, -181, Double.MAX_VALUE})
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception(Double longitude) throws Exception {
+        //given
+        final Long binId = 1L;
+        final String type = "FULL";
+        final String latitude = "37.5833354";
+
+        final MockMultipartFile file = new MockMultipartFile("file",
+                                                             "imagefile.png",
+                                                             "image/png",
+                                                             "<<png data>>".getBytes());
+
+        //when
+        final ResultActions perform = requestSaveCondition(binId, type, latitude, String.valueOf(longitude), file);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("존재하지 않은 폐수거함으로 상태 제보를 한다면")
+    class Context_with_not_found_bin {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final Long binId = 1L;
+        final String type = "FULL";
+        final String latitude = "37.5833354";
+        final String longitude = "126.9876779";
+
+        final MockMultipartFile file = new MockMultipartFile("file",
+                                                             "imagefile.png",
+                                                             "image/png",
+                                                             "<<png data>>".getBytes());
+        willThrow(new EntityNotFoundException(ErrorCode.BIN_NOT_FOUND))
+            .given(reportService)
+            .saveCondition(anyLong(), anyLong(), any(ConditionCreateRequest.class),
+                           any(MultipartFile.class));
+
+        //when
+        final ResultActions perform = requestSaveCondition(binId, type, latitude, longitude, file);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("제보하려는 폐수거함의 거리 차이가 10m 이상인 곳에서 상태 제보를 한다면")
+    class Context_with_distance_far_bin {
+
+      @Test
+      @DisplayName("예외를 던진다.")
+      void It_throws_exception() throws Exception {
+        //given
+        final Long binId = 1L;
+        final String type = "FULL";
+        final String latitude = "37.5833354";
+        final String longitude = "126.9876779";
+
+        final MockMultipartFile file = new MockMultipartFile("file",
+                                                             "imagefile.png",
+                                                             "image/png",
+                                                             "<<png data>>".getBytes());
+        willThrow(new InvalidValueException(ErrorCode.DISTANCE_FAR))
+            .given(reportService)
+            .saveCondition(anyLong(), anyLong(), any(ConditionCreateRequest.class),
+                           any(MultipartFile.class));
+
+        //when
+        final ResultActions perform = requestSaveCondition(binId, type, latitude, longitude, file);
+
+        //then
+        perform.andExpect(status().isBadRequest());
+      }
+    }
+
+    @Nested
+    @DisplayName("제보자의 위도, 경도, 타입, 이미지 파일이 올바른 값으로 입력되면")
+    class Context_with_valid_latitude_longitude_type_file {
+
+      @Test
+      @DisplayName("201을 응답한다.")
+      void It_responses_201() throws Exception {
+        //given
+        final Long binId = 1L;
+        final String type = "FULL";
+        final String latitude = "37.5833354";
+        final String longitude = "126.9876779";
+
+
+        final MockMultipartFile file = new MockMultipartFile("file",
+                                                             "imagefile.png",
+                                                             "image/png",
+                                                             "<<png data>>".getBytes());
+        final ConditionCreateResponse response = new ConditionCreateResponse(1L);
+        final RestResponse restResponse = RestResponse.of(response);
+        given(reportService.saveCondition(anyLong(), anyLong(), any(ConditionCreateRequest.class), any(
+            MultipartFile.class))).willReturn(response);
+
+        //when
+        final ResultActions perform = requestSaveCondition(binId, type, latitude, longitude, file);
+
+        //then
+        perform.andExpect(status().isCreated())
+               .andExpect(content().json(objectMapper.writeValueAsString(restResponse)));
+      }
+    }
+
+    private ResultActions requestSaveCondition(final Long binId, String type, String latitude, String longitude,
+        final MockMultipartFile file)
+        throws Exception {
+      return requestPostWithMultiPart("/api/v2/bins/" + binId + "/report-condition?type=" + type +
+          "&latitude=" + latitude + "&longitude=" + longitude, file);
+    }
+  }
+
+  private ResultActions requestPostWithMultiPart(final String url, final MockMultipartFile file) throws Exception {
     return mockMvc.perform(multipart(url)
-                               .file(dto)
                                .file(file)
                                .contentType("multipart/form-data")
                                .accept(MediaType.APPLICATION_JSON)
                                .characterEncoding("UTF-8")
                                .with(csrf()))
                   .andDo(print());
+  }
+
+  private ResultActions requestPostWithMultiPart(final String url, final MockMultipartFile dto, final MockMultipartFile file) throws
+      Exception {
+    return mockMvc.perform(multipart(url)
+            .file(dto)
+            .file(file)
+            .contentType("multipart/form-data")
+            .accept(MediaType.APPLICATION_JSON)
+            .characterEncoding("UTF-8")
+            .with(csrf()))
+        .andDo(print());
   }
 }

@@ -24,14 +24,14 @@ import com.huemap.backend.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("api/v1/suggestions")
+@RequestMapping("api")
 @RequiredArgsConstructor
 public class SuggestionController {
 
 	private final SuggestionService suggestionService;
 
 	@ResponseStatus(HttpStatus.CREATED)
-	@PostMapping("bin-location")
+	@PostMapping("v1/suggestions/bin-location")
 	public RestResponse save(
 			@CurrentUser User user,
 		  @RequestBody @Valid SuggestionCreateRequest suggestionCreateRequest
@@ -39,7 +39,7 @@ public class SuggestionController {
 		return RestResponse.of(suggestionService.save(suggestionCreateRequest, user.getId()));
 	}
 
-	@GetMapping("bin-location")
+	@GetMapping("v1/suggestions/bin-location")
 	public RestResponse findAllByGuAndTypeAndDate(@PathParam("gu") String gu, @PathParam("type") BinType type,
 		@PathParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startDate,
 		@PathParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endDate) {

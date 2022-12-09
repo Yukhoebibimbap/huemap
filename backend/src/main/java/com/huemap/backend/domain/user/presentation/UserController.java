@@ -16,14 +16,14 @@ import com.huemap.backend.domain.user.dto.request.UserCreateRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("api/v1/users")
+@RequestMapping("api")
 @RequiredArgsConstructor
 public class UserController {
 
   private final UserService userService;
 
   @ResponseStatus(HttpStatus.CREATED)
-  @PostMapping
+  @PostMapping("v1/users")
   public RestResponse save(
       @RequestBody @Valid UserCreateRequest userCreateRequest
   ) {

@@ -1,5 +1,7 @@
 package com.huemap.backend.common.presentation;
 
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +38,13 @@ public class ControllerAdvice {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ResponseEntity<ErrorResponse> businessException(final BusinessException e) {
     final ErrorResponse response = ErrorResponse.of(e.getErrorCode());
+    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(ConstraintViolationException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ResponseEntity<ErrorResponse> constraintViolationException(final ConstraintViolationException e) {
+    final ErrorResponse response = ErrorResponse.of(400, e.getMessage());
     return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
   }
 
