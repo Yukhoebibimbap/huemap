@@ -49,6 +49,7 @@ dependencies:
   pretty_dio_logger: ^1.1.1
   http_parser: ^4.0.2
   form_data: ^0.0.1
+  rotating_icon_button: ^1.0.0
 
 dev_dependencies:
   flutter_test:

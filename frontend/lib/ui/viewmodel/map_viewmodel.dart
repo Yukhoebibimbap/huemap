@@ -89,6 +89,9 @@ class MapViewModel with ChangeNotifier{
   bool _api_loading = false;
   bool get api_loading => _api_loading;
 
+  bool _location_mismatch = false;
+  bool get location_mismatch => _location_mismatch;
+
   final constantValue = ConstantValue();
   var pin_detail_index = ['도로명 주소', '상세 설명', '수거함 종류'];
   var pin_detail_data = ['서울특별시 동작구 동작대로29길 69','두성프라자 건물 뒷편','폐건전지'];
@@ -316,12 +319,14 @@ class MapViewModel with ChangeNotifier{
       if(checkLogin()) {
         bottom_widget_stack.add('missing');
         _missing_visible = !_missing_visible;
+        _location_mismatch = false;
       }
     }
     if (idx == 'condition') {
       if(checkLogin()) {
         bottom_widget_stack.add('condition');
         _condition_visible = !_condition_visible;
+        _location_mismatch = false;
       }
     }
     if (idx == 'report') {
@@ -477,10 +482,9 @@ class MapViewModel with ChangeNotifier{
       result = await _reportRepository.reportCondition(currentBinId, image_path, reportConditionReq);
     }
 
-    log(result);
     _api_loading = false;
     if (result == 'success') {
-      log('api success1');
+      log('api success');
       dialog_title = '정상적으로 처리 되었습니다';
       double_button_dialog = false;
       showDialog(Dialog_Type.response, Widget_Type.success);
@@ -494,6 +498,9 @@ class MapViewModel with ChangeNotifier{
       return;
     }
     else {
+      if (result == '폐수거함 대상과 사용자의 거리가 너무 멉니다.') {
+        _location_mismatch = true;
+      }
       log('api error');
       dialog_title = result;
       double_button_dialog = false;
