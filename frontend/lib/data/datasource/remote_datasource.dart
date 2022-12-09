@@ -157,7 +157,6 @@ class RemoteDataSource {
   }
 
   Future<String> reportPresences(reportPresencesRequest) async {
-    return 'unauthorized';
     const path = '/api/v1/bins/report-presences';
     final uri = Uri.https('huemap.shop', path);
     final token = await flutter_storage.read(key: 'jwt');
@@ -181,7 +180,7 @@ class RemoteDataSource {
     final json = jsonDecode(decoded);
 
     if(res.statusCode == HttpStatus.created){
-      return '정상적으로 처리 되었습니다.';
+      return 'success';
     } else if (res.statusCode == HttpStatus.unauthorized) {
       return 'unauthorized';
     } else {
@@ -215,7 +214,7 @@ class RemoteDataSource {
     final json = jsonDecode(decoded);
 
     if(res.statusCode == HttpStatus.created){
-      return '정상적으로 처리되었습니다.';
+      return 'success';
     } else if (res.statusCode == HttpStatus.unauthorized) {
       return 'unauthorized';
     } else {
@@ -245,7 +244,7 @@ class RemoteDataSource {
     );
 
     if(res.statusCode == HttpStatus.ok){
-      return '정상적으로 처리되었습니다.';
+      return 'success';
     } else if (res.statusCode == HttpStatus.unauthorized) {
       return 'unauthorized';
     } else {
@@ -346,7 +345,7 @@ class RemoteDataSource {
 
 
     // if(res.statusCode == HttpStatus.created){
-    //   return '정상적으로 처리되었습니다.';
+    //   return 'success';
     // } else if (res.statusCode == HttpStatus.unauthorized) {
     //   return 'unauthorized';
     // } else {
@@ -379,7 +378,7 @@ class RemoteDataSource {
     final json = jsonDecode(decoded);
 
     if(res.statusCode == HttpStatus.created){
-      return '정상적으로 처리되었습니다.';
+      return 'success';
     } else if (res.statusCode == HttpStatus.unauthorized) {
       return 'unauthorized';
     } else {

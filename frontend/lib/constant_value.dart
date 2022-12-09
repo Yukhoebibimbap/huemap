@@ -16,6 +16,7 @@ enum Dialog_Type  {
   submit,
   response,
   vote,
+  loading
 }
 
 enum Widget_Type  {
@@ -26,6 +27,7 @@ enum Widget_Type  {
   vote,
   none,
   unauthorized,
+  success
 }
 
 final Map binConditionEng = {
