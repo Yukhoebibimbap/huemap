@@ -86,6 +86,11 @@ class MapViewModel with ChangeNotifier{
   bool get show_vote_button => _show_vote_button;
   bool _show_floating_button = true;
   bool get show_floating_button => _show_floating_button;
+  bool _api_loading = false;
+  bool get api_loading => _api_loading;
+
+  bool _location_mismatch = false;
+  bool get location_mismatch => _location_mismatch;
 
   final constantValue = ConstantValue();
   var pin_detail_index = ['도로명 주소', '상세 설명', '수거함 종류'];
@@ -314,12 +319,14 @@ class MapViewModel with ChangeNotifier{
       if(checkLogin()) {
         bottom_widget_stack.add('missing');
         _missing_visible = !_missing_visible;
+        _location_mismatch = false;
       }
     }
     if (idx == 'condition') {
       if(checkLogin()) {
         bottom_widget_stack.add('condition');
         _condition_visible = !_condition_visible;
+        _location_mismatch = false;
       }
     }
     if (idx == 'report') {
@@ -331,7 +338,7 @@ class MapViewModel with ChangeNotifier{
     if (idx == 'suggestion') {
       if(checkLogin()) {
         bottom_widget_stack.add('suggestion');
-        _report_visible = !_report_visible;
+        _suggestion_visible = !_suggestion_visible;
       }
     }
     _show_floating_button = false;
@@ -412,6 +419,9 @@ class MapViewModel with ChangeNotifier{
     if(checkLogin()) {
       dia_type = dia_t;
       wid_type = wid_t;
+      if (dia_t == Dialog_Type.loading) {
+        dialog_title = '';
+      }
       if (dia_t == Dialog_Type.submit) {
         dialog_title = "작성한 내용으로 제출합니다.";
       }
@@ -427,19 +437,27 @@ class MapViewModel with ChangeNotifier{
   }
 
   void dialogLeftPressed(BuildContext context) async {
-    late var result;
+    var result = '';
 
     if (dia_type == Dialog_Type.response) {
       _dialog_visible = false;
       double_button_dialog = true;
-      notifyListeners();
+
+      if (wid_type == Widget_Type.success) {
+        log('api success');
+        pop_all();
+      }
       if (wid_type == Widget_Type.unauthorized) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
+        Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => (LoginPage()))
         );
       }
+      notifyListeners();
       return;
     }
+    _api_loading = true;
+    dialog_title = '';
+    notifyListeners();
     if (wid_type == Widget_Type.report) {
       final reportPresencesRequest = ReportPresencesRequest(binTypesEng[dropBinMenu], custom_lat, custom_lng);
       result = await _reportRepository.reportPresences(reportPresencesRequest);
@@ -464,16 +482,30 @@ class MapViewModel with ChangeNotifier{
       result = await _reportRepository.reportCondition(currentBinId, image_path, reportConditionReq);
     }
 
-    log(result);
+    _api_loading = false;
+    if (result == 'success') {
+      log('api success');
+      dialog_title = '정상적으로 처리 되었습니다';
+      double_button_dialog = false;
+      showDialog(Dialog_Type.response, Widget_Type.success);
+      return;
+    }
     if (result == 'unauthorized') {
+      log('api unauthorized');
       dialog_title = '인증 오류가 발생했습니다. 다시 로그인해 주세요.';
       double_button_dialog = false;
       showDialog(Dialog_Type.response, Widget_Type.unauthorized);
+      return;
     }
     else {
+      if (result == '폐수거함 대상과 사용자의 거리가 너무 멉니다.') {
+        _location_mismatch = true;
+      }
+      log('api error');
       dialog_title = result;
       double_button_dialog = false;
       showDialog(Dialog_Type.response, Widget_Type.none);
+      return;
     }
   }
 

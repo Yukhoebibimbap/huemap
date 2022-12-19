@@ -17,22 +17,47 @@ class DialogView extends StatelessWidget {
         builder: (context, countProvider, child) => Visibility(
             visible: Provider.of<MapViewModel>(context).dialog_visible,
             child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0)
+              ),
               actionsAlignment: MainAxisAlignment.center,
-              title: Text(viewModel.dialog_title),
-              actions: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      fixedSize: const Size(130,30),
-                      backgroundColor: Color(0xFFCCE6F4), // Background color
+              title: Visibility(
+                  visible: !Provider.of<MapViewModel>(context).api_loading,
+                  child: Text(viewModel.dialog_title)
+              ),
+              content: Visibility(
+                  visible: Provider.of<MapViewModel>(context).api_loading,
+                  child: const SizedBox(
+                    height: 100,
+                    child: Center(
+                        child:SizedBox(
+                          height: 50.0,
+                          width: 50.0,
+                          child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation(Colors.blue),
+                              strokeWidth: 5.0
+                          ),
+                        )
                     ),
-                    child: new Text("예", style:TextStyle(color: Colors.black)),
-                    onPressed: () {viewModel.dialogLeftPressed(context);},
+                  ),
+              ),
+              actions: <Widget>[
+                Visibility(
+                  visible: !Provider.of<MapViewModel>(context).api_loading,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: const Size(130,30),
+                        backgroundColor: Color(0xFFCCE6F4), // Background color
+                      ),
+                      child: new Text("예", style:TextStyle(color: Colors.black)),
+                      onPressed: () {viewModel.dialogLeftPressed(context);},
+                    ),
                   ),
                 ),
                 Visibility(
-                  visible: Provider.of<MapViewModel>(context).double_button_dialog,
+                  visible: Provider.of<MapViewModel>(context).double_button_dialog && !Provider.of<MapViewModel>(context).api_loading,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(

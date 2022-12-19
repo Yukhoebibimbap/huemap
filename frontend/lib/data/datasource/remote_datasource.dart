@@ -157,7 +157,6 @@ class RemoteDataSource {
   }
 
   Future<String> reportPresences(reportPresencesRequest) async {
-    return 'unauthorized';
     const path = '/api/v1/bins/report-presences';
     final uri = Uri.https('huemap.shop', path);
     final token = await flutter_storage.read(key: 'jwt');
@@ -181,7 +180,7 @@ class RemoteDataSource {
     final json = jsonDecode(decoded);
 
     if(res.statusCode == HttpStatus.created){
-      return '정상적으로 처리 되었습니다.';
+      return 'success';
     } else if (res.statusCode == HttpStatus.unauthorized) {
       return 'unauthorized';
     } else {
@@ -215,7 +214,7 @@ class RemoteDataSource {
     final json = jsonDecode(decoded);
 
     if(res.statusCode == HttpStatus.created){
-      return '정상적으로 처리되었습니다.';
+      return 'success';
     } else if (res.statusCode == HttpStatus.unauthorized) {
       return 'unauthorized';
     } else {
@@ -245,7 +244,7 @@ class RemoteDataSource {
     );
 
     if(res.statusCode == HttpStatus.ok){
-      return '정상적으로 처리되었습니다.';
+      return 'success';
     } else if (res.statusCode == HttpStatus.unauthorized) {
       return 'unauthorized';
     } else {
@@ -256,104 +255,50 @@ class RemoteDataSource {
     }
   }
 
-  Future<String> reportCondition(binId, file_path, voteCandidateRequest) async {
-    // var _dio = Dio();
-    // Dio addInterceptors(Dio dio) {
-    //   return dio..interceptors.add(InterceptorsWrapper(
-    //       onRequest: (RequestOptions options) => requestInterceptor(options),
-    //       onResponse: (Response response) => responseInterceptor(response),
-    //       onError: (DioError dioError) => errorInterceptor(dioError)));
-    // }
-    // void setupDio() {
-    //   _dio.interceptors.add(DioInterceptors());
-    //   _dio.options.baseUrl = _config.restBaseURL;
-    //   _dio.options.contentType = 'application/json';
-    // };
-    // dio.interceptors.add(PrettyDioLogger());
-    // dio.interceptors.add(PrettyDioLogger(
-    //     requestHeader: true,
-    //     requestBody: true,
-    //     responseBody: true,
-    //     responseHeader: false,
-    //     error: true,
-    //     compact: true,
-    //     maxWidth: 90));
-    // // https://huemap.shop/
+  Future<String> reportCondition(binId, filePath, reportConditionReq) async {
+    var dio = Dio();
+    dio.interceptors.add(PrettyDioLogger());
+    dio.interceptors.add(PrettyDioLogger(
+        requestHeader: true,
+        requestBody: true,
+        responseBody: true,
+        responseHeader: false,
+        error: true,
+        compact: true,
+        maxWidth: 90));
     // String path = 'https://huemap.shop/api/v1/bins/$binId/report-condition';
-    // final uri = Uri.https('huemap.shop', path);
-    // final token = await flutter_storage.read(key: 'jwt');
-    // // log(path);
-    // // log(token!);
-    // final headers = {
-    //   "Content-Type": "multipart/form-data; application/json; charset=utf-8",
-    //   'Authorization': 'Bearer $token',
-    // };
-    // final encoding = Encoding.getByName('utf-8');
-    // final jsonString = jsonEncode(voteCandidateRequest);
-    // // // log(jsonString);
-    // // final res = await http.post(
-    // //     uri,
-    // //     headers: headers,
-    // //     body: jsonString,
-    // //     encoding: encoding
-    // // );
-    // var formData = FormData.fromMap({
-    //   // 'file': await MultipartFile.fromFile(file_path,filename: 'upload.jpg', contentType: MediaType('multipart','form-data')),
-    //   'dto': jsonString
-    // });
-    // // var formData = form_data.FormData();
-    // // formData.addFile('file', await File(file_path).readAsBytes(),
-    // //     filename: 'upload.png', contentType: 'multipart/form-data'
-    // // );
-    // // formData.add('dto', jsonString);
-    // final res = await dio.post(
-    //     path,
-    //     data: formData,
-    //     options: Options(headers: {
-    //       "Authorization": "Bearer $token",
-    //       // 'Accept-Encoding': "gzip, deflate, br",
-    //       // 'Accept': '*/*',
-    //       // 'Connection': 'keep-alive',
-    //       'Content-Type': 'application/json'
-    //     })
-    // );
-
-    // final request = http.MultipartRequest('POST', Uri.parse(path));
-    // request.headers.addAll({
-    //   "Content-Type": "application/json",
-    //   'Authorization': 'Bearer $token',
-    // });
-    // request.fields['dto']=jsonString;
-    // request.files.add(
-    //     await http.MultipartFile.fromPath(
-    //       'file', file_path,
-    //       contentType: MediaType('multipart','form-data'),
-    //     )
-    // );
-    // print(request.headers);
-    // print(request.files);
-    // print(request.fields);
-    // var res = await request.send();
-    // print('Response body: ${request.headers}');
-    // final json = jsonDecode(res.data);
-    // print('Response body: ${json}');
-
-    // final url = Uri.parse('https://huemap.shop/api/v1/bins/$binId/report-condition');
-
-    // final format = DateFormat('yyyy-MM-dd');
-    // final completionDate = format.format(project.completionDate);
-
-
-
-    // if(res.statusCode == HttpStatus.created){
-    //   return '정상적으로 처리되었습니다.';
-    // } else if (res.statusCode == HttpStatus.unauthorized) {
-    //   return 'unauthorized';
-    // } else {
-    //   // final decoded = utf8.decode(res.stream.bytesToString());
-    //   return 'fail';
-    // }
-    return "fuck u";
+    String path_v2 = 'https://huemap.shop/api/v2/bins/$binId/report-condition';
+    final token = await flutter_storage.read(key: 'jwt');
+    var formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(filePath,filename: 'upload.jpg', contentType: MediaType('multipart','form-data')),
+      // 'dto': jsonString
+    });
+    try {
+      final res = await dio.post(
+          path_v2,
+          data: formData,
+          queryParameters: {
+            'type': '${reportConditionReq.type}',
+            'latitude': '${reportConditionReq.latitude}',
+            'longitude': '${reportConditionReq.longitude}',
+          },
+          options: Options(headers: {
+            "Authorization": "Bearer ${token}",
+            'Content-Type': 'multipart/form-data'
+          })
+      );
+      if(res.statusCode == HttpStatus.created){
+          return 'success';
+      }
+    } on DioError catch (e) {
+      if(e.response?.statusCode == HttpStatus.unauthorized){
+        return 'unauthorized';
+      } else {
+        final json = jsonDecode(e.response?.toString() ?? '{"message":"오류가 발생했습니다.}');
+        return json['message'] ?? '오류가 발생했습니다.';
+      }
+    }
+    return '오류가 발생했습니다.';
   }
 
   Future<String> suggestBinLocation(suggestBinLocationRequest) async {
@@ -379,7 +324,7 @@ class RemoteDataSource {
     final json = jsonDecode(decoded);
 
     if(res.statusCode == HttpStatus.created){
-      return '정상적으로 처리되었습니다.';
+      return 'success';
     } else if (res.statusCode == HttpStatus.unauthorized) {
       return 'unauthorized';
     } else {

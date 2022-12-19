@@ -18,7 +18,7 @@ class ReportRepository {
     return await _remoteDataSource.voteCandidate(binId, voteCandidateRequest);
   }
 
-  Future<String> reportCondition(binId, file_path, voteCandidateRequest) async {
-    return await _remoteDataSource.reportCondition(binId, file_path, voteCandidateRequest);
+  Future<String> reportCondition(binId, filePath, reportConditionReq) async {
+    return await _remoteDataSource.reportCondition(binId, filePath, reportConditionReq);
   }
 }
